@@ -1,0 +1,106 @@
+@version 1
+
+/// Wave 01 translation of validateAgentLimits from galerina-ai-agent/src/index.ts.
+/// The Fungi profile keeps the source's ordered checks and typed diagnostics.
+/// A path-taking helper preserves the TypeScript path override, while the
+/// original one-argument flow retains the source default. No caller authority
+/// is introduced. An explicit raw-Float64 positive classifier preserves the
+/// source's +Infinity, -Infinity, and NaN predicate behavior. The evidence
+/// remains bounded to inert typed records; JavaScript getters/proxies, host
+/// marshalling, consumer cutover, and SLIDE/VOK remain outside this candidate.
+
+// A record payload keeps presence separate from the signed/fractional value.
+// The current WASM Option lane uses negative handles for absence, so a bare
+// Option<Int> cannot faithfully carry a negative optional resource limit.
+record AgentLimitValue {
+  value: Float64
+}
+
+record AgentLimits {
+  timeoutMs: Float64
+  memoryBytes: Float64
+  maxToolCalls: Float64
+  maxTokens: Option<AgentLimitValue>
+  rateLimitPerMinute: Option<AgentLimitValue>
+}
+
+record AgentDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateAgentLimitsAtPath(
+  limits: AgentLimits,
+  path_: String,
+) -> Array<AgentDiagnostic>
+contract { intent { "Require every present agent resource limit to be positive and return ordered typed diagnostics at the caller-selected path." } }
+{
+  mut diagnostics: Array<AgentDiagnostic> = Array.empty()
+
+  if Float64.isPositive(limits.timeoutMs) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_TIMEOUT_REQUIRED"
+      severity: "error"
+      message: "Agent limits require a positive timeout."
+      path: path_ + ".timeoutMs"
+    })
+  }
+
+  if Float64.isPositive(limits.memoryBytes) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_MEMORY_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Agent limits require a positive memory budget."
+      path: path_ + ".memoryBytes"
+    })
+  }
+
+  if Float64.isPositive(limits.maxToolCalls) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AGENT_TOOL_CALL_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Agent limits require a positive maximum tool-call count."
+      path: path_ + ".maxToolCalls"
+    })
+  }
+
+  match limits.maxTokens {
+    Some(value) => {
+      if Float64.isPositive(value.value) == false {
+        diagnostics = diagnostics.append({
+          code: "Galerina_AGENT_MAX_TOKENS_INVALID"
+          severity: "error"
+          message: "Agent max token budget, when set, must be positive."
+          path: path_ + ".maxTokens"
+        })
+      }
+    }
+    None => {}
+    _ => {}
+  }
+
+  match limits.rateLimitPerMinute {
+    Some(value) => {
+      if Float64.isPositive(value.value) == false {
+        diagnostics = diagnostics.append({
+          code: "Galerina_AGENT_RATE_LIMIT_INVALID"
+          severity: "error"
+          message: "Agent rate limit, when set, must be positive."
+          path: path_ + ".rateLimitPerMinute"
+        })
+      }
+    }
+    None => {}
+    _ => {}
+  }
+
+  return diagnostics
+}
+
+pure flow validateAgentLimits(limits: AgentLimits) -> Array<AgentDiagnostic>
+contract { intent { "Validate agent resource limits using the source default diagnostic path." } }
+{
+  return validateAgentLimitsAtPath(limits, "limits")
+}

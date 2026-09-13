@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-085-CORE-COMPILER",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-compiler/src/artifact-reference.ts#ARTIFACT_REFERENCE_SCHEMA",
+  "sourceSha256": "0017793c27447daadca848e429183fa59f0b31f79ba4a8ed345e0e125527a47d",
+  "target": "packages/fungi/products/galerina-core-compiler/artifact-reference-schema.fungi",
+  "targetBytes": 468,
+  "targetSha256": "a0877213c7176e268688e82bc9ef91198fd30d3a5ba6ec7287157e694bbaf3f9",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "7166/7166",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The ARTIFACT_REFERENCE_SCHEMA constant is exactly \"galerina.artifact-reference.v1\". Compiler orchestration, filesystem access, digest and credential custody, and artifact authority remain host-bound.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 242,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

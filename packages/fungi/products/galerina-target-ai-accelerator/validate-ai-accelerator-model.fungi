@@ -1,0 +1,94 @@
+@version 1
+
+/// Bounded direct-package translation of validateAiAcceleratorModel from
+/// packages-ts/galerina-target-ai-accelerator/src/index.ts.
+///
+/// This leaf validates only the model path, ONNX extension and positive static
+/// input dimensions. The full model metadata projection, model loading,
+/// accelerator capability discovery, device dispatch, inference and network or
+/// filesystem effects remain host/runtime boundaries; no accelerator authority
+/// is granted here. The executable shape projection uses Int because the
+/// current array ABI carries i32 elements; fractional, >i32, and nonfinite
+/// source dimensions remain host/manual input-marshalling boundaries.
+
+record AiInputTensor {
+  shape: Array<Int>
+}
+
+record AiAcceleratorModelProfile {
+  path: String
+  format: String
+  inputTensors: Array<AiInputTensor>
+}
+
+record AiAcceleratorDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveStaticDimension(value: Int) -> Bool
+contract { intent { "Accept positive static dimensions in the executable i32 shape projection." } }
+{
+  return value > 0
+}
+
+pure flow validateAiAcceleratorModel(model: AiAcceleratorModelProfile) -> Array<AiAcceleratorDiagnostic>
+contract { intent { "Validate model path, ONNX file extension and each input tensor's positive static dimensions in source diagnostic order." } }
+{
+  mut diagnostics: Array<AiAcceleratorDiagnostic> = Array.empty()
+
+  if model.path.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AI_ACCELERATOR_MODEL_PATH_REQUIRED"
+      severity: "error"
+      message: "AI accelerator inference requires an explicit external model path."
+      path: "model.path"
+    })
+  }
+
+  if model.format == "onnx" and model.path.toLower().endsWith(".onnx") == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_AI_ACCELERATOR_ONNX_EXTENSION_REQUIRED"
+      severity: "error"
+      message: "ONNX model profiles must reference an .onnx model file."
+      path: "model.path"
+    })
+  }
+
+  mut tensorIndex: Int = 0
+  while tensorIndex < model.inputTensors.count() {
+    let tensorOpt: Option<AiInputTensor> = model.inputTensors.get(tensorIndex)
+    match tensorOpt {
+      Some(tensor) => {
+        mut shapeInvalid: Bool = false
+        mut dimensionIndex: Int = 0
+        while dimensionIndex < tensor.shape.count() and shapeInvalid == false {
+          let dimensionOpt: Option<Int> = tensor.shape.get(dimensionIndex)
+          match dimensionOpt {
+            Some(dimension) => {
+              if isPositiveStaticDimension(dimension) == false { shapeInvalid = true }
+            }
+            None => { shapeInvalid = true }
+            _ => { shapeInvalid = true }
+          }
+          dimensionIndex = dimensionIndex + 1
+        }
+        if shapeInvalid == true {
+          diagnostics = diagnostics.append({
+            code: "Galerina_AI_ACCELERATOR_INPUT_SHAPE_INVALID"
+            severity: "error"
+            message: "AI accelerator model input tensor shapes must use positive static dimensions."
+            path: "model.inputTensors." + tensorIndex.toString() + ".shape"
+          })
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    tensorIndex = tensorIndex + 1
+  }
+
+  return diagnostics
+}

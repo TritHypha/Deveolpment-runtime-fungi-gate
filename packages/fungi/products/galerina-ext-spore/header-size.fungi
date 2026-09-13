@@ -1,0 +1,12 @@
+@version 1
+
+/// Bounded pure leaf for the private HEADER_SIZE constant in container.ts.
+/// TypeScript shadow: packages-ts/galerina-ext-spore/src/container.ts#HEADER_SIZE
+/// Spore byte parsing, hashing, cryptography, and container authority remain
+/// outside this constant leaf at the host/manual boundary.
+
+pure flow headerSize() -> Int
+contract { intent { "Return the exact v0 spore container header size in bytes." } }
+{
+  return 56
+}

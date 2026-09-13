@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-61-TARGET-JS",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-target-js/src/index.ts#validateJsOutputPlan",
+  "sourceSha256": "b9b2e775f4583d617c89fa63ed09b6026a2a096d874c95b8ff91c7706d863a6c",
+  "target": "packages/fungi/products/galerina-target-js/validate-js-output-plan.fungi",
+  "targetBytes": 6402,
+  "targetSha256": "74f63270d5f65a915caabc8d765368b33d4dbf3e18ab42f6ebd5e9407168e68a",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0,
+    "details": "Focused parity 12/12"
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Runtime probing, emitted bundle inspection, filesystem contents, physical ABI admission and production authority remain host boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 247.9,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

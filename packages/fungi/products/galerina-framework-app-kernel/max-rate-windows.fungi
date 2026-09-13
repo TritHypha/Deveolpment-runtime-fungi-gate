@@ -1,0 +1,15 @@
+@version 1
+
+/// Bounded direct-package translation of the local maxRateWindows constant
+/// from packages-ts/galerina-framework-app-kernel/src/kernel.ts.
+///
+/// This leaf returns the exact 10,000-entry rate-window capacity bound.
+/// Request routing, timers, filesystem/network effects, rate-window state,
+/// and host authorization remain in the retained TypeScript shadow; this
+/// constant grants no production authority.
+
+pure flow maxRateWindows() -> Int
+contract { intent { "Return the exact maximum number of live rate-limit windows." } }
+{
+  return 10000
+}

@@ -1,0 +1,12 @@
+@version 1
+
+/// Bounded pure leaf for the private K1 constant in bm25.ts.
+/// TypeScript shadow: packages-ts/galerina-devtools-intelligence/src/bm25.ts#K1
+/// K1 is the BM25 term-saturation parameter; package wiring, scoring, and
+/// production search authority remain in the TypeScript/host boundary.
+
+pure flow bm25K1() -> Float
+contract { intent { "Return the exact BM25 term-saturation constant K1." } }
+{
+  return 1.5
+}

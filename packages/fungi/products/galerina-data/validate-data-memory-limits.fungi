@@ -1,0 +1,77 @@
+@version 1
+
+/// Bounded direct-package translation of validateDataMemoryLimits from
+/// packages-ts/galerina-data/src/index.ts.
+///
+/// TypeScript object admission and data-processing consumers remain shadowed.
+/// This pure flow validates only positive safe memory and stream limits; it
+/// grants no allocation, parsing or processing authority.
+
+record DataMemoryLimits {
+  maxDocumentBytes: Float64
+  maxBufferBytes: Float64
+  maxConcurrentStreams: Float64
+}
+
+record DataDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if Float64.isFinite(value) == false { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow validateDataMemoryLimits(
+  limits: DataMemoryLimits,
+  path_: String,
+) -> Array<DataDiagnostic>
+contract { intent { "Validate positive finite safe document, buffer and concurrent-stream limits in source order." } }
+{
+  mut diagnostics: Array<DataDiagnostic> = Array.empty()
+
+  if isPositiveSafeInteger(limits.maxDocumentBytes) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_MEMORY_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Data memory limits require a positive integer maxDocumentBytes."
+      path: path_ + ".maxDocumentBytes"
+    })
+  }
+
+  if isPositiveSafeInteger(limits.maxBufferBytes) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_MEMORY_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Data memory limits require a positive integer maxBufferBytes."
+      path: path_ + ".maxBufferBytes"
+    })
+  }
+
+  if isPositiveSafeInteger(limits.maxConcurrentStreams) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_STREAM_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Data memory limits require a positive integer maxConcurrentStreams."
+      path: path_ + ".maxConcurrentStreams"
+    })
+  }
+
+  return diagnostics
+}
+
+pure flow validateDataMemoryLimitsDefault(limits: DataMemoryLimits) -> Array<DataDiagnostic>
+contract { intent { "Validate data memory limits using the source default limits path." } }
+{
+  return validateDataMemoryLimits(limits, "limits")
+}

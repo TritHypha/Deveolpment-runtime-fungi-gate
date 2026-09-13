@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+  "sourceFile": "terminal-scope.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:2908b084892b868808ff45d930851d15876fec5439cbf9658c5a11130ce78fc8",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:00.774Z"
+  },
+  "behavioralFingerprint": "sha256:13851f55ef948dbe135181646741c001dc96caf9d4e741c93331c31223350dce",
+  "derivedConstraints": [
+    "isTerminalScope: Flow isTerminalScope has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isTerminalScope",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:00.774Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "1f8011a72d510ce2",
+    "signature": "35cLKv6A4o2TU+ub1rzb+2ES0/8dHhpW6eJstzZWFlvF9W793D3sAUxywjCPXMkbPho+XvdxhUZ7hdNNmsqsDA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:00.781Z"
+  }
+}

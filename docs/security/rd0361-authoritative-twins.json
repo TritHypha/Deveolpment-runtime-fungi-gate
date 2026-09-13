@@ -147,7 +147,7 @@
       "dir": "packages-ts/galerina-framework-app-kernel/src/self-hosted",
       "tranche": "T3",
       "surface": "secret-provider presence and required-secret availability admission",
-      "sha256": "ce662c325ef9ba682688a4b18097f5020fe54235ce522773f20e13d0cfda3c36",
+      "sha256": "f062217154df66e3a72bc6adc82e47e72392c5a8d56bc8d40442090a8c8c9166",
       "evidencePack": "docs/security/rd0361-t3-app-kernel-r4-evidence-pack.md",
       "ownerNod": "2026-07-29 — owner's standing 'unlock all green light' plus autonomous ownership directive; T3 app-kernel flipped only after the complete fail-closed evidence pack passed",
       "bake": "shadow-bake in progress (.ts retained as differential shadow; delete only after executable SLIDE integration and the later retirement gate)"

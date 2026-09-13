@@ -1,0 +1,126 @@
+@version 1
+
+/// Bounded translation of validateBenchmarkConfig from
+/// packages-ts/galerina-tools-benchmark/src/index.ts.
+///
+/// The host supplies a typed budget, privacy record, and normalized target
+/// flags. The target flag pair preserves the source true/optional admission
+/// while keeping arbitrary JavaScript object values outside this pure leaf.
+
+record BenchmarkPrivacyPolicy {
+  includeHostname: Bool
+  includeUsername: Bool
+  includeProjectPath: Bool
+}
+
+record BenchmarkTargetFlag {
+  enabled: Bool
+  optional: Bool
+}
+
+record BenchmarkConfig {
+  maxDurationSeconds: Float64
+  maxSingleTestSeconds: Float64
+  privacy: BenchmarkPrivacyPolicy
+  targets: Array<BenchmarkTargetFlag>
+}
+
+record BenchmarkDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateBenchmarkConfigAtPath(
+  config_: BenchmarkConfig,
+  path_: String,
+) -> Array<BenchmarkDiagnostic>
+contract { intent { "Validate benchmark duration ordering, PII denial, and non-empty target selection in source diagnostic order." } }
+{
+  mut diagnostics: Array<BenchmarkDiagnostic> = Array.empty()
+
+  if config_.maxDurationSeconds > 0.0 == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_BENCHMARK_MAX_DURATION_REQUIRED"
+      severity: "error"
+      message: "Benchmark config requires a positive maximum duration."
+      path: path_ + ".maxDurationSeconds"
+    })
+  }
+
+  if config_.maxSingleTestSeconds > 0.0 == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_BENCHMARK_MAX_SINGLE_TEST_REQUIRED"
+      severity: "error"
+      message: "Benchmark config requires a positive maximum single-test duration."
+      path: path_ + ".maxSingleTestSeconds"
+    })
+  }
+
+  if config_.maxSingleTestSeconds > 0.0 and config_.maxDurationSeconds > 0.0 {
+    if config_.maxSingleTestSeconds > config_.maxDurationSeconds {
+      diagnostics = diagnostics.append({
+        code: "Galerina_BENCHMARK_SINGLE_TEST_EXCEEDS_TOTAL"
+        severity: "error"
+        message: "A single test may not be allowed to outlast the whole benchmark budget."
+        path: path_ + ".maxSingleTestSeconds"
+      })
+    }
+  }
+
+  if config_.privacy.includeHostname == true {
+    diagnostics = diagnostics.append({
+      code: "Galerina_BENCHMARK_PRIVACY_PII_FORBIDDEN"
+      severity: "error"
+      message: "Benchmark telemetry must not include PII (includeHostname must be false)."
+      path: path_ + ".privacy.includeHostname"
+    })
+  }
+  if config_.privacy.includeUsername == true {
+    diagnostics = diagnostics.append({
+      code: "Galerina_BENCHMARK_PRIVACY_PII_FORBIDDEN"
+      severity: "error"
+      message: "Benchmark telemetry must not include PII (includeUsername must be false)."
+      path: path_ + ".privacy.includeUsername"
+    })
+  }
+  if config_.privacy.includeProjectPath == true {
+    diagnostics = diagnostics.append({
+      code: "Galerina_BENCHMARK_PRIVACY_PII_FORBIDDEN"
+      severity: "error"
+      message: "Benchmark telemetry must not include PII (includeProjectPath must be false)."
+      path: path_ + ".privacy.includeProjectPath"
+    })
+  }
+
+  mut anyTargetEnabled: Bool = false
+  mut targetIndex: Int = 0
+  while targetIndex < config_.targets.count() and anyTargetEnabled == false {
+    let targetOpt: Option<BenchmarkTargetFlag> = config_.targets.get(targetIndex)
+    match targetOpt {
+      Some(flag) => {
+        if flag.enabled or flag.optional { anyTargetEnabled = true }
+      }
+      None => {}
+      _ => {}
+    }
+    targetIndex = targetIndex + 1
+  }
+  if anyTargetEnabled == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_BENCHMARK_NO_TARGETS"
+      severity: "error"
+      message: "Benchmark config enables no targets; the run would do nothing."
+      path: path_ + ".targets"
+    })
+  }
+
+  return diagnostics
+}
+
+pure flow validateBenchmarkConfig(config_: BenchmarkConfig) -> Array<BenchmarkDiagnostic>
+contract { intent { "Validate a benchmark configuration using the source default diagnostic path." } }
+{
+  return validateBenchmarkConfigAtPath(config_, "config")
+}

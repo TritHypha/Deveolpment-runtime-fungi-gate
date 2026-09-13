@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:e680af0b4cf91a18431d74e8c6b3faf58615acff1f24abf68b0ac0e204599d27",
+  "sourceFile": "validate-native-target.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:39fac58f6e0e166be12e91246de4a8a943ebb2d9eedf0ab21c7cbd92c1f9ad2f",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:50.034Z"
+  },
+  "behavioralFingerprint": "sha256:82053bf7eae9a0a5e6ef84e6ca56cbc766de290b63a9a1988d44ef095a9b7f55",
+  "derivedConstraints": [
+    "validateNativeTarget: Flow validateNativeTargetAtPath has a contract declaration [via contract]",
+    "validateNativeTargetAtPath: Flow validateNativeTargetAtPath has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateNativeTargetAtPath",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateNativeTarget",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:50.034Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "933de7137c890c03",
+    "signature": "13Qq1/8L8CdDMlbEPxbDLXEp18fRMTS4DXxy+hPvbPSJljgjXnRXhxcNubiOflJu6piXyLxuOBP/gwReCRzLDQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:50.044Z"
+  }
+}

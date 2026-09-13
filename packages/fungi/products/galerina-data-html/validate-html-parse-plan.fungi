@@ -1,0 +1,85 @@
+@version 1
+
+/// Bounded translation of validateHtmlParsePlan from
+/// packages-ts/galerina-data-html/src/index.ts.
+///
+/// The host supplies an inert typed plan record. Float64 preserves the source
+/// Number checks; hasMaxNodeCount preserves optional-field presence. Browser,
+/// parser, and host-marshalling behavior remain outside this pure leaf.
+
+record HtmlParsePlan {
+  name: String
+  mode: String
+  maxInputBytes: Float64
+  maxNodeCount: Float64
+  hasMaxNodeCount: Bool
+}
+
+record HtmlDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if Float64.isFinite(value) == false { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow validateHtmlParsePlan(plan_: HtmlParsePlan) -> Array<HtmlDiagnostic>
+contract { intent { "Validate HTML parse plan identity, mode, input bound, and optional node bound in source diagnostic order." } }
+{
+  mut diagnostics: Array<HtmlDiagnostic> = Array.empty()
+
+  if plan_.name.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_HTML_PLAN_NAME_REQUIRED"
+      severity: "error"
+      message: "HTML parse plan requires a name."
+      path: "name"
+    })
+  }
+
+  mut knownMode: Bool = false
+  match plan_.mode {
+    "document" => { knownMode = true }
+    "fragment" => { knownMode = true }
+    _ => {}
+  }
+  if knownMode == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_HTML_PARSE_MODE_UNKNOWN"
+      severity: "error"
+      message: "HTML parse mode " + Char.fromCode(34).toString() + plan_.mode + Char.fromCode(34).toString() + " is not a known mode."
+      path: "mode"
+    })
+  }
+
+  if isPositiveSafeInteger(plan_.maxInputBytes) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_HTML_INPUT_LIMIT_REQUIRED"
+      severity: "error"
+      message: "HTML parse plan requires a positive integer maxInputBytes; unbounded parse is unsafe."
+      path: "maxInputBytes"
+    })
+  }
+
+  if plan_.hasMaxNodeCount and isPositiveSafeInteger(plan_.maxNodeCount) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_HTML_NODE_LIMIT_INVALID"
+      severity: "error"
+      message: "HTML parse plan maxNodeCount, when set, must be a positive integer."
+      path: "maxNodeCount"
+    })
+  }
+
+  return diagnostics
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "binary-dispatch-size.fungi",
+  "sourceHash": "sha256:903844a569193b4a9bbaa12fa187c585e3cc2339a440af2c38187793fdd7fedb",
+  "generatedAt": "2026-09-13T17:47:13.711Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "binaryDispatchSize",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 0
+}

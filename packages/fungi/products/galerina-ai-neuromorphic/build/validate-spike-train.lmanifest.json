@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:e1ab822da8342f066fc4ce0a306e2d5ba93655289440f7350e7304d3109b6f89",
+  "sourceFile": "validate-spike-train.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:847d04d6e5609b9fa7341bc5f6758546624ab63c4dcaad74429bd2a6a5e1944a",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:25.849Z"
+  },
+  "behavioralFingerprint": "sha256:b123d09ca150dcaaef436a39228416c9941f27bf605d216aab44ff75292f2974",
+  "derivedConstraints": [
+    "validateSpikeTrain: Flow validateSpikeTrain has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateSpikeTrain",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:25.849Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "c475b85226dbee0e",
+    "signature": "VhGi8pYnLPwbZldCvgb5RnT3vKdsNrjrX5KCo6D9pqya5c/z5K/IHRXhLWRtbx8S/CMZQFj6zxK7/34WHYpABg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:25.857Z"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:14fa9e903e244a0f926253671313d2114671f677fc7496ef63e64c5c2f04a47e",
+  "sourceFile": "select-vector-tier.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:a0221d70c62d66e5c1e1371d24aac00f45fee810a71d3f7e6c4cd43f37e8ed37",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:01.572Z"
+  },
+  "behavioralFingerprint": "sha256:e56a25d9fb56592dad223614398bd40042ab6be7caf9d1028d6c53e25196fc32",
+  "derivedConstraints": [
+    "selectVectorTier: Flow selectVectorTier has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "selectVectorTier",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:01.572Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "1abaa2093b01c05b",
+    "signature": "Ys2Jsq0e1GQq0ToZk98RtXMCtDu1Ye8CfwXWnBPZcDMmeZm20VKEZwlEpxu7x86XbU2ar3T2wHTcwpsdiP48DQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:01.579Z"
+  }
+}

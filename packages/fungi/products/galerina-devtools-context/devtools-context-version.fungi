@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-devtools-context/src/index.ts#DEVTOOLS_CONTEXT_VERSION
+pure flow devtoolsContextVersion() -> String {
+  return "0.1.0"
+}

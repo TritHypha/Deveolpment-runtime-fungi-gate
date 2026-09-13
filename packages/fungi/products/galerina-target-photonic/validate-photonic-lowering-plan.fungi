@@ -1,0 +1,97 @@
+@version 1
+
+/// Bounded translation of validatePhotonicLoweringPlan from
+/// packages-ts/galerina-target-photonic/src/index.ts.
+///
+/// The host supplies an inert lowering-plan summary. Mapped operation names
+/// are sufficient because this decision reads only their count; physical
+/// photonic execution, vendor capabilities, and plan persistence remain host
+/// boundaries.
+
+record PhotonicUnsupportedOperation {
+  reason: String
+  suggestedFallback: String
+}
+
+record PhotonicLoweringPlan {
+  status: String
+  mappedOperations: Array<String>
+  unsupportedOperations: Array<PhotonicUnsupportedOperation>
+}
+
+record PhotonicDiagnostic {
+  code: String
+  safeMessage: String
+  suggestedFix: String
+}
+
+pure flow validatePhotonicLoweringPlanAtPath(
+  plan_: PhotonicLoweringPlan,
+  path_: String,
+) -> Array<PhotonicDiagnostic>
+contract { intent { "Validate photonic lowering status, unsupported-operation explanations, status consistency, and non-empty planning in source diagnostic order." } }
+{
+  mut diagnostics: Array<PhotonicDiagnostic> = Array.empty()
+
+  mut knownStatus: Bool = false
+  match plan_.status {
+    "photonic-compatible" => { knownStatus = true }
+    "photonic-simulation-only" => { knownStatus = true }
+    "optical-io-only" => { knownStatus = true }
+    "fallback-required" => { knownStatus = true }
+    "unsupported" => { knownStatus = true }
+    _ => {}
+  }
+  if knownStatus == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_PHOTONIC_STATUS_INVALID"
+      safeMessage: "A lowering plan status must be one of the known photonic target statuses."
+      suggestedFix: "Set " + path_ + ".status to one of: photonic-compatible, photonic-simulation-only, optical-io-only, fallback-required, unsupported."
+    })
+  }
+
+  mut unsupportedIndex: Int = 0
+  while unsupportedIndex < plan_.unsupportedOperations.count() {
+    let opOpt: Option<PhotonicUnsupportedOperation> = plan_.unsupportedOperations.get(unsupportedIndex)
+    match opOpt {
+      Some(op_) => {
+        if op_.reason.trim().length() == 0 or op_.suggestedFallback.trim().length() == 0 {
+          diagnostics = diagnostics.append({
+            code: "Galerina_PHOTONIC_UNSUPPORTED_OP_UNEXPLAINED"
+            safeMessage: "An unsupported operation must carry both a reason and a suggested fallback."
+            suggestedFix: "Populate " + path_ + ".unsupportedOperations." + unsupportedIndex.toString() + ".reason and .suggestedFallback."
+          })
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    unsupportedIndex = unsupportedIndex + 1
+  }
+
+  if plan_.status == "photonic-compatible" and plan_.unsupportedOperations.count() > 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_PHOTONIC_STATUS_INCONSISTENT"
+      safeMessage: "A plan marked photonic-compatible must not carry unsupported operations."
+      suggestedFix: "Either map the unsupported operations or set " + path_ + ".status to fallback-required."
+    })
+  }
+
+  if plan_.mappedOperations.count() == 0 and plan_.unsupportedOperations.count() == 0 {
+    if plan_.status != "unsupported" {
+      diagnostics = diagnostics.append({
+        code: "Galerina_PHOTONIC_PLAN_EMPTY"
+        safeMessage: "A lowering plan maps no operations and reports none unsupported."
+        suggestedFix: "Populate " + path_ + ".mappedOperations or mark " + path_ + ".status as unsupported."
+      })
+    }
+  }
+
+  return diagnostics
+}
+
+pure flow validatePhotonicLoweringPlan(plan_: PhotonicLoweringPlan) -> Array<PhotonicDiagnostic>
+contract { intent { "Validate a photonic lowering plan using the source default diagnostic path." } }
+{
+  return validatePhotonicLoweringPlanAtPath(plan_, "plan")
+}

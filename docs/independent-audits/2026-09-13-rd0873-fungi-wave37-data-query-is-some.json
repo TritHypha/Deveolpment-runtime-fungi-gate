@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-037-DATA-QUERY-IS-SOME",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-data-query/src/index.ts#isSome",
+  "sourceSha256": "b2351ff6ddf0c9a2fc18b0c7c0ba69e0dfc29fac72d79c3760d48f3039d12a36",
+  "target": "packages/fungi/products/galerina-data-query/is-some.fungi",
+  "targetBytes": 573,
+  "targetSha256": "d86bac58a8880413efd874d13ce861a3a56ed99ce569afbc2648c6101a0f3e99",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "12/12", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "The kind discriminant preserves Some/None behavior. Generic payload types, malformed structural objects and physical ABI remain host-owned; no production authority is claimed.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {"iterations": 10, "allPassed": true, "meanCheckMs": 248.5, "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup", "cliBenchmarkCommand": "unimplemented diagnostic"}
+}

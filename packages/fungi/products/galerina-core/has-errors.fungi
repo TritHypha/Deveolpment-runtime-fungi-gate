@@ -1,0 +1,29 @@
+@version 1
+
+/// Bounded translation of hasErrors from packages-ts/galerina-core/src/index.ts:461-465.
+///
+/// The TypeScript helper remains the compatibility shadow. This leaf consumes
+/// only diagnostic severity; dense typed-array ingress is assumed, so sparse
+/// JavaScript array behavior remains outside this boundary.
+
+record CompilerDiagnostic {
+  severity: String
+}
+
+pure flow hasErrors(diagnostics: Array<CompilerDiagnostic>) -> Bool
+contract { intent { "Return true when diagnostics contains an error severity." } }
+{
+  mut index: Int = 0
+  while index < diagnostics.count() {
+    let diagnosticOpt: Option<CompilerDiagnostic> = diagnostics.get(index)
+    match diagnosticOpt {
+      Some(diagnostic) => {
+        if diagnostic.severity == "error" { return true }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  return false
+}

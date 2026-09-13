@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-006-CORE-REPORTS",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-reports/src/index.ts#selectReportStatus",
+  "sourceSha256": "bca420aa0b0fc9055b53f2dfe33584b4bb4c7ed80a1d4e2851d07b0595a138f5",
+  "target": "packages/fungi/products/galerina-core-reports/report-status.fungi",
+  "targetBytes": 1213,
+  "targetSha256": "b2b1d6e6ae24145e3738741fa87c2f9ff13d4ef609d220ce6b786b148892a3c2",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "2/2", "workerDifferential": "27/27", "packageSuites": "22/22", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Full JavaScript object/Number ingress, validation, mutable diagnostics and serialization remain shadowed in TypeScript.",
+  "productionAuthorizing": false
+}

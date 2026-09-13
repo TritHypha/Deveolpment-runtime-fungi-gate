@@ -1,0 +1,80 @@
+@version 1
+
+/// Bounded translation of private sanitizeSchemaName from
+/// packages-ts/galerina-docs/src/openapi.ts:102-105.
+///
+/// The TypeScript OpenAPI generator remains the compatibility shadow. This
+/// pure leaf only normalizes a component key; document generation, validation,
+/// and filesystem/output effects remain outside this boundary.
+
+pure flow charCodeAt(value: String, index: Int) -> Int
+contract { intent { "Read one string code point with a negative missing sentinel." } }
+{
+  let characterOpt: Option<Char> = value.charAt(index)
+  match characterOpt {
+    Some(character) => { return character.codePoint() }
+    None => { return 0 - 1 }
+    _ => { return 0 - 1 }
+  }
+}
+
+pure flow isSchemaNameCharacter(codePoint: Int) -> Bool
+contract { intent { "Accept only ASCII OpenAPI component-key characters." } }
+{
+  if codePoint >= 48 and codePoint <= 57 { return true }
+  if codePoint >= 65 and codePoint <= 90 { return true }
+  if codePoint >= 97 and codePoint <= 122 { return true }
+  if codePoint == 46 or codePoint == 95 or codePoint == 45 { return true }
+  return false
+}
+
+pure flow sanitizeSchemaName(typeName: String) -> String
+contract { intent { "Normalize an OpenAPI schema component name with a safe fallback." } }
+{
+  mut cleaned: String = ""
+  mut index: Int = 0
+  mut inInvalidRun: Bool = false
+  while index < typeName.length() {
+    let characterOpt: Option<Char> = typeName.charAt(index)
+    match characterOpt {
+      Some(character) => {
+        if isSchemaNameCharacter(character.codePoint()) {
+          cleaned = cleaned + character.toString()
+          inInvalidRun = false
+        } else {
+          if inInvalidRun == false {
+            cleaned = cleaned + "_"
+            inInvalidRun = true
+          }
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  mut first: Int = 0
+  while first < cleaned.length() and charCodeAt(cleaned, first) == 95 {
+    first = first + 1
+  }
+  mut last: Int = cleaned.length() - 1
+  while last >= 0 and charCodeAt(cleaned, last) == 95 {
+    last = last - 1
+  }
+
+  if first > last { return "Schema" }
+
+  mut result: String = ""
+  mut resultIndex: Int = first
+  while resultIndex <= last {
+    let characterOpt: Option<Char> = cleaned.charAt(resultIndex)
+    match characterOpt {
+      Some(character) => { result = result + character.toString() }
+      None => {}
+      _ => {}
+    }
+    resultIndex = resultIndex + 1
+  }
+  return result
+}

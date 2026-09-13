@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:a080910f4dc351debd8b13b6486aa62e4ca6b2ee679d224028daf91e9e92aaeb",
+  "sourceFile": "validate-envelope.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:1a0ae79a9c80e0bc5e8cdd49002d032980b2de5864817fd79f8798b00dabe224",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:26.660Z"
+  },
+  "behavioralFingerprint": "sha256:5dac7dbbe404c1e198d8c7105bc7debaf4496bb53a658a47de300df4994963fa",
+  "derivedConstraints": [
+    "validateEnvelope: Flow validateEnvelope has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateEnvelope",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:26.661Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "34067b468e44492e",
+    "signature": "pb3kwy6PyFtb4f3ikPino8lSLf+6uYWsaBkBiD/AD5oZ/Wl9CJmN6JkTRHYtwNqt14iv7Ve13EAZnG0gd2rZDA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:26.669Z"
+  }
+}

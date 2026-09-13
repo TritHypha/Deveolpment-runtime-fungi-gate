@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-47-TOOLS-BENCHMARK",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-tools-benchmark/src/index.ts#validateBenchmarkConfig",
+  "sourceSha256": "5c472fbc5723a5d50d824542c7258092a9048109d1800ebd9895333bba1f932a",
+  "target": "packages/fungi/products/galerina-tools-benchmark/validate-benchmark-config.fungi",
+  "targetBytes": 4062,
+  "targetSha256": "91747b02170a124b1d2a49d206b8afe96a11c7c1e77b44aee82675c72514cfca",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Duration ordering, PII denial and true/optional target admission parity; explicit Bool repair cleared three warnings. Arbitrary JavaScript object values, nonfinite host marshalling, telemetry execution and production authority remain outside scope.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 272.5,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

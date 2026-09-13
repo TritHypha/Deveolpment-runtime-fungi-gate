@@ -1,0 +1,63 @@
+@version 1
+
+/// Bounded translation of validateEventPayloadField from
+/// packages-ts/galerina-web-events/src/index.ts.
+///
+/// The host supplies an inert typed payload-field record. Browser event
+/// objects, DOM effects, and event dispatch remain outside this pure leaf.
+
+record EventPayloadField {
+  name: String
+  kind: String
+}
+
+record WebEventsDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateEventPayloadFieldAtPath(
+  field_: EventPayloadField,
+  path_: String,
+) -> Array<WebEventsDiagnostic>
+contract { intent { "Validate payload-field name and known kind in source diagnostic order." } }
+{
+  mut diagnostics: Array<WebEventsDiagnostic> = Array.empty()
+
+  if field_.name.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_WEB_EVENTS_PAYLOAD_FIELD_NAME_REQUIRED"
+      severity: "error"
+      message: "Event payload field requires a name."
+      path: path_ + ".name"
+    })
+  }
+
+  mut knownKind: Bool = false
+  match field_.kind {
+    "string" => { knownKind = true }
+    "integer" => { knownKind = true }
+    "number" => { knownKind = true }
+    "boolean" => { knownKind = true }
+    "enum" => { knownKind = true }
+    _ => {}
+  }
+  if knownKind == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_WEB_EVENTS_PAYLOAD_FIELD_KIND_UNKNOWN"
+      severity: "error"
+      message: "Event payload field kind " + Char.fromCode(34).toString() + field_.kind + Char.fromCode(34).toString() + " is not in the known set; untyped payloads may not cross the event boundary."
+      path: path_ + ".kind"
+    })
+  }
+
+  return diagnostics
+}
+
+pure flow validateEventPayloadField(field_: EventPayloadField) -> Array<WebEventsDiagnostic>
+contract { intent { "Validate an event payload field using the source default diagnostic path." } }
+{
+  return validateEventPayloadFieldAtPath(field_, "field")
+}

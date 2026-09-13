@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "devtools-provenance-version.fungi",
+  "sourceHash": "sha256:bc403d0b01dfce504c161f204f1fe3a97ed1891b9e9253294ade44df4e798289",
+  "generatedAt": "2026-09-13T17:46:48.865Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "devtoolsProvenanceVersion",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 0
+}

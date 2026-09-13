@@ -1,0 +1,18 @@
+@version 1
+
+/// Bounded translation of isSome from
+/// packages-ts/galerina-data-query/src/index.ts.
+///
+/// The TypeScript generic QueryOption<T> is represented by the Fungi Option
+/// ABI at one concrete String specialization. The host must marshal a typed
+/// Some/None value; arbitrary JavaScript structural objects remain outside.
+
+pure flow isSome(option_: Option<String>) -> Bool
+contract { intent { "Return true exactly for a present Option value." } }
+{
+  match option_ {
+    Some(_) => { return true }
+    None => { return false }
+    _ => { return false }
+  }
+}

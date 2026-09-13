@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-040-DB-FIRESTORE",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-db-firestore/src/index.ts#validateFirestoreCredentialRef",
+  "sourceSha256": "4f17513faa0164876b6622d3a362893b03ae44fe325531c2a09f649de237671e",
+  "target": "packages/fungi/products/galerina-db-firestore/validate-firestore-credential-ref.fungi",
+  "targetBytes": 4552,
+  "targetSha256": "2c387c26485891472aee9602201c0962f8b82429248e9b78486161c3b7b4b7be",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "10/10",
+    "parity": "10/10",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Credential-reference parity covers valid refs, invalid kinds, empty refs, inline credentials, regex edges, combined diagnostics and custom paths. Credential resolution, secret custody, provider/network effects, malformed objects, physical ABI admission and host marshalling remain host-owned.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 250.5,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

@@ -1,0 +1,109 @@
+@version 1
+
+/// Bounded translation of validateSpikeTrain from
+/// packages-ts/galerina-ai-neuromorphic/src/index.ts:77-137.
+///
+/// The TypeScript validator remains the compatibility shadow. Optional
+/// amplitude and the prior valid time are explicit Options here; the host must
+/// normalize JavaScript undefined/null and sparse-array behavior at ingress.
+
+record Spike {
+  neuron: String
+  timeMs: Float64
+  amplitude: Option<Float64>
+}
+
+record SpikeTrain {
+  source: String
+  spikes: Array<Spike>
+}
+
+record NeuromorphicDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateSpikeTrain(train: SpikeTrain, path_: String) -> Array<NeuromorphicDiagnostic>
+contract { intent { "Validate spike train identity, finite timing, amplitude, and first ordering violation." } }
+{
+  mut diagnostics: Array<NeuromorphicDiagnostic> = Array.empty()
+
+  if train.source.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_NEUROMORPHIC_SPIKE_SOURCE_REQUIRED",
+      severity: "error",
+      message: "Spike train requires a source.",
+      path: path_ + ".source"
+    })
+  }
+
+  mut previousTimeMs: Option<Float64> = None
+  mut reportedOrder: Bool = false
+  mut index: Int = 0
+  while index < train.spikes.count() {
+    let spikeOpt: Option<Spike> = train.spikes.get(index)
+    match spikeOpt {
+      Some(spike) => {
+        let spikePath: String = path_ + ".spikes." + index.toString()
+
+        if spike.neuron.trim().length() == 0 {
+          diagnostics = diagnostics.append({
+            code: "Galerina_NEUROMORPHIC_SPIKE_NEURON_REQUIRED",
+            severity: "error",
+            message: "Spike requires a neuron identifier.",
+            path: spikePath + ".neuron"
+          })
+        }
+
+        if Float64.isFinite(spike.timeMs) == false or spike.timeMs < 0.0 {
+          diagnostics = diagnostics.append({
+            code: "Galerina_NEUROMORPHIC_SPIKE_TIME_INVALID",
+            severity: "error",
+            message: "Spike time must be a finite, non-negative number of milliseconds.",
+            path: spikePath + ".timeMs"
+          })
+        }
+        if Float64.isFinite(spike.timeMs) and spike.timeMs >= 0.0 {
+          match previousTimeMs {
+            Some(previous) => {
+              if spike.timeMs < previous and reportedOrder == false {
+                diagnostics = diagnostics.append({
+                  code: "Galerina_NEUROMORPHIC_SPIKE_ORDER_WARNING",
+                  severity: "warning",
+                  message: "Spike train is not in non-decreasing time order.",
+                  path: spikePath + ".timeMs"
+                })
+                reportedOrder = true
+              }
+            }
+            None => {}
+            _ => {}
+          }
+          previousTimeMs = Some(spike.timeMs)
+        }
+
+        match spike.amplitude {
+          Some(amplitude) => {
+            if Float64.isFinite(amplitude) == false or amplitude <= 0.0 {
+              diagnostics = diagnostics.append({
+                code: "Galerina_NEUROMORPHIC_SPIKE_AMPLITUDE_INVALID",
+                severity: "error",
+                message: "Spike amplitude, when present, must be a finite positive number.",
+                path: spikePath + ".amplitude"
+              })
+            }
+          }
+          None => {}
+          _ => {}
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  return diagnostics
+}

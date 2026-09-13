@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "default-max-iterations.fungi",
+  "sourceHash": "sha256:e13f249c85929fe763124ebe8aad06f13bae9be593cf3258f9bf3beb70e919c9",
+  "generatedAt": "2026-09-13T17:47:16.327Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "defaultMaxIterations",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 0
+}

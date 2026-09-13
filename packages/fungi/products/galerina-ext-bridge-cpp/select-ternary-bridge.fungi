@@ -1,0 +1,17 @@
+@version 1
+
+/// Bounded identity leaf narrowed from selectTernaryBridge in
+/// packages-ts/galerina-ext-bridge-cpp/src/index.ts.
+///
+/// Both BitNetGpuBridge and BitNetCpuBridge expose the fixed technique identity
+/// "ternary". The TypeScript selector itself constructs native bridge objects,
+/// probes hardware, loads an optional addon, and creates governance state; those
+/// active state and host/provider effects remain in the TypeScript shadow.
+/// This flow reports only the shared identity and performs no bridge selection,
+/// inference, native loading, socket/transport work, or authority grant.
+
+pure flow selectTernaryBridgeTechnique() -> String
+contract { intent { "Return the fixed technique identity shared by the CPU and GPU ternary bridge implementations." } }
+{
+  return "ternary"
+}

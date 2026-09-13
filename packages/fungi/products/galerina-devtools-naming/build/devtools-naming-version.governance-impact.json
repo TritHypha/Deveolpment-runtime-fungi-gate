@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "devtools-naming-version.fungi",
+  "sourceHash": "sha256:1a62bfe090da7b8c5b914e70f981f5c9a40ae07c03d822501f59140697899cee",
+  "generatedAt": "2026-09-13T17:46:48.497Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "devtoolsNamingVersion",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "measuredAt": "2026-09-10T14:42:29.013Z",
-  "resultSha256": "873a48e7e191c86782585ed775ec6ed4a3a805cff98ba4198b662a695f3ceb7a",
-  "galerinaCommit": "30747b81383ac06d08f3c7cd1db5e49f4a8f5b1c",
+  "measuredAt": "2026-09-13T17:52:25.073Z",
+  "resultSha256": "864074784daf06549897bb221d1d8792fec818e927f2d2269cd8559b3f62e6af",
+  "galerinaCommit": "675e1048304b11e109b1de4f68af97ebc64f5949",
   "slideCommit": "c33894d23a7b25e02bddaa6631225e0afcf8288c",
   "toolchains": {
     "go": "go version go1.26.5 windows/amd64",

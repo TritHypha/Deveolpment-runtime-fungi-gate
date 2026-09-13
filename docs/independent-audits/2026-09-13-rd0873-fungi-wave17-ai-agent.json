@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-017-AI-AGENT",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-ai-agent/src/index.ts#validateAgentLimits",
+  "sourceSha256": "4333b9e58e67ec28f54aa49ce9fdaa11d311396ca0271e81d27980c8ed65d145",
+  "target": "packages/fungi/products/galerina-ai-agent/validate-agent-limits.fungi",
+  "targetBytes": 3390,
+  "targetSha256": "7fe32e21b783bd34074d18b526ffbab7b5d94aaa0d105d2e2c19e6627cfb1b77",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "6/6", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Ordered limits checks, optional values and NaN refusal are preserved; hostile getters/proxies, host marshalling, consumer switching and production authority remain outside this leaf.",
+  "productionAuthorizing": false
+}

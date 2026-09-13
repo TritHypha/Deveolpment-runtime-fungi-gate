@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:b2b1d6e6ae24145e3738741fa87c2f9ff13d4ef609d220ce6b786b148892a3c2",
+  "sourceFile": "report-status.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:492c060eada1e6b24cd4c82442d3d57d014a81116b11fd71d47d024eafa6a08d",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:01.961Z"
+  },
+  "behavioralFingerprint": "sha256:1be0a8ac011960e4391ef3345efcf2ed762370eb3972a2d08d6aab55b8fdcde9",
+  "derivedConstraints": [
+    "selectReportStatus: Flow selectReportStatus has a contract declaration [via contract]",
+    "selectReportStatusCounts: Flow selectReportStatus has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "selectReportStatus",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "selectReportStatusCounts",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:01.962Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "4cfb95435b9cbf0c",
+    "signature": "oWdsV7YQvxArwwgzHU0HMbI/4NCgdFaW9dh6Qs4BguNsBXZhtylRD0jSf10LMBToJOYDP4483d6Og4TVhQzhAw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:01.970Z"
+  }
+}

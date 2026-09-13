@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "artifact-reference-schema.fungi",
+  "sourceHash": "sha256:a0877213c7176e268688e82bc9ef91198fd30d3a5ba6ec7287157e694bbaf3f9",
+  "generatedAt": "2026-09-13T17:47:12.975Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "artifactReferenceSchema",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

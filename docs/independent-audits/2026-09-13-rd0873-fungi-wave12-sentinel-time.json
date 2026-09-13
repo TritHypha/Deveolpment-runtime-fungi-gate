@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-012-SENTINEL-TIME",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-sentinel-time/src/synchronization-gate.ts#SynchronizationGate.enforceDrift",
+  "sourceSha256": "96bdea1d7115e9b933719f5f1647614e635fd4da06b823e094d3e1b5e36ab947",
+  "target": "packages/fungi/products/galerina-core-sentinel-time/synchronization-gate.fungi",
+  "targetBytes": 646,
+  "targetSha256": "84b2c92b99f82e979c0aa8f29559b62ad95ed42dfbb61a8766a7437e47a29e70",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "10/10", "packageSuite": "14/14", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Host supplies synchronized state and absolute drift; physical time, mutable state and PrecisionFault projection remain host-owned.",
+  "productionAuthorizing": false
+}

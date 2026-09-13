@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "is-sensitive-header-name.fungi",
+  "sourceHash": "sha256:83dccf196f5537d1e053acf0bec921b6fffd71e887ea19998496b0fbfc9ce4dd",
+  "generatedAt": "2026-09-13T17:46:02.342Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "isSensitiveHeaderName",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

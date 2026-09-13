@@ -1,0 +1,105 @@
+{
+  "schema": "galerina.rd0873.fungi-wave-conversion.v1",
+  "recordedAt": "2026-09-13",
+  "wave": 2,
+  "status": "PASS_BOUNDED_WAVE",
+  "ownerAuthorization": {
+    "granted": true,
+    "scope": "continue conversion of the three remaining named symbol candidates",
+    "basis": "owner instruction in the current task",
+    "productionAuthority": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false
+  },
+  "operatorLimits": {
+    "maxWorkerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "subject": {
+    "repository": "Galerina",
+    "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+    "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+    "profile": "scalar-1",
+    "scopeType": "SYMBOLS",
+    "wholeFileReplacement": false
+  },
+  "limits": {
+    "oneSymbolPerStep": true,
+    "oneSourceFilePerStep": true,
+    "maxSymbols": 3,
+    "maxSourceFiles": 3,
+    "perStepInputBytes": 65536,
+    "perStepOutputEvidenceBytes": 65536,
+    "aggregateInputBytes": 100000,
+    "aggregateOutputEvidenceBytes": 262144,
+    "timeoutMs": 600000,
+    "concurrency": 1,
+    "retries": 0,
+    "chapterAggregate": "after-three-items"
+  },
+  "conversion": {
+    "action": "strict-check and differential execution of existing product-tree candidates",
+    "outputsCreated": 0,
+    "outputsVerified": 3,
+    "typescriptShadowsRetained": true,
+    "note": "All three candidates pre-existed; identical bytes were not rewritten."
+  },
+  "entries": [
+    {
+      "source": "packages-ts/galerina-core-logic/src/omni/omni-state.ts",
+      "symbol": "isOmniUncertain",
+      "sourceBytes": 3801,
+      "sourceSha256": "sha256:c6e101e4debca8bd5f9b2f6a3385373f3ac4837933d5e63d3258d5df4a10909e",
+      "target": "packages/fungi/products/galerina/rd0873-core-logic/omni-uncertain.fungi",
+      "targetBytes": 416,
+      "targetSha256": "sha256:cb082aff60c220d820b7970a75ead50a3329acf4ffbb25e2adfe9af77ac933be",
+      "strictCheck": "PASS",
+      "differentialTest": "PASS"
+    },
+    {
+      "source": "packages-ts/galerina-devtools-context/src/receipt-generator.ts",
+      "symbol": "isBuiltin",
+      "sourceBytes": 21260,
+      "sourceSha256": "sha256:85e8a0cc690c4adbf48a5a5d533b24287a20763c5ff85ba5a4ec01df80d32d23",
+      "target": "packages/fungi/products/galerina/rd0873-devtools-context/builtin-name.fungi",
+      "targetBytes": 750,
+      "targetSha256": "sha256:fe6be087673df88b75c6eacb091ade8b2ed3f85718df72a4d542283422b44cc1",
+      "strictCheck": "PASS",
+      "differentialTest": "PASS"
+    },
+    {
+      "source": "packages-ts/galerina-devtools-project-graph/src/graphs/resource-graph.ts",
+      "symbol": "validateTransition",
+      "sourceBytes": 4941,
+      "sourceSha256": "sha256:db6b001a1c79cac9551a351a0e86a666e3a96e4f7c3ec72edc9a82ac533bf3df",
+      "target": "packages/fungi/products/galerina/rd0873-devtools-project-graph/resource-transition.fungi",
+      "targetBytes": 1037,
+      "targetSha256": "sha256:2dbc316a00a190598f19b1244a76c6509116ab27ba40c8e35ecc495be63f5d0b",
+      "strictCheck": "PASS",
+      "differentialTest": "PASS"
+    }
+  ],
+  "focusedChecks": {
+    "strictChecks": {"passed": 3, "failed": 0, "skipped": 0},
+    "differentialTests": {"passed": 7, "failed": 0, "skipped": 0},
+    "coverage": "isOmniUncertain all state values and hostile surplus; isBuiltin all builtins and hostile surplus; validateTransition complete 7x7 state domain and hostile surplus"
+  },
+  "successes": [
+    "All remaining named queue candidates pass strict Fungi type/governance checks.",
+    "All seven focused package assertions pass with zero failures or skips.",
+    "The product-tree target location and exact source/target identities remain stable.",
+    "Mutable or host tooling concerns did not cause a false consumer switch; TypeScript remains active."
+  ],
+  "issues": [
+    "The target bytes were authored before this current-head run; no general source-to-Fungi generator was exercised.",
+    "Snapshot/GIR/SLIDE/VOK exact-head evidence and independent review are still separate gates.",
+    "This wave does not prove production authority, profile promotion or TypeScript retirement."
+  ],
+  "improvements": [
+    "Keep devtools conversion scoped to the pure classifier while retaining host orchestration in TypeScript.",
+    "Use exhaustive domains and hostile surplus vectors for every String decision.",
+    "Record a fresh wave receipt instead of reusing the stale four-item manifest.",
+    "Continue sequentially under the requested Luna-High effort ceiling and restart a worker only when its bounded step fails or stalls."
+  ],
+  "next": "Select the next exact source/symbol scope from the inventory, create a new manifest with its limits, and run its focused conversion checks before any chapter aggregate or consumer decision."
+}

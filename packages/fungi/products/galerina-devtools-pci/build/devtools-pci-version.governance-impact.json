@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "devtools-pci-version.fungi",
+  "sourceHash": "sha256:855ca749343225c6551d0fb89c7234076fc388a39c83fc70c6a0ce425a85f780",
+  "generatedAt": "2026-09-13T17:46:49.235Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "devtoolsPciVersion",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

@@ -1,0 +1,64 @@
+@version 1
+
+/// Bounded direct-package translation of validateRenderableContent from
+/// packages-ts/galerina-web-render/src/index.ts.
+///
+/// This leaf retains the TypeScript render gate's fail-closed content-kind
+/// decision and sanitize-policy requirement. Browser escaping, sanitizer
+/// execution, DOM mutation, and runtime/provider effects remain host/manual
+/// boundaries; this flow does not render or authorize HTML.
+///
+/// The kind is represented as String at the inert ingress boundary so an
+/// untyped caller's smuggled raw_html or other unknown kind is denied rather
+/// than erased by the source union.
+
+record RenderableContent
+{
+  kind: String
+  sanitizePolicyRef: String
+}
+
+record WebRenderDiagnostic
+{
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateRenderableContent(
+  content: RenderableContent,
+  path_: String,
+) -> Array<WebRenderDiagnostic>
+contract { intent { "Reject unknown renderable content kinds and require a named sanitizer policy for safe_html content." } }
+{
+  mut diagnostics: Array<WebRenderDiagnostic> = Array.empty()
+  mut knownKind: Bool = false
+
+  match content.kind {
+    "text" => { knownKind = true }
+    "safe_html" => { knownKind = true }
+    _ => {}
+  }
+
+  if knownKind == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_WEB_RENDER_CONTENT_KIND_UNKNOWN"
+      severity: "error"
+      message: "Renderable content kind " + Char.fromCode(34).toString() + content.kind + Char.fromCode(34).toString() + " is not renderable; only " + Char.fromCode(34).toString() + "text" + Char.fromCode(34).toString() + " (always escaped) and " + Char.fromCode(34).toString() + "safe_html" + Char.fromCode(34).toString() + " exist — raw HTML is unrepresentable and denied."
+      path: path_ + ".kind"
+    })
+    return diagnostics
+  }
+
+  if content.kind == "safe_html" and content.sanitizePolicyRef.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_WEB_RENDER_SANITIZE_POLICY_REF_REQUIRED"
+      severity: "error"
+      message: "SafeHtml content must name the sanitize policy that produced it; unsanitised HTML may not pass the render gate."
+      path: path_ + ".sanitizePolicyRef"
+    })
+  }
+
+  return diagnostics
+}

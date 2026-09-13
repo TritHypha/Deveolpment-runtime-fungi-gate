@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-098-TRI-PIPE",
+  "status": "MANUAL_HOST_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "sourceFiles": [
+    "packages-ts/galerina-tri-pipe/src/index.ts",
+    "packages-ts/galerina-tri-pipe/src/tri-pipe.ts",
+    "packages-ts/galerina-tri-pipe/src/execution-router.ts"
+  ],
+  "sourceDigests": [
+    {"path": "packages-ts/galerina-tri-pipe/src/index.ts", "bytes": 866, "sha256": "7e7851850b5c0d73bb4d6b45219ce27ede9491042e9910c0da5c1360d3a27a3d"},
+    {"path": "packages-ts/galerina-tri-pipe/src/tri-pipe.ts", "bytes": 4820, "sha256": "c8af0e5d7184203a8f3a10a6b692d624ab2d03fb71fafcfe0f591002d86f930d"},
+    {"path": "packages-ts/galerina-tri-pipe/src/execution-router.ts", "bytes": 9611, "sha256": "22dc67e28eec0a37aff5af91df468af266e794e78ef301b3b61534ece0c233ef"}
+  ],
+  "symbols": ["createTriPipeEngine", "ExecutionRouter", "laneIsGranted"],
+  "targets": [],
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "NOT_APPLICABLE",
+    "strictBuild": "NOT_APPLICABLE",
+    "focusedTests": "NOT_APPLICABLE",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Hardware resolution, external routers and bridges, class construction, capability callbacks and host/runtime effects remain at the owning host boundary.",
+  "disposition": "The barrel exports types/classes; engine construction and ExecutionRouter composition are inseparable from hardware and capability wiring. No standalone pure leaf is available without changing the API and authority boundary.",
+  "productionAuthorizing": false,
+  "outputBytes": 0
+}

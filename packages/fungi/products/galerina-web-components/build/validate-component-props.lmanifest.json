@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:669368e7825b033b19515a3f5ff71c36406fbf7172d468e641514e93fe11e728",
+  "sourceFile": "validate-component-props.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:1aeb70124c04583a5437f00e0394f3c878b4eb4c4158768f0644160b7b2d8fae",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:52.155Z"
+  },
+  "behavioralFingerprint": "sha256:ccc7085e63eca72dd40eeea7b1ea9cb0febfe903e6a0402d0a583f6191c65328",
+  "derivedConstraints": [
+    "validateComponentProps: Flow validateComponentProps has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateComponentProps",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:52.155Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "6a7d5d192228fcd9",
+    "signature": "yXVRpA3nqmRym/h6jatHtsWushsF6oc8PxPJxKpYjMI73dgzc4Hr0HYyc3Kwvw9M8G8G0nk88a2aikHvwvkhDg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:52.163Z"
+  }
+}

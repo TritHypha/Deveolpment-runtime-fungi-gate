@@ -3,6 +3,282 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 full package conversion start - 2026-09-13
+
+The owner-authorized conversion now targets the direct package layout
+`packages/fungi/products/<package-name>`. The plan covers all 100 packages and
+all eligible `.ts`, `.mts`, `.cts`, `.mjs` and `.js` source under
+`packages-ts/*/src`; original sources remain available as differential
+shadows. Git is storage only for this run, so CI, hosted builds and repository
+automation are not invoked.
+
+Wave 3 has started with two exact direct targets:
+
+- `packages/fungi/products/galerina-core-config/environment-mode.fungi`, from
+  `isEnvironmentMode` in
+  `packages-ts/galerina-core-config/src/index.ts`.
+- `packages/fungi/products/galerina-core-runtime/terminal-scope.fungi`, from
+  `isTerminalScope` in
+  `packages-ts/galerina-core-runtime/src/structured-await.ts`.
+
+Both targets are byte-identical to their owner-approved pilot assets. Strict
+checks passed **2/2**, focused semantic cases passed **13/13**, and no failures
+or skips occurred. The receipt and report are
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave3-direct-package-tree.json`
+and `docs/reports/2026-09-13-rd0873-fungi-wave3-direct-package-tree.md`.
+
+The run uses at most 2 packages, 4 source files, 16,384 output bytes and 12
+focused tests per wave, with **Luna - High** as the worker-effort ceiling and
+restart allowed under that ceiling. The legacy pilot tree under
+`packages/fungi/products/galerina/` remains for historical compatibility until
+it is deliberately migrated. Each remaining package chapter must produce
+buildable Fungi or a documented manual host/compiler/build/test boundary, then
+run focused local compilation and benchmark evidence before the next chapter.
+
+### Direct package waves 4-6 - 2026-09-13
+
+Three additional Luna – High workers completed one pure leaf each in the direct
+package tree. `galerina-core-compute#validateComputePlan`,
+`galerina-core-economics#selectVectorTier` and
+`galerina-core-reports#selectReportStatus` all pass the local strict checker
+and build command. Their focused/package evidence is respectively **5/5**,
+**3/3 plus 15/15**, and **2/2 plus 27/27 and 22/22**. The exact receipts are
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave4-core-compute.json`,
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave5-core-economics.json` and
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave6-core-reports.json`.
+
+The TypeScript sources remain shadows, and the three slices grant no production
+authority. The run continues package by package under the manifest’s two
+package, four source-file, 16,384-byte and twelve-focused-test limits. The
+CLI’s benchmark subcommand is still an unimplemented diagnostic; until it is
+implemented, local check/build timing and focused differential cases are the
+available benchmark evidence.
+
+### Direct package waves 7-9 - 2026-09-13
+
+Three more Luna – High workers completed bounded leaves in
+`galerina-core-security`, `galerina-core-vector` and `galerina-data-model`.
+`isSensitiveHeaderName`, `validateMatrixType` and
+`isResponseSafeClassification` each pass the strict local checker and build
+command. The vector package suite passed **5/5**; the data-model
+interpreter/Wasm differential passed **10/10**. The per-item receipts are
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave7-core-security.json`,
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave8-core-vector.json` and
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave9-data-model.json`.
+
+The original TypeScript files remain shadows. These are pure leaves rather
+than whole-package completions: Unicode case-mapping fidelity, hostile
+object/array ingress, full record ABIs, model validation, response allowlists
+and hardware/provider boundaries remain explicit follow-up work. The full
+conversion continues in bounded package chapters; production authority and
+consumer switching remain unchanged.
+
+### Direct package waves 10-11 - 2026-09-13
+
+`galerina-core-tasks#isTaskEffect` and
+`galerina-core-sentinel-state#RESTORE_VERDICT_EXPORT_NAME` are present in the
+direct package tree. Both strict checks/builds passed; task-effect parity was
+**2/2**, and the sentinel-state constant matched in interpreter and signed-Wasm
+checks. Receipts are
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave10-core-tasks.json` and
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave11-sentinel-state.json`.
+
+The TypeScript shadows remain active. Task host marshalling and sentinel-state
+cold-boot, persistence, cryptography and key-provider behavior remain
+host-owned boundaries; these leaves do not complete their containing packages
+or change production authority.
+
+### Direct package wave 12 - 2026-09-13
+
+`galerina-core-sentinel-time#SynchronizationGate.enforceDrift` is now present
+at `packages/fungi/products/galerina-core-sentinel-time/synchronization-gate.fungi`.
+Strict checking/building passed, ten differential vectors passed **10/10**,
+and the retained sentinel-time suite passed **14/14**. The TypeScript source
+remains the shadow. The host still owns synchronized-state calculation,
+physical-time acquisition, mutable state and error-class projection, so this
+leaf does not complete its package or change authority.
+
+The direct-tree ledger currently has **14/100** package roots started, with
+**14** buildable leaves totalling **13,172 bytes**; **86** package roots remain.
+
+### Direct package waves 13-15 - 2026-09-13
+
+Three more Luna – High workers completed bounded leaves in
+`galerina-core-network`, `galerina-core-sentinel-io` and
+`galerina-core-sentinel-memory`. `telemetryToSideSignal`,
+`IntegrityMonitor.verifyBlock` and `ALIGN_BYTES` each pass the strict local
+checker and build command. The network differential passed **1/1**, the
+sentinel-io package suite passed **25/25**, and the constant sentinel-memory
+checks passed. Receipts are
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave13-core-network.json`,
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave14-sentinel-io.json` and
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave15-sentinel-memory.json`.
+
+The TypeScript shadows remain active. Network decoding and admission,
+cryptographic byte computation, memory bounds and native effects remain
+host-owned boundaries; the leaves do not complete their containing packages or
+change production authority.
+
+### Direct package waves 16-18 - 2026-09-13
+
+Three Luna – High workers completed bounded leaves in `galerina-ai`,
+`galerina-ai-agent` and `galerina-data-archive`:
+`defineAiSafetyPolicy`, `validateAgentLimits` and `validateChecksumRef`.
+Strict local checking/building passed **3/3** and focused parity passed
+**2/2**, **6/6** and **4/4**. Ten fresh strict-check invocations per target
+passed **30/30**, averaging **245.9 ms**, **248.1 ms** and **244.8 ms**.
+The receipts are
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave16-ai.json`,
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave17-ai-agent.json` and
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave18-data-archive.json`.
+
+One archive literal needed a Fungi lexer-safe quote repair; the repaired target
+was rechecked and rebuilt. TypeScript shadows remain active. Provider loading,
+host marshalling, cryptographic/archive effects and production authority remain
+boundaries. The direct-tree ledger is now **17/100** package roots, **17**
+buildable leaves and **21,439 bytes**; **83** package roots remain.
+
+### Direct package waves 19-21 - 2026-09-13
+
+The next three Luna – High workers completed bounded leaves in
+`galerina-ai-neural`, `galerina-data-db` and `galerina-data-json`:
+`isSameTensorShape`, `validateDbBoundaryRequirements` and
+`validateJsonMemoryPolicy`. Strict local checking/building passed **3/3**;
+focused parity passed **5/5**, **8/8** and **8/8** (the JSON vectors were
+checked by both interpreter and signed Wasm). Ten fresh strict-check
+invocations per target passed **30/30**, averaging **247.0 ms**, **243.6 ms**
+and **247.3 ms**. Receipts are
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave19-ai-neural.json`,
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave20-data-db.json` and
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave21-data-json.json`.
+
+TypeScript shadows remain active. Sparse/hostile object ingress, host
+decoding/marshalling, JSON stream allocation, providers and production
+authority remain boundaries. The direct-tree ledger is now **20/100** package
+roots, **20** buildable leaves and **27,604 bytes**; **80** package roots
+remain.
+
+### Direct package waves 22-24 - 2026-09-13
+
+Three Luna – High workers completed bounded leaves in
+`galerina-core-photonic`, `galerina-cpu-kernels` and `galerina-data`:
+`validateOpticalSignal`, `requiresLowBitKernel` and
+`validateDataMemoryLimits`. Strict local checking/building passed **3/3**;
+focused parity passed **5/5**, **12/12** and **9/9**. The data vectors were
+checked by both interpreter and signed Wasm backends (18 backend assertions
+over nine vectors). Ten fresh strict-check invocations per target passed
+**30/30**, averaging **248.0 ms**, **247.4 ms** and **241.7 ms**. Receipts are
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave22-core-photonic.json`,
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave23-cpu-kernels.json` and
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave24-data.json`.
+
+TypeScript shadows remain active. Host defaults, hostile object ingress, native
+kernel loading, parsing/allocation, streams and production authority remain
+boundaries. The direct-tree ledger is now **23/100** package roots, **23**
+buildable leaves and **32,484 bytes**; **77** package roots remain.
+
+### Direct package waves 25-27 - 2026-09-13
+
+Three Luna – High workers completed bounded leaves in `galerina-core`,
+`galerina-data-database` and `galerina-core-runtime-wasm`: `hasErrors`,
+`validateDatabaseChecksum` and `WAT_HEAP_BASE`. Strict local checking/building
+passed **3/3**; focused parity passed **6/6**, **3/3** (with database suite
+**22/22**) and **12/12**. Ten fresh strict-check invocations per target passed
+**30/30**, averaging **244.0 ms**, **253.6 ms** and **241.4 ms**. Receipts are
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave25-core.json`,
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave26-data-database.json` and
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave27-runtime-wasm.json`.
+
+TypeScript shadows remain active. Sparse/hostile objects, database/native
+effects, record allocation/layout, compiler integration and production
+authority remain boundaries. The direct-tree ledger is now **26/100** package
+roots, **26** buildable leaves and **36,476 bytes**; **74** package roots
+remain.
+
+
+### RD-0873 direct package waves 28-30 - 2026-09-13
+
+Three Luna – High workers completed bounded leaves in `galerina-core-logic`,
+`galerina-data-pipeline` and `galerina-ai-lowbit`: `validateBoolBoundary`,
+`validateBackpressurePolicy` and `validateLowBitAiModel`. Strict local
+checking/building passed **3/3**; focused parity passed **7/7**, **12/12** and
+**9/9**. Finite interpreter and signed-Wasm parity for the low-bit leaf each
+passed **9/9**. Ten fresh strict checks per target passed **30/30**, averaging
+**247.3 ms**, **247.8 ms** and **245.7 ms**. Two initial Truth/Falsy warnings
+were repaired with explicit boolean equality and rechecked with zero warnings.
+The low-bit leaf records a deliberate manual host boundary for `NaN`/`Infinity`
+because the current WAT emitter traps nonfinite `Float64` before TypeScript
+`<= 0` semantics can be compared. TypeScript shadows remain active and no
+production authority or consumer switch changed. The direct-tree ledger became
+**29/100** roots, **29** leaves and **47,202 bytes**.
+
+### RD-0873 direct package waves 31-33 - 2026-09-13
+
+Three Luna – High workers completed bounded leaves in
+`galerina-ai-neuromorphic`, `galerina-data-html` and
+`galerina-core-sentinel-power`: `validateSpikeTrain`,
+`validateHtmlParsePlan` and `validateEnvelope`. Strict local
+checking/building passed **3/3**; focused parity passed **8/8**, **12/12** and
+**10/10**, with the last set checked on both finite interpreter and signed-Wasm
+backends. The sentinel-power target initially raised one Truth/Falsy warning;
+it was repaired to explicit boolean equality and rechecked with zero warnings.
+Ten fresh local strict-check invocations per target passed **30/30**, averaging **257.3 ms**, **250.8 ms** and **246.4 ms**; the CLI benchmark subcommand remains an
+unimplemented diagnostic. TypeScript shadows remain active and no production
+authority or consumer switch changed. Host/manual boundaries cover JavaScript
+default/undefined/null and sparse-array normalization, browser/parser and
+optional-field marshalling, and nonfinite thermal thresholds plus sensing and
+governor enforcement. The direct-tree ledger is now **32/100** roots, **32**
+leaves and **55,129 bytes**; **68** roots remain.
+### RD-0873 direct package waves 34-36 - 2026-09-13
+
+Three Luna – High workers completed bounded leaves in `galerina-auth`,
+`galerina-data-reports` and `galerina-data-response`: `composeAuthVerdict`,
+`deriveDataReportStatus` and `validateResponseMapping`. Strict local
+checking/building passed **3/3**; focused parity passed **8/8**, **12/12** and
+**10/10**, with response mapping checked on both interpreter and signed-Wasm
+backends. Small validator leaves were not timed; the CLI benchmark subcommand
+remains an unimplemented diagnostic. TypeScript shadows remain active and no
+production authority or consumer switch changed. Credential/provider effects,
+report persistence, response projection, transport/egress and source-object
+admission remain host/manual boundaries. The direct-tree ledger is now
+**35/100** roots, **35** leaves and **64,000 bytes**; **65** roots remain.
+### RD-0873 direct package waves 37-39 - 2026-09-13
+
+Three Luna – High workers completed bounded leaves in `galerina-data-query`
+and `galerina-data-search`: `isSome`, `optionSome` and
+`validateSearchQuery`. Strict local checking/building passed **3/3**; focused
+parity passed **12/12**, **12/12** and **10/10**, with the search leaf checked
+on interpreter and signed-Wasm backends. Ten fresh strict checks per target
+passed **30/30**, averaging **248.5 ms**, **242.0 ms** and **250.9 ms**. Root
+verification repaired an unsupported Char literal and implicit Bool checks in
+the search target using `Char.fromCode(34)` and explicit comparisons; all 38
+current leaves now pass strict checks with zero warnings. TypeScript shadows
+remain active and production authority is unchanged. The direct-tree ledger is
+now **37/100** roots, **38** leaves and **69,674 bytes**; **63** roots remain.
+## RD-1231 bounded Fungi pilot conversion - 2026-09-13
+
+The owner authorized a bounded `.fungi` pilot. Four selected scalar symbol
+scopes were revalidated at Galerina HEAD
+`675e1048304b11e109b1de4f68af97ebc64f5949` / tree
+`b20138180928ed9d787d157d1faedbe86050be64` under profile `scalar-1`, with one
+symbol/source file per step, concurrency `1`, zero retries and a chapter
+aggregate after all four items. Their product-tree targets already existed, so
+identical bytes were not rewritten.
+
+Strict Fungi checks passed **4/4** and the four retained TypeScript/Fungi
+conversion suites passed **8/8**, with zero failures and zero skips. The
+TypeScript shadows remain active; no consumer switch, production authority,
+profile promotion or retirement changed. The exact source/target digests,
+successes, issues and improvements are recorded in
+`docs/independent-audits/2026-09-13-rd0873-fungi-pilot-conversion.json` and
+`docs/reports/2026-09-13-rd0873-fungi-pilot-conversion.md`.
+
+This is a **PASS_BOUNDED_PILOT** for candidate authoring and focused semantic
+execution. Current-head snapshot/GIR/SLIDE/VOK receipts, independent physical
+review and production admission remain separate HOLD gates. A fresh manifest
+is required before the next scope; the older four-item manifest is historical
+at this head.
+
 ## Registry durability production release seam - 2026-09-13
 
 `admitRegistryDurabilityProfile` remains intentionally non-authorizing: it
@@ -5978,3 +6254,469 @@ and codebase-memory reports **60,722/60,722 nodes / 152,367/152,367 edges** at
 the exact indexed HEAD with one untruncated `RoutingContext` interface. A final
 post-record exact-head refresh is retained in handoff. Repository-wide closure
 remains `UNKNOWN`.
+
+
+### Direct package waves 40-45 - 2026-09-13
+
+Six Luna - High workers, using the three designated Fungi conversion agents,
+completed bounded leaves in the database and substrate-math packages:
+
+- packages-ts/galerina-db-firestore/src/index.ts#validateFirestoreCredentialRef ->
+  packages/fungi/products/galerina-db-firestore/validate-firestore-credential-ref.fungi
+  (10/10 parity, 4,552 bytes);
+- packages-ts/galerina-db-mysql/src/index.ts#validateMysqlCredentialRef ->
+  packages/fungi/products/galerina-db-mysql/validate-mysql-credential-ref.fungi
+  (12/12 parity, 5,196 bytes);
+- packages-ts/galerina-db-postgres/src/index.ts#validatePostgresCredentialRef ->
+  packages/fungi/products/galerina-db-postgres/validate-postgres-credential-ref.fungi
+  (11/11 interpreter and signed-Wasm parity, 5,504 bytes);
+- packages-ts/galerina-db-opensearch/src/index.ts#validateOpenSearchCredentialRef ->
+  packages/fungi/products/galerina-db-opensearch/validate-opensearch-credential-ref.fungi
+  (10/10 parity, 4,563 bytes);
+- packages-ts/galerina-db-sqlite/src/index.ts#validateSqliteCredentialRef ->
+  packages/fungi/products/galerina-db-sqlite/validate-sqlite-credential-ref.fungi
+  (12/12 parity, 5,217 bytes);
+- packages-ts/galerina-substrate-math/src/index.ts#flipProbability ->
+  packages/fungi/products/galerina-substrate-math/flip-probability.fungi
+  (8/8 finite interpreter and signed-Wasm parity, 1,135 bytes).
+
+All six targets pass strict checks and serial local builds; the retained
+TypeScript package suites pass 126/126. Root verification repaired explicit
+Bool and lexer-safe Char handling in the MySQL and Postgres targets and fixed
+the Postgres part-stop variable. Ten local strict-check invocations per target
+pass 60/60 (241.7-250.5 ms means). The aggregate direct run is 44/44 checks and
+44/44 serial builds. Nonfinite substrate-math inputs and all provider,
+credential, host-marshalling, physical ABI and production-authority effects
+remain explicit host boundaries.
+
+The direct-tree ledger is now 43/100 package roots with 44 buildable leaves
+totalling 95,841 bytes; 57 package roots remain. No production authority or
+consumer switch changed. Receipts are in docs/independent-audits/2026-09-13-
+rd0873-fungi-wave40-db-firestore.json through wave45-substrate-math.json, with
+the combined report in docs/reports/2026-09-13-rd0873-fungi-waves40-45-luna-
+high.md.
+
+
+### Direct package waves 46-48 - 2026-09-13
+
+Three Luna - High workers completed bounded leaves in the target-Wasm,
+tools-benchmark and web packages:
+
+- packages-ts/galerina-target-wasm/src/index.ts#validateWasmArtefact ->
+  packages/fungi/products/galerina-target-wasm/validate-wasm-artefact.fungi
+  (6/6 parity, 1,909 bytes);
+- packages-ts/galerina-tools-benchmark/src/index.ts#validateBenchmarkConfig ->
+  packages/fungi/products/galerina-tools-benchmark/validate-benchmark-config.fungi
+  (12/12 parity, 4,062 bytes);
+- packages-ts/galerina-web/src/index.ts#isServerOnlyImport ->
+  packages/fungi/products/galerina-web/is-server-only-import.fungi
+  (11/11 interpreter and signed-Wasm parity, 1,637 bytes).
+
+All three targets pass strict checks and serial local builds; retained package
+suites pass 38/38. Root verification repaired three implicit privacy Bool
+checks in the benchmark target. Ten local strict-check invocations per target
+pass 30/30 (269.4-272.5 ms means). The direct aggregate remains 44/44 strict
+checks and 44/44 serial builds. Wasm bytes, module/bundler behavior, telemetry
+execution and capability enforcement remain host/toolchain boundaries.
+
+The direct-tree ledger is now 46/100 package roots with 47 buildable leaves
+totalling 103,449 bytes; 54 package roots remain. Receipts are in
+docs/independent-audits/2026-09-13-rd0873-fungi-wave46-target-wasm.json through
+wave48-web.json; the combined report is
+docs/reports/2026-09-13-rd0873-fungi-waves46-48-luna-high.md.
+
+
+### Direct package waves 49-51 - 2026-09-13
+
+Three Luna - High workers completed bounded leaves in core-cli,
+core-sentinel-egress and devtools-graph-project:
+
+- packages-ts/galerina-core-cli/src/output.ts#formatCliResult ->
+  packages/fungi/products/galerina-core-cli/format-cli-result.fungi (6/6 parity,
+  1,477 bytes);
+- packages-ts/galerina-core-sentinel-egress/src/audit-egress.ts#readEgressLedger ->
+  packages/fungi/products/galerina-core-sentinel-egress/read-egress-ledger.fungi
+  (12/12 parity, 1,612 bytes);
+- packages-ts/galerina-devtools-graph-project/src/index.ts#createPackageNode ->
+  packages/fungi/products/galerina-devtools-graph-project/create-package-node.fungi
+  (7/7 interpreter and signed-Wasm parity, 1,242 bytes).
+
+Strict checks and serial local builds pass 3/3; retained package suites pass
+63/63. Root verification repaired an implicit CLI tripwire Bool check. Ten local
+strict-check invocations pass 30/30 (267.3-272.5 ms means). The direct aggregate
+now passes 50/50 strict checks and 50/50 serial builds. Filesystem reads,
+JSON parsing, graph scanning, persistence, indexing, publication and authority
+remain explicit host/toolchain boundaries.
+
+The direct-tree ledger is now 49/100 package roots with 50 buildable leaves
+totalling 107,772 bytes; 51 package roots remain. No production authority or
+consumer switch changed. Receipts are in docs/independent-audits/2026-09-13-
+rd0873-fungi-wave49-core-cli.json through wave51-devtools-graph.json; the
+combined report is docs/reports/2026-09-13-rd0873-fungi-waves49-51-luna-high.md.
+
+
+### Direct package waves 52-54 - 2026-09-13
+
+Three Luna - High workers completed bounded metadata/table leaves:
+
+- packages-ts/galerina-devtools-context/src/index.ts#DEVTOOLS_CONTEXT_VERSION ->
+  packages/fungi/products/galerina-devtools-context/devtools-context-version.fungi
+  (1/1 parity, 252 bytes);
+- packages-ts/galerina-devtools-flowgraph/src/index.ts#FLOWGRAPH_VERSION ->
+  packages/fungi/products/galerina-devtools-flowgraph/flowgraph-version.fungi
+  (1/1 parity, 295 bytes);
+- packages-ts/galerina-devtools-fungi-scan/src/scanner.ts#PLANNED_CONSTRUCT_WORDS ->
+  packages/fungi/products/galerina-devtools-fungi-scan/planned-construct-words.fungi
+  (15/15 interpreter and signed-Wasm parity, 1,103 bytes).
+
+Strict checks/builds pass 3/3; retained package suites pass 99/99. Ten local
+strict-check invocations pass 30/30 (262.6-267.3 ms means). The direct
+aggregate now passes 53/53 strict checks and 53/53 serial builds. Scanner
+traversal, collision measurement, reporting and package/version authority
+remain host/toolchain boundaries.
+
+The direct-tree ledger is now 52/100 package roots with 53 buildable leaves
+totalling 109,422 bytes; 48 package roots remain. Receipts are in
+docs/independent-audits/2026-09-13-rd0873-fungi-wave52-devtools-context.json
+through wave54-devtools-fungi-scan.json; the combined report is
+docs/reports/2026-09-13-rd0873-fungi-waves52-54-luna-high.md.
+
+
+### Direct package waves 55-57 - 2026-09-13
+
+Three Luna - High workers completed exact metadata constants:
+
+- packages-ts/galerina-devtools-naming/src/index.ts#DEVTOOLS_NAMING_VERSION ->
+  packages/fungi/products/galerina-devtools-naming/devtools-naming-version.fungi
+  (1/1 parity, 417 bytes);
+- packages-ts/galerina-devtools-provenance/src/index.ts#DEVTOOLS_PROVENANCE_VERSION ->
+  packages/fungi/products/galerina-devtools-provenance/devtools-provenance-version.fungi
+  (1/1 parity, 321 bytes);
+- packages-ts/galerina-devtools-pci/src/index.ts#DEVTOOLS_PCI_VERSION ->
+  packages/fungi/products/galerina-devtools-pci/devtools-pci-version.fungi
+  (1/1 interpreter and signed-Wasm parity, 537 bytes).
+
+Strict checks/builds pass 3/3; retained package suites pass 73/73. Ten local
+strict-check invocations pass 30/30 (268.9-273.8 ms means). The direct
+aggregate now passes 56/56 strict checks and 56/56 serial builds. Naming,
+provenance and PCI audit execution, ledgers, external effects and consumer
+wiring remain host/toolchain boundaries.
+
+The direct-tree ledger is now 55/100 package roots with 56 buildable leaves
+totalling 110,697 bytes; 45 package roots remain. Receipts are in
+docs/independent-audits/2026-09-13-rd0873-fungi-wave55-devtools-naming.json
+through wave57-devtools-pci.json; the combined report is
+docs/reports/2026-09-13-rd0873-fungi-waves55-57-luna-high.md.
+
+
+### Direct package waves 58-60 - 2026-09-13
+
+Three Luna - High workers completed bounded target leaves:
+
+- packages-ts/galerina-target-cpu/src/index.ts#supportsCpuFeatures ->
+  packages/fungi/products/galerina-target-cpu/supports-cpu-features.fungi
+  (7/7 parity, 1,457 bytes);
+- packages-ts/galerina-target-native/src/index.ts#validateNativeTarget ->
+  packages/fungi/products/galerina-target-native/validate-native-target.fungi
+  (12/12 parity, 2,979 bytes);
+- packages-ts/galerina-target-gpu/src/index.ts#validateGpuKernelPlan ->
+  packages/fungi/products/galerina-target-gpu/validate-gpu-kernel-plan.fungi
+  (5/5 parity, 3,261 bytes).
+
+Strict checks/builds pass 3/3; retained package suites pass 15/15. Root
+verification repaired an unsupported GPU Char literal with Char.fromCode(34).
+Ten local strict-check invocations pass 30/30 (250.0-267.3 ms means). The
+direct aggregate now passes 59/59 strict checks and 59/59 serial builds. SIMD
+probing, native/GPU execution, provider effects, host marshalling and physical
+ABI admission remain host/toolchain boundaries.
+
+The direct-tree ledger is now 58/100 package roots with 59 buildable leaves
+totalling 118,394 bytes; 42 package roots remain. Receipts are in
+docs/independent-audits/2026-09-13-rd0873-fungi-wave58-target-cpu.json through
+wave60-target-gpu.json; the combined report is
+docs/reports/2026-09-13-rd0873-fungi-waves58-60-luna-high.md.
+
+
+### Direct package waves 61-63 - 2026-09-13
+
+Three designated Luna - High Fungi workers completed bounded target leaves:
+
+- `packages-ts/galerina-target-js/src/index.ts#validateJsOutputPlan` ->
+  `packages/fungi/products/galerina-target-js/validate-js-output-plan.fungi`
+  (12/12 focused parity, 6,402 bytes);
+- `packages-ts/galerina-target-photonic/src/index.ts#validatePhotonicLoweringPlan` ->
+  `packages/fungi/products/galerina-target-photonic/validate-photonic-lowering-plan.fungi`
+  (12/12 focused parity, 3,667 bytes);
+- `packages-ts/galerina-target-ai-accelerator/src/index.ts#validateAiAcceleratorModel` ->
+  `packages/fungi/products/galerina-target-ai-accelerator/validate-ai-accelerator-model.fungi`
+  (8/8 interpreter and signed-Wasm parity, 3,271 bytes).
+
+Strict checks and serial local builds pass 3/3; retained package suites pass 26/26.
+Ten local strict-check invocations per target pass 30/30, averaging 247.9 ms,
+242.9 ms and 250.6 ms. Root verification repaired implicit Bool conditions in the
+JS and AI leaves. Runtime probing, bundle inspection, model/device loading and
+dispatch, host marshalling, external effects, physical ABI admission and
+production authority remain host/runtime boundaries.
+
+The direct-tree ledger is now **61/100** package roots with **62** buildable
+leaves totalling **131,734 bytes**; **39** package roots remain. Receipts are
+in `docs/independent-audits/2026-09-13-rd0873-fungi-wave58-target-cpu.json`
+through `wave63-target-ai-accelerator.json`; the combined report is
+`docs/reports/2026-09-13-rd0873-fungi-waves61-63-luna-high.md`.
+
+
+### Direct package waves 64-66 - 2026-09-13
+
+Three designated Luna - High Fungi workers completed bounded web validation leaves:
+
+- `packages-ts/galerina-web-components/src/index.ts#validateComponentProps` ->
+  `packages/fungi/products/galerina-web-components/validate-component-props.fungi`
+  (8/8 focused parity, 3,214 bytes);
+- `packages-ts/galerina-web-events/src/index.ts#validateEventPayloadField` ->
+  `packages/fungi/products/galerina-web-events/validate-event-payload-field.fungi`
+  (12/12 focused parity, 1,897 bytes);
+- `packages-ts/galerina-web-render/src/index.ts#validateRenderableContent` ->
+  `packages/fungi/products/galerina-web-render/validate-renderable-content.fungi`
+  (22/22 retained package cases, 2,247 bytes; separate cross-backend parity remains unclaimed).
+
+Strict checks and serial local builds pass 3/3; retained package suites pass 73/73.
+Ten local strict-check invocations per target pass 30/30, averaging 251.0 ms,
+242.0 ms and 243.1 ms. Browser effects, DOM rendering, host marshalling,
+runtime probing, external effects, physical ABI admission and production authority
+remain host/runtime boundaries.
+
+The direct-tree ledger is now **64/100** package roots with **65** buildable
+leaves totalling **139,092 bytes**; **36** package roots remain. Receipts are
+in `docs/independent-audits/2026-09-13-rd0873-fungi-wave064-web-components.json`
+through `wave066-web-render.json`; the combined report is
+`docs/reports/2026-09-13-rd0873-fungi-waves64-66-luna-high.md`.
+
+
+### Direct package waves 67-69 - 2026-09-13
+
+Three designated Luna - High Fungi workers completed bounded leaves:
+
+- `packages-ts/galerina-web-router/src/index.ts#validateLinkTarget` ->
+  `packages/fungi/products/galerina-web-router/validate-link-target.fungi`
+  (12/12 focused parity, 7,846 bytes);
+- `packages-ts/galerina-web-state/src/index.ts#validateApiToStateConversion` ->
+  `packages/fungi/products/galerina-web-state/validate-api-to-state-conversion.fungi`
+  (12/12 focused parity, 1,791 bytes);
+- `packages-ts/galerina-devtools-impact/src/impact-plan.mjs#isDocumentation` ->
+  `packages/fungi/products/galerina-devtools-impact/build-impact-plan.fungi`
+  (10/10 interpreter and signed-Wasm parity, 255 bytes), narrowed from the
+  host-bound `buildImpactPlan` planner.
+
+Strict checks and serial local builds pass 3/3; retained package suites pass 65/65.
+Ten local strict-check invocations per target pass 30/30, averaging 255.4 ms,
+244.3 ms and 243.2 ms. Browser navigation, API transport/state storage,
+filesystem/Git discovery, package hashing, command execution, host marshalling,
+physical ABI admission and production authority remain host/toolchain boundaries.
+
+The direct-tree ledger is now **67/100** package roots with **68** buildable
+leaves totalling **148,984 bytes**; **33** package roots remain. Receipts are
+in `docs/independent-audits/2026-09-13-rd0873-fungi-wave067-web-router.json`
+through `wave069-devtools-impact.json`; the combined report is
+`docs/reports/2026-09-13-rd0873-fungi-waves67-69-luna-high.md`.
+
+
+### Direct package waves 70-72 - 2026-09-13
+
+Three designated Luna - High Fungi workers completed bounded leaves:
+
+- `packages-ts/galerina-docs/src/openapi.ts#sanitizeSchemaName` ->
+  `packages/fungi/products/galerina-docs/sanitize-schema-name.fungi`
+  (8/8 focused parity, 2,442 bytes);
+- `packages-ts/galerina-devtools-intelligence/src/bm25.ts#K1` ->
+  `packages/fungi/products/galerina-devtools-intelligence/bm25-k1.fungi`
+  (1/1 exact constant parity, 425 bytes);
+- `packages-ts/galerina-ext-proof-snarkjs/src/circuit.ts#CIRCUIT_ID` ->
+  `packages/fungi/products/galerina-ext-proof-snarkjs/circuit-id.fungi`
+  (1/1 interpreter and signed-Wasm parity, 243 bytes).
+
+Strict checks and serial local builds pass 3/3; retained package suites pass 58/58.
+Ten local strict-check invocations per target pass 30/30, averaging 247.3 ms,
+243.0 ms and 240.9 ms. The intelligence tokenization implementation and
+cryptographic proving/verification/key custody remain host/toolchain boundaries.
+
+The direct-tree ledger is now **70/100** package roots with **71** buildable
+leaves totalling **152,094 bytes**; **30** package roots remain. Receipts are
+in `docs/independent-audits/2026-09-13-rd0873-fungi-wave070-docs.json`
+through `wave072-snarkjs.json`; the combined report is
+`docs/reports/2026-09-13-rd0873-fungi-waves70-72-luna-high.md`.
+
+
+### Direct package waves 73-75 - 2026-09-13
+
+Three designated Luna - High Fungi workers completed bounded leaves:
+
+- `packages-ts/galerina-ext-photonic-emulator/src/partition-decider.ts#W_REP` ->
+  `packages/fungi/products/galerina-ext-photonic-emulator/w-rep.fungi`
+  (1/1 exact constant parity, 224 bytes);
+- `packages-ts/galerina-ext-spore/src/container.ts#HEADER_SIZE` ->
+  `packages/fungi/products/galerina-ext-spore/header-size.fungi`
+  (1/1 exact constant parity, 440 bytes);
+- `packages-ts/galerina-ext-tritsocket/src/prefilter.ts#packedLen` ->
+  `packages/fungi/products/galerina-ext-tritsocket/packed-len.fungi`
+  (12/12 interpreter and signed-Wasm parity, 862 bytes).
+
+Strict checks and serial local builds pass 3/3; retained package suites pass 72/72.
+Ten local strict-check invocations per target pass 30/30, averaging 246.5 ms,
+243.4 ms and 243.9 ms. Photonic routing, spore byte/crypto handling, Tritsocket
+packing/transport, host marshalling, physical ABI admission and production
+authority remain host/toolchain boundaries.
+
+The direct-tree ledger is now **73/100** package roots with **74** buildable
+leaves totalling **153,620 bytes**; **27** package roots remain. Receipts are
+in `docs/independent-audits/2026-09-13-rd0873-fungi-wave073-photonic-emulator.json`
+through `wave075-tritsocket.json`; the combined report is
+`docs/reports/2026-09-13-rd0873-fungi-waves73-75-luna-high.md`.
+
+
+### Direct package waves 76-78 - 2026-09-13
+
+Three designated Luna - High Fungi workers completed bounded leaves:
+
+- `packages-ts/galerina-ext-secrets-spore/src/schema.ts#MODALITY_STRUCTURED` ->
+  `packages/fungi/products/galerina-ext-secrets-spore/modality-structured.fungi`
+  (1/1 exact constant parity, 236 bytes);
+- `packages-ts/galerina-ext-secrets-vault/src/types.ts#SECRETS_GATEWAY_WIT` ->
+  `packages/fungi/products/galerina-ext-secrets-vault/secrets-gateway-wit.fungi`
+  (1/1 exact UTF-8 parity, 696 bytes);
+- `packages-ts/galerina-ext-bridge-cpp/src/index.ts#selectTernaryBridge` ->
+  `packages/fungi/products/galerina-ext-bridge-cpp/select-ternary-bridge.fungi`
+  (narrowed technique identity, 1/1 interpreter and signed-Wasm parity, 802 bytes).
+
+Strict checks and serial local builds pass 3/3; retained package suites pass 102/102.
+Secret custody, vault/TPM access, native addon/provider probing, inference,
+transport, host marshalling, physical ABI admission and production authority
+remain host/toolchain boundaries.
+
+The direct-tree ledger is now **76/100** package roots with **77** buildable
+leaves totalling **155,354 bytes**; **24** package roots remain. Receipts are
+in `docs/independent-audits/2026-09-13-rd0873-fungi-wave076-secrets-spore.json`
+through `wave078-bridge-cpp.json`; the combined report is
+`docs/reports/2026-09-13-rd0873-fungi-waves76-78-luna-high.md`.
+
+
+### Direct package waves 79-81 - 2026-09-13
+
+Three designated Luna - High Fungi workers completed bounded leaves:
+
+- `packages-ts/galerina-hardware-tier/src/hardware-directive.ts#capabilityPreimage` ->
+  `packages/fungi/products/galerina-hardware-tier/capability-preimage.fungi`
+  (3/3 governed parity, 617 bytes);
+- `packages-ts/galerina-governance-telemetry/src/exposition.ts#isSafeLabel` ->
+  `packages/fungi/products/galerina-governance-telemetry/is-safe-label.fungi`
+  (12/12 focused parity, 1,384 bytes);
+- `packages-ts/galerina-inference-bridge-contract/src/oracle.ts#oracleAgrees` ->
+  `packages/fungi/products/galerina-inference-bridge-contract/oracle-agrees.fungi`
+  (12/12 interpreter and signed-Wasm parity, 982 bytes).
+
+Strict checks and serial local builds pass 3/3; retained package suites pass 47/47.
+Hardware probing/attestation, metrics export/storage, inference providers,
+cryptographic evidence, host marshalling, physical ABI admission and production
+authority remain host/toolchain boundaries.
+
+The direct-tree ledger is now **79/100** package roots with **80** buildable
+leaves totalling **158,337 bytes**; **21** package roots remain. Receipts are
+in `docs/independent-audits/2026-09-13-rd0873-fungi-wave079-hardware-tier.json`
+through `wave081-inference-oracle.json`; the combined report is
+`docs/reports/2026-09-13-rd0873-fungi-waves79-81-luna-high.md`.
+
+### RD-0873 direct package waves 82-84 - 2026-09-13
+
+Three designated Luna - High workers completed bounded TriRegex, observability and
+Test leaves. Strict checks and serial local Fungi builds passed 3/3; retained
+package suites passed 281/281; exact constant parity passed 1/1 for each leaf.
+The direct manifest now records 82/100 package roots, 83 buildable leaves,
+159,692 output bytes and 18 remaining roots. Regex/runtime execution, metrics
+storage/export, process spawning, host marshalling, physical ABI admission and
+production authority remain explicit host/toolchain boundaries. Git remains
+storage-only; no CI or push was used.
+
+### RD-0873 direct package waves 85-87 - 2026-09-13
+
+Three designated Luna - High workers completed bounded core-compiler,
+benchmark-integrity and graph-algorithms leaves. Strict checks and serial local
+Fungi builds passed 3/3; retained package suites passed 7,376/7,376; exact
+constant parity passed 1/1 for each leaf. The direct manifest now records 85/100
+package roots, 86 buildable leaves, 161,153 output bytes and 15 remaining roots.
+Compiler orchestration, benchmark execution, graph construction, host marshalling,
+physical ABI admission and production authority remain explicit host/toolchain
+boundaries. Git remains storage-only; no CI or push was used.
+
+
+### RD-0873 direct package waves 88-90 - 2026-09-13
+
+Three designated Luna - High workers completed bounded KB-graph, package-graph and
+API-server leaves. Strict checks and serial local Fungi builds passed 3/3; retained
+package suites passed 85/85; exact constant parity passed 1/1 for each leaf. The
+direct manifest now records 88/100 package roots, 89 buildable leaves, 162,468
+output bytes and 12 remaining roots. Graph discovery, filesystem and HTTP/TLS
+transport effects, host marshalling, physical ABI admission and production
+authority remain explicit host/toolchain boundaries. Git remains storage-only; no
+CI or push was used.
+
+### RD-0873 direct package waves 91-93 - 2026-09-13
+
+Three designated Luna - High workers completed bounded Hypha, devtools-security and
+Tower-Citizen leaves. Strict checks and serial local Fungi builds passed 3/3;
+retained package suites passed 618/618; focused parity passed 4/4, 1/1 and 12/12.
+The direct manifest now records 91/100 package roots, 92 buildable leaves, 165,133
+output bytes and 9 remaining roots. Fact extraction, audit execution,
+cryptography/providers, key custody, host marshalling, physical ABI admission and
+production authority remain explicit host/toolchain boundaries. Git remains
+storage-only; no CI or push was used.
+
+### RD-0873 direct package waves 94-96 - 2026-09-13
+
+Three designated Luna - High workers completed bounded project-graph, Myco and
+app-kernel leaves. Strict checks and serial local Fungi builds passed 3/3; retained
+package suites passed 458/458; focused parity passed 1/1 for each leaf. The direct
+manifest now records 94/100 package roots, 95 buildable leaves, 166,487 output bytes
+and 6 remaining roots. Graph traversal, Myco indexing/CLI effects, request routing,
+timers, host marshalling, physical ABI admission and production authority remain
+explicit host/toolchain boundaries. Git remains storage-only; no CI or push was used.
+
+### RD-0873 final package disposition waves 97-99 - 2026-09-13
+
+Waves 97-99 closed the package-root disposition pass. `galerina-ext-bridge-bitnet`
+and `galerina-tri-pipe` are recorded as explicit manual host/native boundaries;
+their mutable inference, hardware, bridge, router and capability composition has
+no faithful standalone Fungi leaf. The four remaining roots
+(`galerina-api-protocol-rest`, `galerina-devtools-wasmtime-oracle`,
+`galerina-framework-example-app`, and `galerina-registry`) contain no eligible
+TypeScript/JavaScript source under their declared `src` roots; existing Fungi,
+Rust, host and metadata files remain in their owning lanes.
+
+The manifest therefore records **100/100 package roots dispositioned**: 94
+direct-buildable roots, 2 manual host boundaries, 4 no-eligible-source roots,
+and 95 direct leaves totalling **166,487 bytes**. There are no further package
+conversion waves in this plan. Chapter-level integration and final corpus checks
+remain as declared barriers; host/native code is not claimed as converted and
+production authority remains disabled. Receipts are in
+`docs/independent-audits/2026-09-13-rd0873-fungi-wave097-bitnet.json` through
+`wave099-no-source.json`, with the combined report at
+`docs/reports/2026-09-13-rd0873-fungi-waves97-99-luna-high.md`.
+
+### RD-0873 post-conversion build and benchmark - 2026-09-13
+
+The direct Fungi product tree was regenerated from the exact manifest. All 95
+direct `.fungi` leaves built successfully from their own
+`packages/fungi/products/<package>` directory, with zero TypeScript inputs and
+475 generated artifacts totalling 820,572 bytes. The first pass exposed and
+closed an `Array.includes` WAT-emitter lowering gap; the compiler was rebuilt
+and the affected leaf passed on repeat.
+
+The full benchmark publisher then measured 30 groups. Eighteen groups were
+work-equivalent and unit-aligned; the 0.4% noise gate, truth audit and
+benchmark guard all passed. The current chart, standalone chart, measured CSV
+sheet, archive comparison page and run receipt are generated under
+`packages-ts/galerina-devtools-benchmarks/results/`. Production SLIDE remains
+unmeasured (0/18) and all development manifests remain non-authorizing.
+
+The build and benchmark evidence is recorded in
+`docs/independent-audits/2026-09-13-rd0873-fungi-build-regeneration.json` and
+`docs/reports/2026-09-13-rd0873-fungi-build-and-benchmark.md`. No SVG was
+regenerated in this step.

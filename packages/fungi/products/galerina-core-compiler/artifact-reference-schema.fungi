@@ -1,0 +1,9 @@
+@version 1
+/// Bounded non-authorizing leaf for the artifact reference schema constant.
+/// TypeScript oracle: packages-ts/galerina-core-compiler/src/artifact-reference.ts#ARTIFACT_REFERENCE_SCHEMA
+/// Compiler orchestration, filesystem access, digest custody, and authority remain host-bound.
+pure flow artifactReferenceSchema() -> String
+contract { intent { "Return the exact artifact reference schema identifier." } }
+{
+  return "galerina.artifact-reference.v1"
+}

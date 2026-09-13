@@ -1,0 +1,7 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-ts/galerina-devtools-kb-graph/src/cli.ts#STALE_DAYS
+/// KB scanning, filesystem traversal, time observation, and report output remain host-bound.
+pure flow staleDays() -> Int {
+  return 7
+}

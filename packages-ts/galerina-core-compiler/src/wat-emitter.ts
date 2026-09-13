@@ -1256,6 +1256,10 @@ const STDLIB_HOST_MAP: Record<string, string> = {
   get:      "$host___array_get_option_v2",
   count:    "$host___array_length",  // #161: Array.count() → length (reuses the array_length import)
   contains: "$host___array_contains",
+  // `includes` is the source-level spelling used by converted JavaScript/TypeScript
+  // collection checks. Keep it an exact alias of `contains` so it cannot fall
+  // through to a dangling `$includes` call in the standalone WAT module.
+  includes: "$host___array_contains",
   first:    "$host___array_first_option_v2",
   last:     "$host___array_last_option_v2",
   unwrapOr: "$host___unwrap_or_v2",
@@ -1453,7 +1457,7 @@ function inferExprType(node: AstNode | undefined): string | undefined {
             name === "bitAnd" || name === "bitOr") return "Int";
         if (name === "toInt") return "Option<Int>";
         if (name === "isFinite" || name === "isLetter" || name === "isDigit" || name === "isUpper" || name === "isLower" ||
-            name === "isWhitespace" || name === "contains" || name === "startsWith" || name === "endsWith") return "Bool";
+             name === "isWhitespace" || name === "contains" || name === "includes" || name === "startsWith" || name === "endsWith") return "Bool";
         if (name === "charAt") return "Option<Char>";
         // unwrapOr(default) yields the default's type, except that a statically
         // typed Float64 option owns the f64 lane even when its fallback is an
@@ -2071,7 +2075,7 @@ export function emitWATExpr(
 
         // #160/#162: type-directed `contains`. String → __str_contains (substring),
         // Array<String> → __array_contains_str (by-value), else __array_contains (handle).
-        if (name === "contains" && realReceiver !== undefined && argNodes.length === 1) {
+        if ((name === "contains" || name === "includes") && realReceiver !== undefined && argNodes.length === 1) {
           const recvType = inferExprType(realReceiver);
           const recvWat = emitWATExpr(realReceiver, vars, staticConsts);
           const argWat = emitWATExpr(argNodes[0]!, vars, staticConsts);

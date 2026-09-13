@@ -1,0 +1,36 @@
+@version 1
+
+/// Bounded direct-package translation of the report status priority decision
+/// from packages-ts/galerina-core-reports/src/index.ts.
+///
+/// The TypeScript source remains the differential shadow. Exact-object
+/// admission, numeric validation and report construction stay at the caller
+/// boundary; this pure flow grants no authority.
+
+record ReportStatusCounts {
+  warnings: Int
+  errors: Int
+  critical: Int
+}
+
+pure flow selectReportStatus(input: ReportStatusCounts) -> String
+contract { intent { "Select the highest report status represented by the admitted counts." } }
+{
+  if input.critical > 0 { return "critical" }
+  if input.errors > 0 { return "error" }
+  if input.warnings > 0 { return "warning" }
+  return "ok"
+}
+
+/// Scalar wrapper for the bounded differential. The physical profile invokes
+/// selectReportStatus through the nominal record ABI.
+pure flow selectReportStatusCounts(warnings: Int, errors: Int, critical: Int) -> String
+contract { intent { "Construct the exact report-count record and select its status." } }
+{
+  let input: ReportStatusCounts = ReportStatusCounts {
+    warnings: warnings
+    errors: errors
+    critical: critical
+  }
+  return selectReportStatus(input)
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:ad430a633e2d6acdc8231e2b46dd53a9c0c99b104bc0ca3b8b28680acdc5bc82",
+  "sourceFile": "capability-preimage.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:060d3031e2004812e143d162c387036209c4f726665654a4d731f54eb71fe1d6",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:10.710Z"
+  },
+  "behavioralFingerprint": "sha256:016cb1340fa66a4c35d86b3fb39087ca9c0a3477083b2f9e84cbb3a031ace1b5",
+  "derivedConstraints": [
+    "capabilityPreimage: Flow capabilityPreimage has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "capabilityPreimage",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:10.710Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "34f965a9633f79fa",
+    "signature": "AESQ7BHeb+55VLTdfgh53itqzkJBEEYF7paNyjvp8oZ5tjbgjPZ8zjciozGMnS2GjnG5oKgZknVntAEx8rXgAw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:10.721Z"
+  }
+}

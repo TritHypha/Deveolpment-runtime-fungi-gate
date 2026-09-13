@@ -1,0 +1,16 @@
+@version 1
+
+/// Bounded direct-package translation of isResponseSafeClassification from
+/// packages-ts/galerina-data-model/src/index.ts.
+///
+/// Only the canonical public classification is response-safe by default;
+/// response allowlists and model validation remain caller-owned boundaries.
+
+pure flow isResponseSafeClassification(classification: String) -> Bool
+contract { intent { "Admit only the public model-field classification for responses." } }
+{
+  match classification {
+    "public" => return true
+    _ => return false
+  }
+}

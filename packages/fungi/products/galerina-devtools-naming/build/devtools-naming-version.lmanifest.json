@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:1a62bfe090da7b8c5b914e70f981f5c9a40ae07c03d822501f59140697899cee",
+  "sourceFile": "devtools-naming-version.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:a40b34abd09c6320395e144384b9712ca16aa3cc2266d2798c7451994bce2973",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:48.497Z"
+  },
+  "behavioralFingerprint": "sha256:b77d8b3684b118ede05fc2a5a6e57a3560758bd3d1a4e7750ca6dc2765522c11",
+  "derivedConstraints": [
+    "devtoolsNamingVersion: Flow devtoolsNamingVersion has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "devtoolsNamingVersion",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:48.497Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "8db7d73edace1ddc",
+    "signature": "XhwmUf6Guu4ldBBb172wS2XPkr3FG+9ZVKC70sbMzH1z6xfLm1OHD1YuV6GIwTRXwPj1WX/jsfKWcKc6pGCNBA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:48.504Z"
+  }
+}

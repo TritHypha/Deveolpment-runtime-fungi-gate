@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-LEDGER-RECONCILIATION-2026-09-13",
+  "status": "BOUNDED_METADATA_RECONCILIATION",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "reason": "Remeasured current direct-tree target files and corrected stale byte/digest metadata. No source authoring or target semantics were changed by this receipt.",
+  "items": [
+    {
+      "waveId": "WAVE-026-DIRECT-DATA-DATABASE",
+      "target": "packages/fungi/products/galerina-data-database/validate-database-checksum.fungi",
+      "previousBytes": 2906,
+      "currentBytes": 2964,
+      "previousSha256": "8dd947cc64ad7b84750df1131453d2bac71b4bf5475ed5a2ca196cfd2905b79d",
+      "currentSha256": "3cdc9205a82802b45cc6ef20351c7f4c99ac0ca2dc8d5fd48f14eb8105ba3c33"
+    },
+    {
+      "waveId": "WAVE-035-DIRECT-DATA-REPORTS",
+      "target": "packages/fungi/products/galerina-data-reports/derive-data-report-status.fungi",
+      "previousBytes": 1013,
+      "currentBytes": 1023,
+      "previousSha256": "d0515aff3cde53c575c2a773b0bfdb39e1cd8476b68c6f225a95b1080dffd9ec",
+      "currentSha256": "d0515aff3cde53c575c2a773b0bfdb39e1cd8476b68c6f225a95b1080dffd9ec"
+    },
+    {
+      "waveId": "WAVE-070-DIRECT-DOCS",
+      "target": "packages/fungi/products/galerina-docs/sanitize-schema-name.fungi",
+      "previousBytes": 2442,
+      "currentBytes": 2442,
+      "previousSha256": "b4df56248b55e912424a3066fcfdef6416153e0a4193d0c432be154b9b7fb1e",
+      "currentSha256": "b4df56248b55e912424a3066fcfdfef6416153e0a4193d0c432be154b9b7fb1e"
+    },
+    {
+      "waveId": "WAVE-072-DIRECT-SNARKJS",
+      "target": "packages/fungi/products/galerina-ext-proof-snarkjs/circuit-id.fungi",
+      "previousBytes": 243,
+      "currentBytes": 243,
+      "previousSha256": "5e92345047b626762f8fa950d94094ee19f73222ac1943c5ebb721b7cb1a4b6",
+      "currentSha256": "5e92345047b626762f8fa950d94094ee19f73222ac1943c5ebbb721b7cb1a4b6"
+    }
+  ],
+  "validation": {
+    "aggregateStrictCheckBuild": "86/86 PASS",
+    "semanticParity": "not re-run by this metadata reconciliation",
+    "failures": 0,
+    "skips": 0
+  },
+  "productionAuthorizing": false,
+  "manualBoundary": "This receipt corrects ledger metadata only; source shadows, host boundaries, physical admission and production authority remain unchanged."
+}

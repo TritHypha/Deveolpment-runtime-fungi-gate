@@ -1,0 +1,12 @@
+@version 1
+
+/// Bounded pure leaf for the GRAPH_DIR constant in reporter.ts.
+/// TypeScript shadow: packages-ts/galerina-devtools-package-graph/src/reporter.ts#GRAPH_DIR
+/// Graph discovery, policy evaluation, filesystem reads/writes, and authority
+/// remain in the TypeScript/host boundary.
+
+pure flow graphDir() -> String
+contract { intent { "Return the exact relative directory name used for package graph artifacts." } }
+{
+  return ".graph"
+}

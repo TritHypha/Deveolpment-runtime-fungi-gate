@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:28443bef6d635a65f49f1b6ea8d2dd843e747d10c385cc9736afac60268c0fb8",
+  "sourceFile": "restore-verdict-export-name.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:390f75f7ec6ad640e6065a82ab79c3df46de157a4ec891ff9d316e176b6a76f7",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:03.882Z"
+  },
+  "behavioralFingerprint": "sha256:00b81abdc39ae9a5c967263b739170a8dc8ada2dbe75171029b28774d49d215b",
+  "derivedConstraints": [
+    "restoreVerdictExportName: Flow restoreVerdictExportName has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "restoreVerdictExportName",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:03.883Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "6c1d0182d671ebd7",
+    "signature": "75NfY7Tsh06STNyMEk+0V7O42UpHdglQ9bOxOHNKQ4ZYXFowJLeaLSH2V7gddt3IUBqPizKbEUG/AaztgMGvAg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:03.890Z"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-099-NO-SOURCE",
+  "status": "NO_ELIGIBLE_SOURCE",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "packages": [
+    "galerina-api-protocol-rest",
+    "galerina-devtools-wasmtime-oracle",
+    "galerina-framework-example-app",
+    "galerina-registry"
+  ],
+  "declaredSourceRoots": [
+    "packages-ts/galerina-api-protocol-rest/src",
+    "packages-ts/galerina-devtools-wasmtime-oracle/src",
+    "packages-ts/galerina-framework-example-app/src",
+    "packages-ts/galerina-registry/src"
+  ],
+  "eligibleSourceFiles": [],
+  "symbols": [],
+  "targets": [],
+  "sourceShadowRetained": true,
+  "observedFiles": [
+    "packages-ts/galerina-api-protocol-rest/src/index.fungi",
+    "packages-ts/galerina-devtools-wasmtime-oracle/src/admission.rs",
+    "packages-ts/galerina-devtools-wasmtime-oracle/src/lib.rs",
+    "packages-ts/galerina-devtools-wasmtime-oracle/src/main.rs",
+    "packages-ts/galerina-framework-example-app/src/App.fungi",
+    "packages-ts/galerina-framework-example-app/src/flows/greeting.fungi"
+  ],
+  "validation": {
+    "sourceEnumeration": "PASS",
+    "eligibleTsJsFiles": 0,
+    "strictCheck": "NOT_APPLICABLE",
+    "strictBuild": "NOT_APPLICABLE",
+    "focusedTests": "NOT_APPLICABLE",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Existing Fungi, Rust/VOK code, host files outside src and registry metadata remain outside this TypeScript/JavaScript conversion scope.",
+  "disposition": "Four package roots contain no eligible .ts/.mts/.cts/.mjs/.js source under their declared src roots; no conversion is required.",
+  "productionAuthorizing": false,
+  "outputBytes": 0
+}

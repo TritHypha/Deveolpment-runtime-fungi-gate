@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:5b2cf46fb97f5899793c326a662dec6b9eb57642c31b9d24d69a3b082dc08291",
+  "sourceFile": "stale-days.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:de4dcd3f732fe3a4e8ed5f6e8d18520d8b07de7506317e731b296ce21a9da029",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:14.101Z"
+  },
+  "behavioralFingerprint": "sha256:62e1f1c44d9a3ba7dc5d89514123305b224ca965c46b6300da12fec8e04e4fbe",
+  "derivedConstraints": [],
+  "proofObligations": [
+    {
+      "flowName": "staleDays",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:14.101Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "78813af803a77cbf",
+    "signature": "FM4ri0HiAjcxWDYud7GiW8BLNVnCrbKs6Ihg3habcwGoXGznUGKIyc1XQv0/nEDiyy/kpNt6EhDQwQO9TRVqCg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:14.109Z"
+  }
+}

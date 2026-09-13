@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "sanitize-schema-name.fungi",
+  "sourceHash": "sha256:b4df56248b55e912424a3066fcfdfef6416153e0a4193d0c432be154b9b7fb1e",
+  "generatedAt": "2026-09-13T17:46:54.606Z",
+  "flowCount": 3,
+  "flows": [
+    {
+      "name": "charCodeAt",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "isSchemaNameCharacter",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "sanitizeSchemaName",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 3,
+  "derivedConstraintCount": 3
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:b02a52d54b7085a3be19056a4bb58a9a1629ec31ce846d4cb29d4c06ba50e5e9",
+  "sourceFile": "validate-search-query.fungi",
+  "flowCount": 3,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:40e93789f45b7a7449610e3bb64b36d9357f636812d759858260c7c3529a7d11",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:29.063Z"
+  },
+  "behavioralFingerprint": "sha256:e0256a5052183fc11c3057eaaf6f34009340cdb3aac83455bbc97cbb09ce3af2",
+  "derivedConstraints": [
+    "isNonNegativeSafeInteger: Flow isPositiveSafeInteger has a contract declaration [via contract]",
+    "isPositiveSafeInteger: Flow isPositiveSafeInteger has a contract declaration [via contract]",
+    "validateSearchQuery: Flow isPositiveSafeInteger has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isPositiveSafeInteger",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "isNonNegativeSafeInteger",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateSearchQuery",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:29.063Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "a437b0d5c7b222cd",
+    "signature": "raoCx1NpMZG8SN6PajmncCGOfJltoJik82Am+oGPMjAfrvM6KCBnGUUFCOwGk//tdSzG6oQkEUpU+OdIFQAACw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:29.071Z"
+  }
+}

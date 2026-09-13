@@ -1027,6 +1027,10 @@ test("12 discovery logs refused sources, excludes the test package, and continue
     project,
     out: join(dir, "manifest.json"),
     limit: 10,
+    // Start immediately before the first stable String-parameter candidate so
+    // the bounded test exercises the physical-profile refusal path rather
+    // than depending on whichever candidates happen to precede it today.
+    after: "packages-ts/galerina-core-compiler/src/interpreter.ts#DEFAULT_MAX_STEPS",
   });
   assert.ok(result.selected >= 0 && result.selected <= 10);
   if (result.manifest !== null) assert.ok(result.manifest.requests.every((request) => !request.file.startsWith("packages-ts/galerina-test/")));

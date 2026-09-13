@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-014-SENTINEL-IO",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-sentinel-io/src/integrity-monitor.ts#IntegrityMonitor.verifyBlock",
+  "sourceSha256": "9d0731e75935238eb15b9a45ed1d7118c2d1aaf224a41fc4e50f0cd93318021f",
+  "target": "packages/fungi/products/galerina-core-sentinel-io/integrity-verdict.fungi",
+  "targetBytes": 502,
+  "targetSha256": "11e20affe3276fa6b6e039670608cebd0ce7aab08f2a316645335465e4c25658",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "2/2", "packageSuite": "25/25", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "SHA/HMAC computation, byte access, manifest validation, mutable state and violation projection remain host-owned.",
+  "productionAuthorizing": false
+}

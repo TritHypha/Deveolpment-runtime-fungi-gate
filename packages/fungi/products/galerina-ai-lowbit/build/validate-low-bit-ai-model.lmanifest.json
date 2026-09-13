@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:1ccbf30886482ed5e523ffb9c179a1526a1678875a99eaacd228d073b0a91220",
+  "sourceFile": "validate-low-bit-ai-model.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:14c7db9a6a475d5f05bfc7b427936a7acccd7ab22361bcae41813edf42897279",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:25.437Z"
+  },
+  "behavioralFingerprint": "sha256:22e9ec7ce736ed5aa941d5952aba339ae1753a2b554c6bf6df61653dc4efee9e",
+  "derivedConstraints": [
+    "validateLowBitAiModel: Flow validateLowBitAiModel has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateLowBitAiModel",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:25.437Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "e80b25e153f584b4",
+    "signature": "jTPRclNybeDJ9IMobNZiOaEYyTA6UhgDeKmBSwIwqoK4h1HM89O3f/lRrgMr5rydOIy+vsxz5w3v6dIWCMI0Dg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:25.445Z"
+  }
+}

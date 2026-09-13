@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:11e20affe3276fa6b6e039670608cebd0ce7aab08f2a316645335465e4c25658",
+  "sourceFile": "integrity-verdict.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:54f92694d8c7a7049af946d9702a83d111f4368980dbe0f5f390d9bfd66d0886",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:05.015Z"
+  },
+  "behavioralFingerprint": "sha256:f29a0bd6343bfa4e40f66d32a1d48563b333b5e70344e1be535825b6ad77d6bd",
+  "derivedConstraints": [
+    "integrityVerdict: Flow integrityVerdict has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "integrityVerdict",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:05.015Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "274b3a08319c0e76",
+    "signature": "qlL85NiXGe9RZG7CXunB4izcTBoBbSQDDWLXv32hDNaaWEpLW6NWUIEI7I4Z5laNIEqbxcV/EW/J4FIXJgcLBg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:05.022Z"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-096-APP-KERNEL",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-framework-app-kernel/src/kernel.ts#maxRateWindows",
+  "sourceSha256": "5b34a9a7009c7088e4e093241715c7653da4214d0bf3871bcd82539dcb51fe49",
+  "target": "packages/fungi/products/galerina-framework-app-kernel/max-rate-windows.fungi",
+  "targetBytes": 566,
+  "targetSha256": "6fa3d9e40111ef49df5ce2539c7d00594da630c45aafc6aa2298141bde6eb266",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1 interpreter and admitted Wasm",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "233/233",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The maxRateWindows constant is exactly 10000. Request routing, timers, rate-window state/enforcement, filesystem/network effects and host authorization remain host-bound.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 241.4,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:0a4f2e21e0ed2000c4c041b168ffa9293bb48b7b3212925233fcb1075f5b9f23",
+  "sourceFile": "is-safe-label.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:44d88776fd56bb0d2e0ac0cbee39256398fbae16c2236d45ba777adee5c4784b",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:11.122Z"
+  },
+  "behavioralFingerprint": "sha256:78c89e9607705554656e8917c6aa5b59d9dcf6ce3ddad62a2c4e3ad05bf979f2",
+  "derivedConstraints": [
+    "isSafeLabel: Flow isSafeLabelCharacter has a contract declaration [via contract]",
+    "isSafeLabelCharacter: Flow isSafeLabelCharacter has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isSafeLabelCharacter",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "isSafeLabel",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:11.123Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "7fe6e71d87948fa1",
+    "signature": "5rZDoALFeia/0c3PaNrgp6/WzMx59QANMJIZRuXRnsFuw0t1QTeulpj1+LuonQfNn1rNJ1lJ7KjwKsGg7qW6BQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:11.132Z"
+  }
+}

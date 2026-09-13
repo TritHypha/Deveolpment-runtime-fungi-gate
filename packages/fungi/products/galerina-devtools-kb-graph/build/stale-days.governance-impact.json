@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "stale-days.fungi",
+  "sourceHash": "sha256:5b2cf46fb97f5899793c326a662dec6b9eb57642c31b9d24d69a3b082dc08291",
+  "generatedAt": "2026-09-13T17:47:14.101Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "staleDays",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 0
+}

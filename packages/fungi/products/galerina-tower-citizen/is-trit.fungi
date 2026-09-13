@@ -1,0 +1,20 @@
+@version 1
+
+/// Bounded direct-package translation of the pure isTrit predicate from
+/// packages-ts/galerina-tower-citizen/src/ai-governance.ts.
+///
+/// The TypeScript predicate accepts unknown and recognizes exactly the numeric
+/// trit values -1, 0, and 1. This leaf uses a Float64 numeric projection, so
+/// finite numeric inputs preserve those equality semantics. Nonnumeric values
+/// and nonfinite Number ingress remain host/manual boundaries.
+///
+/// This is a classifier only. AI proposals, governance composition, provider
+/// calls, cryptography, key custody, and authorization remain in the retained
+/// TypeScript shadow; a true result grants no authority.
+
+pure flow isTrit(value: Float64) -> Bool
+contract { intent { "Recognize exactly the three finite numeric Kleene trit values." } }
+{
+  if value == -1.0 or value == 0.0 or value == 1.0 { return true }
+  return false
+}

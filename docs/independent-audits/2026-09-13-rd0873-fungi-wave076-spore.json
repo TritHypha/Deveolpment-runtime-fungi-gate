@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-076-SECRETS-SPORE",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-ext-secrets-spore/src/schema.ts#MODALITY_STRUCTURED",
+  "sourceSha256": "ad70134ce334f84628df2d0f0d091ef08b11f7000c833b21a91e3199646ad98d",
+  "target": "packages/fungi/products/galerina-ext-secrets-spore/modality-structured.fungi",
+  "targetBytes": 236,
+  "targetSha256": "522c885874d854fd8dc5135f7fab780352b1a82b7de522b19a723ff79a2ef3db",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "1/1",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The modality constant is exactly 9. Secret bytes, cryptography, erasure, provider effects and custody remain host responsibilities.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 244.6,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

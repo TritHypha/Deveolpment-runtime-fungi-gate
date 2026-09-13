@@ -1,0 +1,7 @@
+@version 1
+/// Bounded pure leaf for the DEVTOOLS_PROVENANCE_VERSION constant.
+/// TypeScript oracle: packages-ts/galerina-devtools-provenance/src/index.ts#DEVTOOLS_PROVENANCE_VERSION
+/// The host retains package/version authority and consumer wiring.
+pure flow devtoolsProvenanceVersion() -> String {
+  return "0.1.0"
+}

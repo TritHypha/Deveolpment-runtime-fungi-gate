@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:6afb8a0101322fe4a1e8cb5007f2bf5105e2476f839c3ede92699526ae11149d",
+  "sourceFile": "admission-feedback.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:38e88357e1d4d49ad737d00a1443090c0ff54d0cda5ecaefd3411ebf61b4777f",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:04.644Z"
+  },
+  "behavioralFingerprint": "sha256:683aa6f8df64314698194c9afdb42fa896e79d71b7b54fe9d5081ecd701d9a21",
+  "derivedConstraints": [
+    "telemetrySideSignal: Flow vAnd has a contract declaration [via contract]",
+    "vAnd: Flow vAnd has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "vAnd",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "telemetrySideSignal",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:04.644Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "9f3b6bae862430ff",
+    "signature": "Iug5l6ZShfapaA414UWe/xqKQpybECC9kymOFdIVnNqAjPyHxoaw1QKyGZQAJpUj/Szfns0drPUKhBmh98BxDw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:04.653Z"
+  }
+}

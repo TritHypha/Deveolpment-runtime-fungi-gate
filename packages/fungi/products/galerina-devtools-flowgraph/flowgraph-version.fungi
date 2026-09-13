@@ -1,0 +1,7 @@
+@version 1
+/// Bounded pure leaf for the FLOWGRAPH_VERSION constant.
+/// TypeScript oracle: packages-ts/galerina-devtools-flowgraph/src/index.ts#FLOWGRAPH_VERSION
+/// The host retains package/version authority and any consumer wiring.
+pure flow flowgraphVersion() -> String {
+  return "0.1.0"
+}

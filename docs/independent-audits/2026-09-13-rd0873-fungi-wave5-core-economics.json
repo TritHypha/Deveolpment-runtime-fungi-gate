@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-005-CORE-ECONOMICS",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-economics/src/index.ts#selectVectorTier",
+  "sourceSha256": "1df8eff287179e43b02860db8a26e19ca2721815bf6c26d39a6fc3ce3517dd9b",
+  "target": "packages/fungi/products/galerina-core-economics/select-vector-tier.fungi",
+  "targetBytes": 361,
+  "targetSha256": "14fa9e903e244a0f926253671313d2114671f677fc7496ef63e64c5c2f04a47e",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "3/3", "packageSuite": "15/15", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "The full HardwareProfile record ABI and hardware probing remain outside this scalar projection.",
+  "productionAuthorizing": false
+}

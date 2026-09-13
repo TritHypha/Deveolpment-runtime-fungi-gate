@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-db-boundary-requirements.fungi",
+  "sourceHash": "sha256:9b4ef019a87ab8abb60acd06d98da71c217ae954041c572ff0d4cc2291f9e24a",
+  "generatedAt": "2026-09-13T17:46:07.421Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "validateDbBoundaryRequirementsAtPath",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateDbBoundaryRequirements",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

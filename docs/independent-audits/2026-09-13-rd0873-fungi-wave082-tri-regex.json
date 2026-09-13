@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-082-TRI-REGEX",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-tri-regex/src/index.ts#VERSION",
+  "sourceSha256": "c9d5da2a6ef42ea2edf7d61fdf5bb3ee71aa30775f8dd3d7add1f1173ec02d33",
+  "target": "packages/fungi/products/galerina-tri-regex/version.fungi",
+  "targetBytes": 363,
+  "targetSha256": "4cc92dcdc16fb384df7d690ac20446a3f0adca8885ccc682fcc4962d0094d8e4",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "34/34",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The VERSION constant is exactly \"0.1.1\". Regex parsing, compilation, streaming execution, ReDoS controls and host version/package authority remain host/manual responsibilities.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 245.9,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

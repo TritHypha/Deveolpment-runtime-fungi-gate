@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:d0515aff3cde53c575c2a773b0bfdb39e1cd8476b68c6f225a95b1080dffd9ec",
+  "sourceFile": "derive-data-report-status.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:7d685ef32c3a4e873eafdf429fdea0fa83935620192a53b4b94da93c3e6a2576",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:27.428Z"
+  },
+  "behavioralFingerprint": "sha256:fd96c08d4b74e08700aafa4020a5cac0657cf4e14d7685dd327feb417091fc83",
+  "derivedConstraints": [
+    "deriveDataReportStatus: Flow deriveDataReportStatus has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "deriveDataReportStatus",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:27.429Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "ae53b739572085ea",
+    "signature": "CCtUXzVcHRyYiAp32y+trEa9cUqct0NycvCzaM2AZeLkGCHJ2HnQCwVK+woEs3lM54veaEFHaug7g00rHtNyCQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:27.436Z"
+  }
+}

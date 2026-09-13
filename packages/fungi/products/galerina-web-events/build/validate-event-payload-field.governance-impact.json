@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-event-payload-field.fungi",
+  "sourceHash": "sha256:bb9020fabb856cbb0ddccaf510880a04ab70889a784ca0d925f9cab00bb7977a",
+  "generatedAt": "2026-09-13T17:46:52.562Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "validateEventPayloadFieldAtPath",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateEventPayloadField",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

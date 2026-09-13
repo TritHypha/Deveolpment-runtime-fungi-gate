@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:329ab4b589582004038253d42fffab816ad740be4c59a1e91330ad0dc6d713e8",
+  "sourceFile": "devtools-context-version.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:90c6eff58ada09aad219d4bd0df4f5df716bed53bbbde35db4cc9b40a8b0d3a5",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:47.326Z"
+  },
+  "behavioralFingerprint": "sha256:d2ac589441d0cfc4ef497aa385805f7c579064c8d4b70a1961422fdaa9f0b340",
+  "derivedConstraints": [],
+  "proofObligations": [
+    {
+      "flowName": "devtoolsContextVersion",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:47.326Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "13a728a8b7f5e1f7",
+    "signature": "XxImxcN71QFEYfOL0Z+xg3IBLM1ML3qNrNPM6FQkNuXxECrP+G2Jxf8+pMX0GXzVHmE4ap241l2HEVLdfB8ACg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:47.333Z"
+  }
+}

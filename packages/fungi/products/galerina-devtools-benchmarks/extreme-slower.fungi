@@ -1,0 +1,12 @@
+@version 1
+
+/// Bounded pure leaf for EXTREME_SLOWER in audit-benchmark-integrity.mjs.
+/// MJS shadow: packages-ts/galerina-devtools-benchmarks/src/audit-benchmark-integrity.mjs#EXTREME_SLOWER
+/// Benchmark runners, measurements, reporting, and publication authority
+/// remain in the MJS/host boundary.
+
+pure flow extremeSlower() -> Int
+contract { intent { "Return the slowdown threshold above which benchmark integrity classifies a result as extreme." } }
+{
+  return 10000
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-bool-boundary.fungi",
+  "sourceHash": "sha256:e2ca55143cac5d5ac620847a28237f2fab3147abfe646978737b12aec1afa462",
+  "generatedAt": "2026-09-13T17:46:24.592Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "validateBoolBoundary",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

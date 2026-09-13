@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-compute-plan.fungi",
+  "sourceHash": "sha256:8aad3c9afb5300b5a6b24d0acb874c222b9ec9bd7bed061e52adfdf409c6b467",
+  "generatedAt": "2026-09-13T17:46:01.188Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "validateComputePlan",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

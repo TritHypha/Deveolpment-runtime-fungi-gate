@@ -1,0 +1,10 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-ts/galerina-hardware-tier/src/hardware-directive.ts#capabilityPreimage
+/// Host boundary: callers must admit the Tier union (binary, hybrid, or photonic).
+pure flow capabilityPreimage(tier: String) -> String
+contract { intent { "Render the deterministic hardware capability plan-hash pre-image." } }
+{
+  let quote: String = Char.fromCode(34).toString()
+  return "{" + quote + "id" + quote + ":" + quote + "hardware.capability" + quote + "," + quote + "tier" + quote + ":" + quote + tier + quote + "}"
+}

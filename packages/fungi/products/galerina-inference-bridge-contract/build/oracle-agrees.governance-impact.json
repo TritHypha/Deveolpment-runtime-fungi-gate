@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "oracle-agrees.fungi",
+  "sourceHash": "sha256:507995f17b82e01bd73a5c45e33af4d654d9062746192240c2cc3ad37f1f3166",
+  "generatedAt": "2026-09-13T17:47:11.502Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "oracleAgrees",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

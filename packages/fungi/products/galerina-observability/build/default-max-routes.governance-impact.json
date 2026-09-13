@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "default-max-routes.fungi",
+  "sourceHash": "sha256:4097a346e408e5ab97818fc9a1adcf579034b5ae50861b439551ee901c0e0396",
+  "generatedAt": "2026-09-13T17:47:12.242Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "defaultMaxRoutes",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

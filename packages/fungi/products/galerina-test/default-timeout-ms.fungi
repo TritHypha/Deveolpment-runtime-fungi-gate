@@ -1,0 +1,15 @@
+@version 1
+
+/// Bounded direct-package translation of DEFAULT_TIMEOUT_MS from
+/// packages-ts/galerina-test/src/spawn.ts.
+///
+/// This pure leaf returns the exact default per-target timeout in milliseconds.
+/// Child-process spawning, timeout termination, exit-status classification,
+/// output capture, and test execution remain host boundaries; the value grants
+/// no process or execution authority.
+
+pure flow defaultTimeoutMs() -> Int
+contract { intent { "Return the exact default harness timeout in milliseconds." } }
+{
+  return 600000
+}

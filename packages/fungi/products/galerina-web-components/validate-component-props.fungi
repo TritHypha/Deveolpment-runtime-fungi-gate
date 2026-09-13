@@ -1,0 +1,95 @@
+@version 1
+
+/// Bounded translation of validateComponentProps from
+/// packages-ts/galerina-web-components/src/index.ts:169-207.
+///
+/// The TypeScript prop union and component boundary remain the compatibility
+/// shadow. This leaf validates only prop names/kinds; browser rendering and
+/// component effects remain host/manual responsibilities.
+
+record ComponentProp {
+  name: String
+  kind: String
+}
+
+record WebComponentsDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateComponentProps(props: Array<ComponentProp>, path_: String) -> Array<WebComponentsDiagnostic>
+contract { intent { "Validate component prop names, duplicate declarations, and known prop kinds in source order." } }
+{
+  mut diagnostics: Array<WebComponentsDiagnostic> = Array.empty()
+  mut seenNames: Array<String> = Array.empty()
+  mut index: Int = 0
+
+  while index < props.count() {
+    let propOpt: Option<ComponentProp> = props.get(index)
+    match propOpt {
+      Some(prop) => {
+        let name: String = prop.name.trim()
+        if name.length() == 0 {
+          diagnostics = diagnostics.append({
+            code: "Galerina_WEB_COMPONENTS_PROP_NAME_REQUIRED",
+            severity: "error",
+            message: "Component prop requires a name.",
+            path: path_ + "." + index.toString() + ".name"
+          })
+        } else {
+          mut duplicate: Bool = false
+          mut seenIndex: Int = 0
+          while seenIndex < seenNames.count() {
+            let seenOpt: Option<String> = seenNames.get(seenIndex)
+            match seenOpt {
+              Some(seenName) => {
+                if seenName == name { duplicate = true }
+              }
+              None => {}
+              _ => {}
+            }
+            seenIndex = seenIndex + 1
+          }
+
+          if duplicate {
+            diagnostics = diagnostics.append({
+              code: "Galerina_WEB_COMPONENTS_PROP_DUPLICATE",
+              severity: "error",
+              message: "Component prop " + Char.fromCode(34).toString() + name + Char.fromCode(34).toString() + " is declared more than once.",
+              path: path_ + "." + index.toString() + ".name"
+            })
+          } else {
+            seenNames = seenNames.append(name)
+          }
+        }
+
+        mut kindKnown: Bool = false
+        match prop.kind {
+          "string" => { kindKnown = true }
+          "integer" => { kindKnown = true }
+          "number" => { kindKnown = true }
+          "boolean" => { kindKnown = true }
+          "enum" => { kindKnown = true }
+          "list" => { kindKnown = true }
+          "record" => { kindKnown = true }
+          _ => {}
+        }
+        if kindKnown == false {
+          diagnostics = diagnostics.append({
+            code: "Galerina_WEB_COMPONENTS_PROP_KIND_UNKNOWN",
+            severity: "error",
+            message: "Component prop kind " + Char.fromCode(34).toString() + prop.kind + Char.fromCode(34).toString() + " is not in the known set; untyped props may not cross the component boundary.",
+            path: path_ + "." + index.toString() + ".kind"
+          })
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  return diagnostics
+}

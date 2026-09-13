@@ -1,0 +1,94 @@
+@version 1
+
+/// Bounded translation of validateComputePlan from
+/// packages-ts/galerina-core-compute/src/index.ts.
+///
+/// The TypeScript implementation remains the compatibility shadow. This
+/// candidate contains only ordered, pure plan diagnostics; it does not select
+/// hardware, execute work, or grant compute authority.
+
+record ComputeBudget {
+  memoryBytes: Option<Float64>
+  timeoutMs: Option<Float64>
+  parallelism: Option<Float64>
+  maxTokens: Option<Float64>
+}
+
+record ComputePlan {
+  name: String
+  workload: String
+  preferredTarget: String
+  fallbackTargets: Array<String>
+  budget: Option<ComputeBudget>
+  requiredCapabilities: Array<String>
+  reportTargetSelection: Bool
+}
+
+record ComputeDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateComputePlan(plan: ComputePlan) -> Array<ComputeDiagnostic>
+contract { intent { "Return ordered diagnostics for a compute plan name, fallback target, and optional positive budgets." } }
+{
+  mut diagnostics: Array<ComputeDiagnostic> = Array.empty()
+
+  if plan.name.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_COMPUTE_PLAN_NAME_REQUIRED"
+      severity: "error"
+      message: "Compute plan requires a name."
+      path: "name"
+    })
+  }
+
+  if plan.fallbackTargets.includes(plan.preferredTarget) {
+    diagnostics = diagnostics.append({
+      code: "Galerina_COMPUTE_FALLBACK_DUPLICATES_PREFERRED_TARGET"
+      severity: "warning"
+      message: "Compute fallback target duplicates the preferred target."
+      path: "fallbackTargets"
+    })
+  }
+
+  match plan.budget {
+    Some(budget) => {
+      match budget.memoryBytes {
+        Some(value) => {
+          if value <= 0.0 {
+            diagnostics = diagnostics.append({
+              code: "Galerina_COMPUTE_MEMORY_BUDGET_INVALID"
+              severity: "error"
+              message: "Compute memory budget must be positive when declared."
+              path: "budget.memoryBytes"
+            })
+          }
+        }
+        None => {}
+        _ => {}
+      }
+
+      match budget.timeoutMs {
+        Some(value) => {
+          if value <= 0.0 {
+            diagnostics = diagnostics.append({
+              code: "Galerina_COMPUTE_TIMEOUT_BUDGET_INVALID"
+              severity: "error"
+              message: "Compute timeout budget must be positive when declared."
+              path: "budget.timeoutMs"
+            })
+          }
+        }
+        None => {}
+        _ => {}
+      }
+    }
+    None => {}
+    _ => {}
+  }
+
+  return diagnostics
+}

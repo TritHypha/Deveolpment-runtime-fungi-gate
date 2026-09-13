@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "derive-data-report-status.fungi",
+  "sourceHash": "sha256:d0515aff3cde53c575c2a773b0bfdb39e1cd8476b68c6f225a95b1080dffd9ec",
+  "generatedAt": "2026-09-13T17:46:27.429Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "deriveDataReportStatus",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

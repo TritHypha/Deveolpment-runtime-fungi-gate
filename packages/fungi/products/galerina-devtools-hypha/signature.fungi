@@ -1,0 +1,42 @@
+@version 1
+/// Bounded pure translation of the Hypha signature helper.
+/// MJS oracle: packages-ts/galerina-devtools-hypha/src/queries.mjs#sig
+/// The host retains fact extraction, Hypha queries, persistence, and report output.
+/// Fungi has no Array.sort/join methods, so stable insertion sorting and joining are explicit.
+pure flow sig(members: Array<String>) -> String
+contract { intent { "Sort members by UTF-16 order and join them with commas." } }
+{
+  mut sorted: Array<String> = Array.empty()
+  mut outer: Int = 0
+  while outer < members.count() {
+    let current: String = members.get(outer).unwrapOr("")
+    mut next: Array<String> = Array.empty()
+    mut inserted: Bool = false
+    mut inner: Int = 0
+    while inner < sorted.count() {
+      let item: String = sorted.get(inner).unwrapOr("")
+      if inserted == false and current < item {
+        next = next.append(current)
+        inserted = true
+      }
+      next = next.append(item)
+      inner = inner + 1
+    }
+    if inserted == false {
+      next = next.append(current)
+    }
+    sorted = next
+    outer = outer + 1
+  }
+
+  mut joined: String = ""
+  mut index: Int = 0
+  while index < sorted.count() {
+    if index > 0 {
+      joined = joined + ","
+    }
+    joined = joined + sorted.get(index).unwrapOr("")
+    index = index + 1
+  }
+  return joined
+}

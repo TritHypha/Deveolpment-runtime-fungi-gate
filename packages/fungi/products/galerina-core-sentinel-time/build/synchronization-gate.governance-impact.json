@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "synchronization-gate.fungi",
+  "sourceHash": "sha256:84b2c92b99f82e979c0aa8f29559b62ad95ed42dfbb61a8766a7437e47a29e70",
+  "generatedAt": "2026-09-13T17:46:04.254Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "driftGateVerdict",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

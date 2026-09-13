@@ -1,0 +1,9 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-ts/galerina-tri-regex/src/index.ts#VERSION
+/// The host retains package/version authority and TriRegex engine execution.
+pure flow triRegexVersion() -> String
+contract { intent { "Return the exact TriRegex package version." } }
+{
+  return "0.1.1"
+}

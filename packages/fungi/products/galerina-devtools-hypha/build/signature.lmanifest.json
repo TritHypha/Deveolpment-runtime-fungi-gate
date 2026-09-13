@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:6804ff8d98cbf82546df9db8d844589639f648bfe62d79584155950c8d2152d8",
+  "sourceFile": "signature.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:d2532968e44d9a246c57be33e512f7da4d2d175747a262cd7ba9a91652004bdb",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:15.226Z"
+  },
+  "behavioralFingerprint": "sha256:a06619d5f75a8ee334a0b2e25e0f86d302c7d73b1d39a047bffe5a22bb3052c9",
+  "derivedConstraints": [
+    "sig: Flow sig has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "sig",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:15.227Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "1dc8a5d035ff2824",
+    "signature": "FxxMmuDKbzR8cKqJL8Mu3xtGvOSLIVweyGrDYgWw4u04j/dP0EPQhw+SQHQRIBq6iju/miAIbrkhg/IzYaGuBA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:15.234Z"
+  }
+}

@@ -1,0 +1,38 @@
+@version 1
+
+/// Bounded pure translation of isSafeLabel from exposition.ts.
+/// TypeScript shadow: packages-ts/galerina-governance-telemetry/src/exposition.ts#isSafeLabel
+/// The host retains metrics export, storage, and governance authority; this
+/// leaf only applies the source's ASCII label admission predicate.
+
+pure flow isSafeLabelCharacter(character: Char) -> Bool
+contract { intent { "Accept only ASCII letters, digits, underscore, dot, colon, and hyphen." } }
+{
+  let codePoint: Int = character.codePoint()
+  if codePoint >= 48 and codePoint <= 57 { return true }
+  if codePoint >= 65 and codePoint <= 90 { return true }
+  if codePoint >= 97 and codePoint <= 122 { return true }
+  if codePoint == 95 or codePoint == 46 or codePoint == 58 or codePoint == 45 { return true }
+  return false
+}
+
+pure flow isSafeLabel(value_: String) -> Bool
+contract { intent { "Admit a nonempty ASCII label of at most 80 allowed characters, matching SAFE_LABEL." } }
+{
+  let length: Int = value_.length()
+  if length < 1 or length > 80 { return false }
+
+  mut index: Int = 0
+  while index < length {
+    let characterOpt: Option<Char> = value_.charAt(index)
+    match characterOpt {
+      Some(character) => {
+        if isSafeLabelCharacter(character) == false { return false }
+      }
+      None => { return false }
+      _ => { return false }
+    }
+    index = index + 1
+  }
+  return true
+}

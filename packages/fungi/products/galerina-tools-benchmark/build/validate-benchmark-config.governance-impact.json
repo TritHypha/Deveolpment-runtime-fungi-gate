@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-benchmark-config.fungi",
+  "sourceHash": "sha256:91747b02170a124b1d2a49d206b8afe96a11c7c1e77b44aee82675c72514cfca",
+  "generatedAt": "2026-09-13T17:46:32.450Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "validateBenchmarkConfigAtPath",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateBenchmarkConfig",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

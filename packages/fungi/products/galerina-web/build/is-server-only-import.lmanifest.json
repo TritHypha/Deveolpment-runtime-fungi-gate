@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:71df769cc988110487757e61fc8eed452654cb327a0e2954f10a243665a913bd",
+  "sourceFile": "is-server-only-import.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:11d541b13b16911976591f000355a7bee290331f9a3ef3e5fb5f48793309d347",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:32.842Z"
+  },
+  "behavioralFingerprint": "sha256:eac09fa885828a391b95bb7456c57ab70460ed8394d1f0f7b397a649576ab511",
+  "derivedConstraints": [
+    "isServerOnlyImport: Flow isServerOnlyImport has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isServerOnlyImport",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:32.842Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "4582a37748875368",
+    "signature": "IZ2P2tic1dhca3hkcoHPlZQvQ5iuWrGZVx9hh0oe40FK1N4h4X2E3EAKW81CN6icYBzSQMVdTPGIz2GNrw/KCQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:32.850Z"
+  }
+}

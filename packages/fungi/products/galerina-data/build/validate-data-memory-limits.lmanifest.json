@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:b24c362a44dec3cec07d952c7bff634567c0b0b614d09f6896acf2067f77439a",
+  "sourceFile": "validate-data-memory-limits.fungi",
+  "flowCount": 3,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:5a990a89acf53c4017bdfb4f0ecf1c23fbfe7ddc830eef19cb98cb0c23bb69fe",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:08.997Z"
+  },
+  "behavioralFingerprint": "sha256:2a6e4c04760c7095932dd3eb8fa4900becfdf1a370a43adb0f5d06b743e835b7",
+  "derivedConstraints": [
+    "isPositiveSafeInteger: Flow isPositiveSafeInteger has a contract declaration [via contract]",
+    "validateDataMemoryLimits: Flow isPositiveSafeInteger has a contract declaration [via contract]",
+    "validateDataMemoryLimitsDefault: Flow isPositiveSafeInteger has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isPositiveSafeInteger",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateDataMemoryLimits",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateDataMemoryLimitsDefault",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:08.998Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "5a6673dcedf2b27c",
+    "signature": "/3cdniAC0SVuo/HBGZLDlEgcnySDidaYJ/aA+v0sUW05QiRWPbD4XJ61dO+98RypJbtc+LzpDb2PqCuFf8F/Cw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:09.009Z"
+  }
+}

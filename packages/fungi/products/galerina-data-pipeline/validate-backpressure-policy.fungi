@@ -1,0 +1,99 @@
+@version 1
+
+/// Bounded translation of validateBackpressurePolicy from
+/// packages-ts/galerina-data-pipeline/src/index.ts.
+///
+/// The host adapter supplies an inert typed policy record. Float64 preserves
+/// the source Number checks; hasBlockTimeout preserves Object.hasOwn for the
+/// optional non-blocking field. Host object/proxy behavior and marshalling are
+/// outside this pure leaf.
+
+record BackpressurePolicy {
+  maxInFlight: Float64
+  onSaturation: String
+  blockTimeoutMs: Float64
+  hasBlockTimeout: Bool
+}
+
+record PipelineDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if Float64.isFinite(value) == false { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow validateBackpressurePolicyAtPath(
+  policy_: BackpressurePolicy,
+  path_: String,
+) -> Array<PipelineDiagnostic>
+contract { intent { "Validate bounded pipeline saturation policy in source diagnostic order." } }
+{
+  mut diagnostics: Array<PipelineDiagnostic> = Array.empty()
+
+  if isPositiveSafeInteger(policy_.maxInFlight) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_PIPELINE_BACKPRESSURE_BOUND_REQUIRED"
+      severity: "error"
+      message: "Backpressure requires a positive integer maxInFlight; an unbounded stage is unsafe."
+      path: path_ + ".maxInFlight"
+    })
+  }
+
+  mut knownSaturation: Bool = false
+  match policy_.onSaturation {
+    "block" => { knownSaturation = true }
+    "shed_oldest" => { knownSaturation = true }
+    "fail" => { knownSaturation = true }
+    _ => {}
+  }
+  if knownSaturation == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_PIPELINE_SATURATION_MODE_UNKNOWN"
+      severity: "error"
+      message: "Saturation behaviour " + Char.fromCode(34).toString() + policy_.onSaturation + Char.fromCode(34).toString() + " is not a known behaviour."
+      path: path_ + ".onSaturation"
+    })
+  }
+
+  if policy_.onSaturation == "block" {
+    if policy_.hasBlockTimeout == false or isPositiveSafeInteger(policy_.blockTimeoutMs) == false {
+      diagnostics = diagnostics.append({
+        code: "Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_REQUIRED"
+        severity: "error"
+        message: "Blocking saturation requires a positive safe-integer blockTimeoutMs bound."
+        path: path_ + ".blockTimeoutMs"
+      })
+    }
+  } else {
+    if policy_.onSaturation == "fail" or policy_.onSaturation == "shed_oldest" {
+      if policy_.hasBlockTimeout == true {
+      diagnostics = diagnostics.append({
+        code: "Galerina_DATA_PIPELINE_BLOCK_TIMEOUT_UNEXPECTED"
+        severity: "error"
+        message: "Non-blocking saturation must not declare an unused blockTimeoutMs field."
+        path: path_ + ".blockTimeoutMs"
+      })
+      }
+    }
+  }
+
+  return diagnostics
+}
+
+pure flow validateBackpressurePolicy(policy_: BackpressurePolicy) -> Array<PipelineDiagnostic>
+contract { intent { "Validate a backpressure policy using the source default diagnostic path." } }
+{
+  return validateBackpressurePolicyAtPath(policy_, "backpressure")
+}

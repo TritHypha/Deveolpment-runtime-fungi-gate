@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:b4df56248b55e912424a3066fcfdfef6416153e0a4193d0c432be154b9b7fb1e",
+  "sourceFile": "sanitize-schema-name.fungi",
+  "flowCount": 3,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:9f7558f4d4a1462e2848913a65cda0351fe393640ff3d88d1afe5af27d0342a6",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:54.606Z"
+  },
+  "behavioralFingerprint": "sha256:d6f3e37909ec89ee65d45a3d0b0cbbcdbd9ff8541b65d79683bd01f2356b1e68",
+  "derivedConstraints": [
+    "charCodeAt: Flow charCodeAt has a contract declaration [via contract]",
+    "isSchemaNameCharacter: Flow charCodeAt has a contract declaration [via contract]",
+    "sanitizeSchemaName: Flow charCodeAt has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "charCodeAt",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "isSchemaNameCharacter",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "sanitizeSchemaName",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:54.606Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "1c6bbb80a4700551",
+    "signature": "ffRCjnb78vue7hRwYMQ59B1Crkbyavl6ZmT/L0aVrozCMoNB0vThxnnIS67NmT4+3ffvSuI2tbXYj58wawt2Bw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:54.617Z"
+  }
+}

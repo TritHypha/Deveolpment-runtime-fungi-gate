@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:a9c9a09d511a165cd712b2a03f481e3afd81acac5a1914c82ddfdfe766e6bcdf",
+  "sourceFile": "flowgraph-version.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:42b6fc495ba083176c25c7d0d17d64e9817216ecb1eb3dfdc18e996f52342e59",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:47.712Z"
+  },
+  "behavioralFingerprint": "sha256:e317a81dd2e7b4613d7d6872b1b61b9b2b2e7587b498397c30bc10d54adca36c",
+  "derivedConstraints": [],
+  "proofObligations": [
+    {
+      "flowName": "flowgraphVersion",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:47.712Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "d05a60b3d5cd4495",
+    "signature": "QWNN22WpytJ7XBGAzcZRq9o+fGdGKxYtsdxwwO0yO8+iWXKHbLx0YVqXFTfEiC5iO+ohKKHJ5BoPktkVMiTxDw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:47.719Z"
+  }
+}

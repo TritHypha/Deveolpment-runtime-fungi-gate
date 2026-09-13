@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:4f61e158e471f2fea9f2dffc49484872b91e1f51eee0fb5ad5e4aac6ff1ee1b9",
+  "sourceFile": "has-errors.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:1b38a408545b01bf2b363a4ea64ae7a54f565cf8d634a8434b369d915ae1c824",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:09.378Z"
+  },
+  "behavioralFingerprint": "sha256:4f28a572830099112ec063dcd7494b83c75052557f12c6761d8c18050619f47e",
+  "derivedConstraints": [
+    "hasErrors: Flow hasErrors has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "hasErrors",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:09.378Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "9d2b2b8881f7041e",
+    "signature": "dT2wHLLNXfDoEkFIbaL+6dxZMOD71e0pnJ4uz/iGBnj8NSDkbEA9UDx7N8BMmkGgQyAUysew7CZj9UbDRoUIDQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:09.388Z"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "is-same-tensor-shape.fungi",
+  "sourceHash": "sha256:13eecd74c22bc42f0d647faa393508ca9febe41f3de72b665683492852165304",
+  "generatedAt": "2026-09-13T17:46:07.017Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "isSameTensorShape",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "flowgraph-version.fungi",
+  "sourceHash": "sha256:a9c9a09d511a165cd712b2a03f481e3afd81acac5a1914c82ddfdfe766e6bcdf",
+  "generatedAt": "2026-09-13T17:46:47.712Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "flowgraphVersion",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 0
+}

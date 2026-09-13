@@ -1,0 +1,52 @@
+@version 1
+
+/// Bounded parsing leaf for readEgressLedger from
+/// packages-ts/galerina-core-sentinel-egress/src/audit-egress.ts.
+///
+/// The host reads <dir>/audit-egress.jsonl as UTF-8 and maps ENOENT to an
+/// empty string before calling this flow. This pure boundary returns ordered
+/// nonblank trimmed JSONL lines; filesystem access and JSON.parse into
+/// AuditBatch values remain manual host responsibilities.
+
+pure flow readEgressLedger(ledgerText_: String) -> Array<String>
+contract { intent { "Split ledger text by newline, trim each line, and retain nonblank JSONL records in source order." } }
+{
+  mut out: Array<String> = Array.empty()
+  mut lines: Array<String> = Array.empty()
+  mut currentLine: String = ""
+  mut scanIndex: Int = 0
+  while scanIndex < ledgerText_.length() {
+    let characterOpt: Option<Char> = ledgerText_.charAt(scanIndex)
+    match characterOpt {
+      Some(character) => {
+        if character.codePoint() == 10 {
+          lines = lines.append(currentLine)
+          currentLine = ""
+        }
+        if character.codePoint() != 10 {
+          currentLine = currentLine + character.toString()
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    scanIndex = scanIndex + 1
+  }
+  lines = lines.append(currentLine)
+  mut index: Int = 0
+  while index < lines.count() {
+    let lineOpt: Option<String> = lines.get(index)
+    match lineOpt {
+      Some(line) => {
+        let trimmed: String = line.trim()
+        if trimmed.length() > 0 {
+          out = out.append(trimmed)
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  return out
+}

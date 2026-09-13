@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-025-CORE",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core/src/index.ts#hasErrors",
+  "sourceSha256": "aac353602dd144ba251bbf7d1bebb25c5dcf3cb7ebc96ab66a44ed51f3ac54d",
+  "target": "packages/fungi/products/galerina-core/has-errors.fungi",
+  "targetBytes": 862,
+  "targetSha256": "4f61e158e471f2fea9f2dffc49484872b91e1f51eee0fb5ad5e4aac6ff1ee1b9",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "6/6", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Error-severity existential fold is preserved; sparse JavaScript arrays, hostile objects and physical ABI admission remain outside this leaf.",
+  "productionAuthorizing": false
+}

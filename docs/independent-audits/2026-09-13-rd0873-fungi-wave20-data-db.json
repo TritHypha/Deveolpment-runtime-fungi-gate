@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-020-DATA-DB",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-data-db/src/index.ts#validateDbBoundaryRequirements",
+  "sourceSha256": "29a8f1e65c1d5695fb900b2b6d395d8de89981db131fc6b62178849b5e468f20",
+  "target": "packages/fungi/products/galerina-data-db/validate-db-boundary-requirements.fungi",
+  "targetBytes": 2062,
+  "targetSha256": "9b4ef019a87ab8abb60acd06d98da71c217ae954041c572ff0d4cc2291f9e24a",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "8/8", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "The three literal Boolean requirements remain fail-closed; wrong-class decoding, consumer switching and provider effects remain host-owned.",
+  "productionAuthorizing": false
+}

@@ -1,0 +1,48 @@
+@version 1
+
+/// Bounded translation of isSameTensorShape from
+/// packages-ts/galerina-ai-neural/src/index.ts:160-171.
+///
+/// The TypeScript predicate remains the compatibility shadow. Fungi receives
+/// dense typed arrays, so JavaScript sparse-array and hostile-object behavior
+/// remains an ingress/ABI obligation outside this pure leaf.
+
+record TensorShape {
+  dimensions: Array<Float64>
+}
+
+record NeuralTensorRef {
+  elementType: String
+  shape: TensorShape
+}
+
+pure flow isSameTensorShape(left: NeuralTensorRef, right: NeuralTensorRef) -> Bool
+contract { intent { "Compare tensor element types and dimensions in source order." } }
+{
+  if left.elementType != right.elementType { return false }
+  if left.shape.dimensions.count() != right.shape.dimensions.count() { return false }
+
+  mut index: Int = 0
+  while index < left.shape.dimensions.count() {
+    let leftDimension: Option<Float64> = left.shape.dimensions.get(index)
+    let rightDimension: Option<Float64> = right.shape.dimensions.get(index)
+
+    match leftDimension {
+      Some(leftValue) => {
+        match rightDimension {
+          Some(rightValue) => {
+            if leftValue != rightValue { return false }
+          }
+          None => { return false }
+          _ => { return false }
+        }
+      }
+      None => { return false }
+      _ => { return false }
+    }
+
+    index = index + 1
+  }
+
+  return true
+}

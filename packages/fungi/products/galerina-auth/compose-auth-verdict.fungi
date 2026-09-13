@@ -1,0 +1,37 @@
+@version 1
+
+/// Bounded translation of composeAuthVerdict from
+/// packages-ts/galerina-auth/src/compose.ts:41-43.
+///
+/// The TypeScript Verdict brand and tower-citizen allOf remain the compatibility
+/// shadow. This pure leaf folds already-produced K3 factors only; credential,
+/// provider, and App Kernel admission effects stay at their host boundaries.
+
+pure flow composeAuthVerdict(factors: Array<Int>) -> Int
+contract { intent { "Conjoin authentication factors with deny-by-default empty handling." } }
+{
+  if factors.count() == 0 { return 0 }
+
+  let firstOpt: Option<Int> = factors.get(0)
+  mut verdict: Int = 0
+  match firstOpt {
+    Some(first) => { verdict = first }
+    None => { return 0 }
+    _ => { return 0 }
+  }
+
+  mut index: Int = 1
+  while index < factors.count() {
+    let factorOpt: Option<Int> = factors.get(index)
+    match factorOpt {
+      Some(factor) => {
+        if factor < verdict { verdict = factor }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  return verdict
+}

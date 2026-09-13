@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-083-OBSERVABILITY",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-observability/src/metrics.ts#DEFAULT_MAX_ROUTES",
+  "sourceSha256": "626f6078133dbe422228280d91cb4aeb7bf1be8c4f02a5b0f87d8063b12582ac",
+  "target": "packages/fungi/products/galerina-observability/default-max-routes.fungi",
+  "targetBytes": 448,
+  "targetSha256": "4097a346e408e5ab97818fc9a1adcf579034b5ae50861b439551ee901c0e0396",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "36/36",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The DEFAULT_MAX_ROUTES constant is exactly 1000. Metrics storage/export, route enforcement, and governance authority remain host/manual responsibilities.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 239.8,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

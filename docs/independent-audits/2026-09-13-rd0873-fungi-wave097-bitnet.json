@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-097-BITNET",
+  "status": "MANUAL_HOST_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-ext-bridge-bitnet/src/index.ts",
+  "sourceSha256": "b3d29ae36119c48f54bdd2f601605ac5732fbc576533422183677736c60cbe10",
+  "sourceBytes": 10247,
+  "symbols": ["isInitialized", "getModelSpec", "createBitNetBridge"],
+  "target": null,
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "NOT_APPLICABLE",
+    "strictBuild": "NOT_APPLICABLE",
+    "focusedTests": "NOT_APPLICABLE",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Native addon loading, model lifecycle, asynchronous inference, erasure, process/environment access, model paths and host authority remain outside the TypeScript/JavaScript-to-Fungi source scope.",
+  "disposition": "No faithful standalone Fungi leaf was identified. isInitialized, getModelSpec and createBitNetBridge depend on mutable host/native state; authoring them as Fungi would change the API and authority boundary.",
+  "productionAuthorizing": false,
+  "outputBytes": 0
+}

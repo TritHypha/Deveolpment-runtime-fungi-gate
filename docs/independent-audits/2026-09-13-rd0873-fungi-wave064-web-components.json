@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-064-WEB-COMPONENTS",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-web-components/src/index.ts#validateComponentProps",
+  "sourceSha256": "f963030dbb6e69d04d9cc50799e0e42106530658e27ad05b4f93cc27240ba57a",
+  "target": "packages/fungi/products/galerina-web-components/validate-component-props.fungi",
+  "targetBytes": 3214,
+  "targetSha256": "669368e7825b033b19515a3f5ff71c36406fbf7172d468e641514e93fe11e728",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "8/8",
+    "parity": "8/8",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "26/26",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Trimming, duplicate detection, known prop-kind validation, diagnostic order and paths preserve source behavior. Rendering, browser effects, physical ABI admission and production authority remain host/manual boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 251.0,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

@@ -22,6 +22,17 @@
 - Grok outputs are advisory alternatives and knowledge-gap notes. GPT-6 Astra's receipt is independent review evidence, not owner admission.
 - Pushes remain owner-controlled. Commit only the files explicitly listed in the execution record after verification; hold the push for the owner.
 
+## Owner-authorized pilot addendum - 2026-09-13
+
+The owner has now authorized a bounded `.fungi` conversion pilot. That
+instruction permits the four already selected scalar symbol scopes to be
+executed and recorded under the limits below; it does not waive exact-head
+identity, semantic checks, retained TypeScript shadows, physical SLIDE/VOK
+evidence, consumer switching, production authority or retirement. The pilot
+receipt is `docs/independent-audits/2026-09-13-rd0873-fungi-pilot-conversion.json`.
+The existing product-tree twins were revalidated at the current head and were
+not rewritten because their bytes already matched the selected candidates.
+
 ---
 
 ## 1. Reproduce the immutable toolchain and current authority baseline
@@ -99,7 +110,7 @@
 - [ ] Define checkpoint states `ready`, `checking`, `repair`, `accepted`, and `refused`, keyed by manifest digest, source digest, compiler/toolchain closure, and profile.
 - [ ] Make journal ownership exclusive, records append-only and synchronised, and restart reconciliation deterministic. Existing code already refuses an active lock and torn tail; add explicit stale-lock policy, torn-tail recovery or refusal evidence, and publication reconciliation. Never publish an output twice.
 - [ ] Add interruption fixtures at every transition, including process termination before receipt publication, after staging, during rename, and during journal append. Restart must either accept the exact prior result or refuse; it must not re-author or duplicate it.
-- [ ] Exercise the RD-0361 caller route through `createSecretGate` and `secretGate.admit` while keeping TypeScript active. Run the retained TypeScript shadow and the Fungi twin against the same inputs and compare verdict, authority, and receipt fields.
+- [x] Exercise the RD-0361 caller route through `createSecretGate` and `secretGate.admit` while keeping TypeScript active. The bounded fixture `scripts/tests/rd0873-caller-route-shadow-bake.test.mjs` runs the retained TypeScript shadow, the real `createAppKernel().handle()` gate-9.5 route and the Fungi twin against the same eight inputs, comparing verdict, authority labels and route receipt fields.
 - [ ] Record caller-route, shadow-bake, restart, and no-consumer-switch outcomes in one receipt. Do not run a full corpus scan for this proof.
 
 **Acceptance:** Resume fixtures pass with no duplicate outputs; the two RD-0361 caller locations execute and agree for the bounded fixture set; a missing or changed shadow refuses.

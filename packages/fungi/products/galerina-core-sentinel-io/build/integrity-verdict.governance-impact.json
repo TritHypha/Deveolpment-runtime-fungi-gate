@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "integrity-verdict.fungi",
+  "sourceHash": "sha256:11e20affe3276fa6b6e039670608cebd0ce7aab08f2a316645335465e4c25658",
+  "generatedAt": "2026-09-13T17:46:05.015Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "integrityVerdict",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

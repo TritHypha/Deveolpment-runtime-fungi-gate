@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-59-TARGET-NATIVE",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-target-native/src/index.ts#validateNativeTarget",
+  "sourceSha256": "831215d52f5012eeb225654097c581f8ecf7e518a340977374627e6df3a5b2f1",
+  "target": "packages/fungi/products/galerina-target-native/validate-native-target.fungi",
+  "targetBytes": 2979,
+  "targetSha256": "e680af0b4cf91a18431d74e8c6b3faf58615acff1f24abf68b0ac0e204599d27",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0,
+    "details": "Target diagnostics parity 12/12"
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Native execution, binary loading, machine effects and production authority remain host boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 267.3,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

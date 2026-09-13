@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-wasm-artefact.fungi",
+  "sourceHash": "sha256:a1949c813837efdffd4496b22f47fdac9723f3bcdd78efd5a899ef4f5438e7b6",
+  "generatedAt": "2026-09-13T17:46:32.029Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "validateWasmArtefact",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

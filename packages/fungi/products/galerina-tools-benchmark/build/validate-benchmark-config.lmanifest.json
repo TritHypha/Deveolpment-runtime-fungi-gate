@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:91747b02170a124b1d2a49d206b8afe96a11c7c1e77b44aee82675c72514cfca",
+  "sourceFile": "validate-benchmark-config.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:250614dac1a5e74f4c64fd88935e1e6022cacfe9129e67b85d7c6880056e61be",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:32.450Z"
+  },
+  "behavioralFingerprint": "sha256:e326b6e388d131c813cd94e9199dfd2ba43c9d2fef913a26d8b8ef8326fa5a7f",
+  "derivedConstraints": [
+    "validateBenchmarkConfig: Flow validateBenchmarkConfigAtPath has a contract declaration [via contract]",
+    "validateBenchmarkConfigAtPath: Flow validateBenchmarkConfigAtPath has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateBenchmarkConfigAtPath",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateBenchmarkConfig",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:32.450Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "e8a7410f84830895",
+    "signature": "ZGp8thStXOJKWDZjPMRI2DBIwy6hxAJKFy56aFwQY0ii+tIq/sbb7429xh/FM42wytbSaO871CkpPhzEb5qoDw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:32.461Z"
+  }
+}

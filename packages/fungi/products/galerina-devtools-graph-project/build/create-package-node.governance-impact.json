@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "create-package-node.fungi",
+  "sourceHash": "sha256:1628fb02d35a82f5c65098acf68dc4fdd816c804d40645c97b5a540243a2dd43",
+  "generatedAt": "2026-09-13T17:46:34.049Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "createPackageNode",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "createPackageNodeDefault",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

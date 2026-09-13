@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "admission-feedback.fungi",
+  "sourceHash": "sha256:6afb8a0101322fe4a1e8cb5007f2bf5105e2476f839c3ede92699526ae11149d",
+  "generatedAt": "2026-09-13T17:46:04.644Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "vAnd",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "telemetrySideSignal",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

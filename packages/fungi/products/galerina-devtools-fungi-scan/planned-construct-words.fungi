@@ -1,0 +1,30 @@
+@version 1
+
+/// Bounded direct-package translation of
+/// packages-ts/galerina-devtools-fungi-scan/src/scanner.ts#PLANNED_CONSTRUCT_WORDS.
+///
+/// The scanner lexer, filesystem traversal, collision measurement and report
+/// generation remain host/toolchain boundaries. This pure flow exposes only
+/// the ordered planned-word table; it grants no scanning or migration power.
+
+pure flow plannedConstructWords() -> Array<String>
+contract { intent { "Return the exact ordered planned construct words reserved by the scanner migration table." } }
+{
+  mut words: Array<String> = Array.empty()
+  words = words.append("check")
+  words = words.append("fault")
+  words = words.append("flip")
+  words = words.append("all")
+  words = words.append("any")
+  words = words.append("sealed")
+  words = words.append("auto")
+  words = words.append("schema")
+  words = words.append("prefilter")
+  words = words.append("unsecure")
+  words = words.append("purify")
+  words = words.append("through")
+  words = words.append("destination")
+  words = words.append("breach")
+  words = words.append("authorize")
+  return words
+}

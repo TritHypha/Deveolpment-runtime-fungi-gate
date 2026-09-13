@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:3cdc9205a82802b45cc6ef20351c7f4c99ac0ca2dc8d5fd48f14eb8105ba3c33",
+  "sourceFile": "validate-database-checksum.fungi",
+  "flowCount": 3,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:3eace11eaf12428d389e999374c3a804f0dae988202993846461eabccc722156",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:09.791Z"
+  },
+  "behavioralFingerprint": "sha256:d781f340806d453615396b66e928392c11df19c07836a112c28b65ce59d933ae",
+  "derivedConstraints": [
+    "isHexDigit: Flow isHexDigit has a contract declaration [via contract]",
+    "validateDatabaseChecksum: Flow isHexDigit has a contract declaration [via contract]",
+    "validateDatabaseChecksumAtPath: Flow isHexDigit has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isHexDigit",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateDatabaseChecksumAtPath",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateDatabaseChecksum",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:09.791Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "dfa63e75b83b1caa",
+    "signature": "LgANWRREYmmo0ePsfXSTvsWGsnBP1bl4XFsyvkbLULnv2y3Ydi5wyGkSi38mYgh3q3A2KuWCy16SWs/vwoiMCg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:09.802Z"
+  }
+}

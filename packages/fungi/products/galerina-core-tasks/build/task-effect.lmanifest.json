@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+  "sourceFile": "task-effect.fungi",
+  "flowCount": 3,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:03b38a673a86fc955e791d7f0afe6163af36a54595fd7af049a49fcb70bed199",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:03.510Z"
+  },
+  "behavioralFingerprint": "sha256:f4b30647bbb15390ea327011ebb4e3509daf888ab4436e75374c8fb0f44b9685",
+  "derivedConstraints": [
+    "isTaskEffect: Flow isTaskEffectCore has a contract declaration [via contract]",
+    "isTaskEffectCore: Flow isTaskEffectCore has a contract declaration [via contract]",
+    "isTaskEffectExtended: Flow isTaskEffectCore has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isTaskEffectCore",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "isTaskEffectExtended",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "isTaskEffect",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:03.510Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "1ae53589e5becbe7",
+    "signature": "KihhOKgKU63gW2FRUmR9CWMK5muMCEJvE7Mp0fbLiTPf1WN1WcaRrMw81VIBtTfQfAY0PSzomwZD41Oz7b4pBg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:03.518Z"
+  }
+}

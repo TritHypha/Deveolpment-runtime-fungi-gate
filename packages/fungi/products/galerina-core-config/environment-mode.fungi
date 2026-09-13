@@ -1,0 +1,14 @@
+@version 1
+
+/// Preserve the exact case-sensitive environment-mode membership decision.
+pure flow isEnvironmentMode(value: String) -> Bool
+contract { intent { "Recognize only a canonical Galerina environment mode." } }
+{
+  match value {
+    "development" => return true
+    "test" => return true
+    "staging" => return true
+    "production" => return true
+    _ => return false
+  }
+}

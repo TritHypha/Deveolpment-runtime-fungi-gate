@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:6b5221b21e46039f1f0fcdd413db7e707afa72a4701b2b072cd265756391dd5c",
+  "sourceFile": "validate-backpressure-policy.fungi",
+  "flowCount": 3,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:e55eb3685a3424a87a64e83ab12f7043036d353da78dd53c1cdbafac1c67e75d",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:25.026Z"
+  },
+  "behavioralFingerprint": "sha256:6f1d0bb9319dcd8f2f5b21853bb2756939bd697fedaa637eee88a77698b9f436",
+  "derivedConstraints": [
+    "isPositiveSafeInteger: Flow isPositiveSafeInteger has a contract declaration [via contract]",
+    "validateBackpressurePolicy: Flow isPositiveSafeInteger has a contract declaration [via contract]",
+    "validateBackpressurePolicyAtPath: Flow isPositiveSafeInteger has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isPositiveSafeInteger",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateBackpressurePolicyAtPath",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateBackpressurePolicy",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:25.029Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "c6f9b4b4f0c49b2c",
+    "signature": "icp4MK6nSlBOo2EWjfx9jddKCCWxMdt7PH3zEanStg1wVdr9ZkVgi0GYh7vZK7aMXdj8iqiq/D25sUXPBDAaCw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:25.036Z"
+  }
+}

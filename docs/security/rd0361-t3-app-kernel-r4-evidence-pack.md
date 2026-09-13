@@ -81,7 +81,7 @@ environment or process authority fails the tranche. App-kernel result:
 | `package-admission` | 562 | `a725b0ae366e64beebf188f7793f28cb5814d0199c4f2dc0393ac2b274a7b113` | string equality |
 | `registry-index` | 479 | `99796c089eb1a88961ed6ca2766b3d7ec91ab6fa083b378027267ec4280a61e0` | string equality |
 | `route-defaults` | 408 | `b7a27319ea50bfd09525ab151a33851fd2717137a6e2c101b4ed4fdcd8780bff` | string equality |
-| `secret-gate` | 278 | `ce662c325ef9ba682688a4b18097f5020fe54235ce522773f20e13d0cfda3c36` | array get/length and string equality |
+| `secret-gate` | 365 | `f062217154df66e3a72bc6adc82e47e72392c5a8d56bc8d40442090a8c8c9166` | array get/length, Option presence/value and string equality |
 
 `node scripts/gather-r4-twin-hashes.mjs --verify-ledger` re-derives every
 currently authoritative twin and refuses hash drift, failed admission,
@@ -103,6 +103,19 @@ routes. The Fungi ABI no longer accepts a header-presence input: absent channel
 authority now refuses directly. The deterministic 126-byte artifact has zero
 ambient imports and independently passes signed #105 admission before its new
 hash is recorded above.
+
+The `secret-gate` row was re-baselined on 2026-09-13 after the committed
+`ca2bc2fb5` Option-ABI safety change. The twin now uses explicit registry
+handles, so its byte identity and import set are intentionally different from
+the historical 278-byte sentinel artifact. The current 365-byte artifact
+passes the same signed/admitted differential; the old digest is retained only
+in the historical drift report.
+
+The corresponding non-vacuity probe (`rd0361-ak-secretgate-present`) passes:
+the mutation anchor matches **1/1**, the fail-open mutant is killed **1/1** by
+the execution differential, and the mutation harness restores the target with
+no dirty file. This supports the repaired gate but does not close caller-route,
+SLIDE integration or production-authority evidence.
 
 ## Result
 

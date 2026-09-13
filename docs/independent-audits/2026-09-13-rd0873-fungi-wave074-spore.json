@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-074-SPORE",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-ext-spore/src/container.ts#HEADER_SIZE",
+  "sourceSha256": "03b74142a166dda63090f59070a98e9a22312d4d16a1896afdc41ed47029788b",
+  "target": "packages/fungi/products/galerina-ext-spore/header-size.fungi",
+  "targetBytes": 440,
+  "targetSha256": "70844b7b5fd3d9a36578c7454898a4fd8f688156da38afa0034ef5d4af0c067f",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "61/61",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The HEADER_SIZE container constant is exactly 56. Spore byte parsing, hashing, cryptography, container authority and host marshalling remain host/manual.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 243.4,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

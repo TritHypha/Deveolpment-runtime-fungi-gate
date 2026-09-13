@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "flip-probability.fungi",
+  "sourceHash": "sha256:7074d9d82eb3505a205b77878a37e4880faa9088464aeb943ea7a02e04c76497",
+  "generatedAt": "2026-09-13T17:46:31.639Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "flipProbability",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

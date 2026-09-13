@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:fc5419be9bea302cb719787452c35d3be534d9be43b0a8efa301782c6dd37786",
+  "sourceFile": "define-ai-safety-policy.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:7ec935632920e847e188304db22eb5093e4c16b66a7d67052fa255d68447d566",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:05.763Z"
+  },
+  "behavioralFingerprint": "sha256:d8a06ac59a25e69a0f6c9c970cedd1741328d911aca20f35c7e90b8590a1952d",
+  "derivedConstraints": [
+    "defineAiSafetyPolicy: Flow defineAiSafetyPolicy has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "defineAiSafetyPolicy",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:05.763Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "869f8a6f2cde2cd9",
+    "signature": "azuCWfSkfxn83fCzsm3CJyeikcSUOIGZxeAhe4CElKURkuIcWu8V67zpA3xeeWUkAYIRUppB4zpwlDXk4HJuDA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:05.771Z"
+  }
+}

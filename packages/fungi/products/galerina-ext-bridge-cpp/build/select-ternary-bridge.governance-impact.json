@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "select-ternary-bridge.fungi",
+  "sourceHash": "sha256:2f71c9d5ce95e6c663d9abba2300a3157b88dbb18c6f38fa2c22952ed974f6d7",
+  "generatedAt": "2026-09-13T17:47:10.314Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "selectTernaryBridgeTechnique",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

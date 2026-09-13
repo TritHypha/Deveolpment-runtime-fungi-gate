@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-50-SENTINEL-EGRESS",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-sentinel-egress/src/audit-egress.ts#readEgressLedger",
+  "sourceSha256": "e50f92a68dbadab39c09ab1f88d5102256111876db8ef3d5cac1fc7f214e90d8",
+  "target": "packages/fungi/products/galerina-core-sentinel-egress/read-egress-ledger.fungi",
+  "targetBytes": 1612,
+  "targetSha256": "31fe042dc6cc8183d1f9b018f7bc903cc235ea82ec2e2b535f4146d992194c38",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Newline splitting, trimming, blank-line omission and source order preserve source behavior. Filesystem access, UTF-8 read, ENOENT mapping, JSON.parse and AuditBatch construction remain host responsibilities.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 267.3,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

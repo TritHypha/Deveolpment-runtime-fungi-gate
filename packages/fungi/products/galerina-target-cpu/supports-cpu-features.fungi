@@ -1,0 +1,46 @@
+@version 1
+
+/// Bounded translation of supportsCpuFeatures from
+/// packages-ts/galerina-target-cpu/src/index.ts:79-84.
+///
+/// The TypeScript CPU capability and closed SIMD unions remain the
+/// compatibility shadow. This pure leaf checks only the supplied feature
+/// lists; runtime probing and feature-domain admission remain host duties.
+
+record CpuTargetCapability {
+  simd: Array<String>
+}
+
+pure flow supportsCpuFeatures(capability: CpuTargetCapability, requiredFeatures: Array<String>) -> Bool
+contract { intent { "Require every requested CPU SIMD feature to be present in the capability." } }
+{
+  mut requiredIndex: Int = 0
+  while requiredIndex < requiredFeatures.count() {
+    let requiredOpt: Option<String> = requiredFeatures.get(requiredIndex)
+    mut requiredFeature: String = ""
+    match requiredOpt {
+      Some(feature) => { requiredFeature = feature }
+      None => { return false }
+      _ => { return false }
+    }
+
+    mut supported: Bool = false
+    mut capabilityIndex: Int = 0
+    while capabilityIndex < capability.simd.count() {
+      let capabilityOpt: Option<String> = capability.simd.get(capabilityIndex)
+      match capabilityOpt {
+        Some(feature) => {
+          if feature == requiredFeature { supported = true }
+        }
+        None => {}
+        _ => {}
+      }
+      capabilityIndex = capabilityIndex + 1
+    }
+
+    if supported == false { return false }
+    requiredIndex = requiredIndex + 1
+  }
+
+  return true
+}

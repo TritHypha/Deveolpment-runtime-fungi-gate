@@ -1,0 +1,190 @@
+benchmark,runtime,metricClass,metricField,value,unit,status,notes
+compute-mix,nodejs,cpu-throughput,normThroughput,136320656.58,mix-ops/s,PASS,"v2: 2x LCG, 2x xorshift mix, float sqrt, 4-way branch per operation | Harder than v1 — exercises float, int, and branch prediction together"
+compute-mix,python,cpu-throughput,normThroughput,1080848.22,mix-ops/s,PASS,"v2: 2x LCG, 2x xorshift mix, float sqrt, 4-way branch per operation | Harder than v1 — exercises float, int, and branch prediction together"
+compute-mix,cpp,cpu-throughput,,,mix-ops/s,UNMEASURED,result=null
+compute-mix,rust,cpu-throughput,normThroughput,133119116.09,mix-ops/s,PASS,
+compute-mix,rustAvx2,cpu-throughput,normThroughput,130922796.63,mix-ops/s,PASS,
+compute-mix,wasm,cpu-throughput,normThroughput,78280000,mix-ops/s,PASS,"Phase 27: Galerina → WAT → binary WASM (413 bytes) → WebAssembly.instantiate | Compile (one-time): 40.0ms. Execution: pure WASM, no JS tree-walker."
+compute-mix,slideReference,cpu-throughput,normThroughput,189901.42217175066,mix-ops/s,PASS,
+compute-mix,galerinaGoverned,cpu-throughput,normThroughput,1638270,mix-ops/s,PASS,
+compute-mix,galerinaManifest,cpu-throughput,normThroughput,1730703,mix-ops/s,PASS,
+compute-mix,galerinaPassive,cpu-throughput,normThroughput,2236500,mix-ops/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+arithmetic-threshold,nodejs,cpu-throughput,,,,UNMEASURED,"v2: doubled threshold, +imul+XOR checksum per cycle"
+arithmetic-threshold,python,cpu-throughput,,,,UNMEASURED,"v2: doubled threshold, +multiply+XOR checksum per cycle"
+arithmetic-threshold,cpp,cpu-throughput,,,,UNMEASURED,result=null
+arithmetic-threshold,rust,cpu-throughput,,,,UNMEASURED,
+arithmetic-threshold,rustAvx2,cpu-throughput,,,,UNMEASURED,
+arithmetic-threshold,wasm,cpu-throughput,callsPerSecond,7859.43,,PASS,"Phase 27: Galerina → WAT → binary WASM (269 bytes) → WebAssembly.instantiate | Compile (one-time): 14.1ms. Execution: pure WASM, no JS tree-walker."
+arithmetic-threshold,galerinaGoverned,cpu-throughput,runsPerSecond,82,,PASS,
+arithmetic-threshold,galerinaManifest,cpu-throughput,runsPerSecond,82,,PASS,
+arithmetic-threshold,galerinaPassive,cpu-throughput,iterationsPerSecond,146.97,,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+six-digit-guess,nodejs,cpu-throughput,attemptsPerSecond,2902920.86,,PASS,"v2: 6-digit codes (1M combinations), bulls+cows scoring per attempt | Each attempt is ~6x more expensive than raw string equality"
+six-digit-guess,python,cpu-throughput,attemptsPerSecond,116239.49,,PASS,"v2: 6-digit codes (1M combinations), bulls+cows scoring per attempt | Each attempt is ~6x more expensive than raw string equality"
+six-digit-guess,cpp,cpu-throughput,,,,UNMEASURED,result=null
+six-digit-guess,rust,cpu-throughput,attemptsPerSecond,77334558.82,,PASS,
+six-digit-guess,rustAvx2,cpu-throughput,attemptsPerSecond,74817712.96,,PASS,
+six-digit-guess,wasm,cpu-throughput,callsPerSecond,875.93,,PASS,"Phase 27: Galerina → WAT → binary WASM (413 bytes) → WebAssembly.instantiate | Compile (one-time): 17.1ms. Execution: pure WASM, no JS tree-walker."
+six-digit-guess,galerinaGoverned,cpu-throughput,runsPerSecond,1,,PASS,
+six-digit-guess,galerinaManifest,cpu-throughput,runsPerSecond,1,,PASS,
+six-digit-guess,galerinaPassive,cpu-throughput,iterationsPerSecond,1.19,,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+record-allocation,nodejs,memory,normThroughput,59484861.1,records/s,PASS,
+record-allocation,python,memory,normThroughput,5352387.83,records/s,PASS,
+record-allocation,rust,memory,normThroughput,1185395922.24,records/s,PASS,
+record-allocation,rustAvx2,memory,normThroughput,1187140889.88,records/s,PASS,
+record-allocation,wasm,memory,normThroughput,559834800,records/s,PASS,"Phase 27: Galerina → WAT → binary WASM (219 bytes) → WebAssembly.instantiate | Compile (one-time): 13.4ms. Execution: pure WASM, no JS tree-walker."
+record-allocation,galerinaGoverned,memory,normThroughput,2325581,records/s,PASS,
+record-allocation,galerinaManifest,memory,normThroughput,2666667,records/s,PASS,
+record-allocation,galerinaPassive,memory,normThroughput,8318200,records/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+fibonacci-recursive,nodejs,cpu-throughput,iterationsPerSecond,126.4,,PASS,
+fibonacci-recursive,python,cpu-throughput,callsPerSecond,8.67,,PASS,
+fibonacci-recursive,rust,cpu-throughput,iterationsPerSecond,497.44,,PASS,
+fibonacci-recursive,rustAvx2,cpu-throughput,iterationsPerSecond,507.29,,PASS,
+fibonacci-recursive,go,cpu-throughput,iterationsPerSecond,307.96,,PASS,
+fibonacci-recursive,wasm,cpu-throughput,callsPerSecond,17324.53,,PASS,"Phase 27: Galerina → WAT → binary WASM (171 bytes) → WebAssembly.instantiate | Compile (one-time): 13.0ms. Execution: pure WASM, no JS tree-walker."
+fibonacci-recursive,galerinaGoverned,cpu-throughput,runsPerSecond,13,,PASS,
+fibonacci-recursive,galerinaManifest,cpu-throughput,runsPerSecond,18,,PASS,
+fibonacci-recursive,galerinaPassive,cpu-throughput,iterationsPerSecond,23.78,,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+tower-of-hanoi,nodejs,cpu-throughput,normThroughput,129047185.37,moves/s,PASS,
+tower-of-hanoi,python,cpu-throughput,normThroughput,4413939.79,moves/s,PASS,
+tower-of-hanoi,rust,cpu-throughput,normThroughput,255481687.36,moves/s,PASS,
+tower-of-hanoi,rustAvx2,cpu-throughput,normThroughput,255984044.5,moves/s,PASS,
+tower-of-hanoi,wasm,cpu-throughput,normThroughput,122536032,moves/s,PASS,"Phase 27: Galerina → WAT → binary WASM (282 bytes) → WebAssembly.instantiate | Compile (one-time): 13.1ms. Execution: pure WASM, no JS tree-walker."
+tower-of-hanoi,galerinaGoverned,cpu-throughput,normThroughput,95672,moves/s,PASS,
+tower-of-hanoi,galerinaManifest,cpu-throughput,normThroughput,94164,moves/s,PASS,
+tower-of-hanoi,galerinaPassive,cpu-throughput,normThroughput,97647,moves/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+collection-pipeline,nodejs,memory,normThroughput,71717000,elements/s,PASS,
+collection-pipeline,python,memory,normThroughput,21990100,elements/s,PASS,
+collection-pipeline,rust,memory,normThroughput,4322328100,elements/s,PASS,
+collection-pipeline,rustAvx2,memory,normThroughput,13263004000,elements/s,PASS,
+collection-pipeline,wasm,memory,normThroughput,425153000,elements/s,PASS,"Phase 27: Galerina → WAT → binary WASM (251 bytes) → WebAssembly.instantiate | Compile (one-time): 13.1ms. Execution: pure WASM, no JS tree-walker."
+collection-pipeline,slideReference,memory,normThroughput,581622,elements/s,PASS,
+collection-pipeline,galerinaGoverned,memory,normThroughput,8333333,elements/s,PASS,
+collection-pipeline,galerinaManifest,memory,normThroughput,2024291,elements/s,PASS,
+collection-pipeline,galerinaPassive,memory,normThroughput,7721000,elements/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+governance-cost,nodejs,governance,iterationsPerSecond,2124057.71,gov-factor,PASS,Pure JS loop: sum 1..n for each iteration
+governance-cost,python,governance,iterationsPerSecond,42321.81,gov-factor,PASS,Pure Python loop: sum 1..n for each iteration
+governance-cost,rust,governance,iterationsPerSecond,893814801.57,gov-factor,PASS,
+governance-cost,rustAvx2,governance,iterationsPerSecond,907317515.76,gov-factor,PASS,
+governance-cost,wasm,governance,callsPerSecond,3181474.74,gov-factor,PASS,"Phase 27: Galerina → WAT → binary WASM (201 bytes) → WebAssembly.instantiate | Compile (one-time): 12.5ms. Execution: pure WASM, no JS tree-walker."
+governance-cost,galerinaGoverned,governance,runsPerSecond,628,gov-factor,PASS,
+governance-cost,galerinaManifest,governance,runsPerSecond,932,gov-factor,PASS,
+governance-cost,galerinaPassive,governance,iterationsPerSecond,2079.65,gov-factor,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+hardware-targets,nodejs,cpu-throughput,iterationsPerSecond,921437.16,,PASS,"Float32Array dot product — 1024 elements × N iterations | V8 auto-SIMD: typically SSE4 or AVX2 depending on host CPU | Measures: FMA throughput per second. i5=AVX2, i9=AVX-512."
+hardware-targets,rust,cpu-throughput,iterationsPerSecond,1188093.5,,PASS,
+hardware-targets,rustAvx2,cpu-throughput,iterationsPerSecond,1188286.21,,PASS,
+hardware-targets,wasm,cpu-throughput,callsPerSecond,49501841.59,,PASS,"Phase 27: Galerina → WAT → binary WASM (266 bytes) → WebAssembly.instantiate | Compile (one-time): 12.8ms. Execution: pure WASM, no JS tree-walker."
+hardware-targets,galerinaGoverned,cpu-throughput,runsPerSecond,3517,,PASS,
+hardware-targets,galerinaManifest,cpu-throughput,runsPerSecond,2867,,PASS,
+hardware-targets,galerinaPassive,cpu-throughput,iterationsPerSecond,11881.42,,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+low-memory,nodejs,memory,normThroughput,716003100,items/s,PASS,V8 uses tagged integers — no heap allocation for small integer operations | Bytes/op: 0.00 (target: ~0 for integer-only flows)
+low-memory,python,memory,normThroughput,5781100,items/s,PASS,tracemalloc measures Python heap allocations | Bytes/op: 0.00 (Python objects are ~56+ bytes each)
+low-memory,rust,memory,normThroughput,1361486900,items/s,PASS,Rust stack-only — zero heap allocation
+low-memory,rustAvx2,memory,normThroughput,6240779200,items/s,PASS,Rust stack-only — zero heap allocation
+low-memory,wasm,memory,normThroughput,474424300,items/s,PASS,"Phase 27: Galerina → WAT → binary WASM (310 bytes) → WebAssembly.instantiate | Compile (one-time): 13.3ms. Execution: pure WASM, no JS tree-walker. | Bytes/op: 0.00 (target: ~0 — WASM Int32Array, no JS object boxing)"
+low-memory,galerinaGoverned,memory,normThroughput,147973,items/s,PASS,
+low-memory,galerinaManifest,memory,normThroughput,123031,items/s,PASS,
+low-memory,galerinaPassive,memory,normThroughput,169300,items/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+gpu-compute,nodejs,gpu,normThroughput,999791444,kernel-evals/s,PASS,CPU serial execution — V8 JIT. | GPU-shaped workload: per-element kernel + reduction. On GPU this parallelises across thousands of threads.
+gpu-compute,python,gpu,normThroughput,12733339,kernel-evals/s,PASS,CPU serial execution — CPython. | GPU-shaped map-reduce workload.
+gpu-compute,rust,gpu,normThroughput,1192314683,kernel-evals/s,PASS,Rust CPU serial baseline. GPU variant requires wgpu (toolchain-gated).
+gpu-compute,rustAvx2,gpu,normThroughput,1191263531,kernel-evals/s,PASS,Rust CPU serial baseline. GPU variant requires wgpu (toolchain-gated).
+gpu-compute,wasm,gpu,normThroughput,475138000,kernel-evals/s,PASS,"Phase 27: Galerina → WAT → binary WASM (302 bytes) → WebAssembly.instantiate | Compile (one-time): 13.8ms. Execution: pure WASM, no JS tree-walker. | Galerina real result: map-reduce compiled to WASM, executed on CPU. | Galerina GPU execution pending Phase 38 — no GPU number is shown (gpu-plan.ts is a stub)."
+gpu-compute,denoWebGpu,gpu,normThroughput,4001905,kernel-evals/s,PASS,"Real GPU parallel execution via WebGPU (Deno built-in navigator.gpu). | Map: 2048 workgroups × 64 threads; 100000 real elements, 31072 zero-padded to power-of-2. | Reduce: 17 binary-tree passes with u64 carry; rawSum = 10000000000. | result = ((rawSum-1) % 1e9) + 1 — equivalent to the sequential CPU wrap algorithm. | elapsedMs = wall time incl. GPU readback; gpuDispatchMs = GPU submit+wait only. | Adapter: NVIDIA GeForce RTX 2060"
+gpu-compute,galerinaGoverned,gpu,normThroughput,345841,kernel-evals/s,PASS,
+gpu-compute,galerinaManifest,gpu,normThroughput,361572,kernel-evals/s,PASS,
+gpu-compute,galerinaPassive,gpu,normThroughput,407000,kernel-evals/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+matrix-multiply,nodejs,cpu-throughput,normThroughput,623247360,mul-adds/s,PASS,Float32Array matrix multiply — V8 JIT may auto-vectorise to AVX2
+matrix-multiply,python,cpu-throughput,normThroughput,18562809856,mul-adds/s,PASS,NumPy float32 matmul
+matrix-multiply,rust,cpu-throughput,normThroughput,1509561467,mul-adds/s,PASS,Rust serial float32 matmul — compiler may auto-vectorise
+matrix-multiply,rustAvx2,cpu-throughput,normThroughput,1442452603,mul-adds/s,PASS,Rust serial float32 matmul — compiler may auto-vectorise
+matrix-multiply,wasm,cpu-throughput,normThroughput,446084874,mul-adds/s,PASS,"Phase 27: Galerina → WAT → binary WASM (443 bytes) → WebAssembly.instantiate | Compile (one-time): 14.2ms. Execution: pure WASM, no JS tree-walker. | Galerina integer matmul (scaled ×1000) compiled to WASM"
+matrix-multiply,denoWebGpu,cpu-throughput,normThroughput,1522993725,mul-adds/s,PASS,Deno WebGPU WGSL compute shader — 8×8 workgroups
+matrix-multiply,galerinaGoverned,cpu-throughput,normThroughput,771556,mul-adds/s,PASS,
+matrix-multiply,galerinaManifest,cpu-throughput,normThroughput,679552,mul-adds/s,PASS,
+matrix-multiply,galerinaPassive,cpu-throughput,normThroughput,914883,mul-adds/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+crypto-ops,nodejs,io,,,,UNMEASURED,bcrypt intentionally excluded from this runner (use bcrypt.mjs for that) | SHA-256 throughput: 274 MB/s (1024 byte chunks)
+crypto-ops,python,io,,,,UNMEASURED,hashlib (C-backed) SHA-256 throughput: 427 MB/s
+crypto-ops,rust,io,,,,UNMEASURED,Rust pseudo-hash — install sha2 crate for real SHA-256 numbers
+crypto-ops,rustAvx2,io,,,,UNMEASURED,Rust pseudo-hash — install sha2 crate for real SHA-256 numbers
+crypto-ops,galerinaGoverned,io,runsPerSecond,202,,PASS,
+crypto-ops,galerinaManifest,io,runsPerSecond,1852,,PASS,
+crypto-ops,galerinaPassive,io,iterationsPerSecond,5905.45,,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+text-html,nodejs,io,,,,UNMEASURED,HTML escaping is security-critical — must be fast to avoid temptation to skip it | JSON parse/stringify is the most common web service operation
+text-html,python,io,,,,UNMEASURED,Python html.escape + json built-ins (C extension)
+text-html,rust,io,,,,UNMEASURED,Rust char-by-char HTML escape + split/join
+text-html,rustAvx2,io,,,,UNMEASURED,Rust char-by-char HTML escape + split/join
+text-html,galerinaGoverned,io,runsPerSecond,824,,PASS,
+text-html,galerinaManifest,io,runsPerSecond,1727,,PASS,
+text-html,galerinaPassive,io,iterationsPerSecond,4920.29,,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+tri-logic,nodejs,cpu-throughput,normThroughput,958915888,trit-ops/s,PASS,"✓ 27/27 Kleene truth-table combinations correct | Common bulk-N path: runBulkTri(100000) = 300000 trit-ops/call, identical on every runtime | Kleene AND/OR/NOT collapse to min/max/neg — single i32 instructions in WASM"
+tri-logic,python,cpu-throughput,normThroughput,14508222,trit-ops/s,PASS,"Common bulk-N path: runBulkTri(100000) = 300000 trit-ops/call, identical on every runtime"
+tri-logic,rust,cpu-throughput,normThroughput,1406841093,trit-ops/s,PASS,"Common bulk-N path: runBulkTri(100000)=300000 trit-ops/call, identical on every runtime"
+tri-logic,rustAvx2,cpu-throughput,normThroughput,1407630578,trit-ops/s,PASS,"Common bulk-N path: runBulkTri(100000)=300000 trit-ops/call, identical on every runtime"
+tri-logic,wasm,cpu-throughput,normThroughput,474084000,trit-ops/s,PASS,"Phase 27: Galerina → WAT → binary WASM (421 bytes) → WebAssembly.instantiate | Compile (one-time): 14.3ms. Execution: pure WASM, no JS tree-walker. | Kleene AND = i32.min_s, OR = i32.max_s, NOT = i32.sub(0,a) in WAT | Zero branching overhead — should match or beat branchless Node.js"
+tri-logic,galerinaGoverned,cpu-throughput,normThroughput,331543,trit-ops/s,PASS,
+tri-logic,galerinaManifest,cpu-throughput,normThroughput,347266,trit-ops/s,PASS,
+tri-logic,galerinaPassive,cpu-throughput,normThroughput,354000,trit-ops/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+verified-native-operation,nodejs,cpu-throughput,normThroughput,2031281738,element-reads/s,PASS,
+verified-native-operation,python,cpu-throughput,normThroughput,20155926,element-reads/s,PASS,
+verified-native-operation,rust,cpu-throughput,normThroughput,2396357536,element-reads/s,PASS,
+verified-native-operation,rustAvx2,cpu-throughput,normThroughput,3709198813,element-reads/s,PASS,
+verified-native-operation,go,cpu-throughput,normThroughput,915750915,element-reads/s,PASS,
+verified-native-operation,checkedReference,cpu-throughput,normThroughput,583737084,element-reads/s,PASS,
+verified-native-operation,slideReference,cpu-throughput,normThroughput,1529285823,element-reads/s,PASS,
+data-query,nodejs,cpu-throughput,normThroughput,387211189,record-scans/s,PASS,"Common bulk-N path: scanRecords(10000) = 10000 record-scans/call (filter + group-by), identical on every runtime | Integer core = the WASM/interp-comparable throughput; Galerina's taint checker governs the real Tainted<String> query path at compile time"
+data-query,python,cpu-throughput,normThroughput,6995768,record-scans/s,PASS,"Common bulk-N path: scanRecords(10000) = 10000 record-scans/call (filter + group-by), identical on every runtime"
+data-query,galerinaGoverned,cpu-throughput,normThroughput,233100,record-scans/s,PASS,
+data-query,galerinaManifest,cpu-throughput,normThroughput,243368,record-scans/s,PASS,
+data-query,galerinaPassive,cpu-throughput,normThroughput,283500,record-scans/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+call-chain,nodejs,cpu-throughput,normThroughput,42398032.73,chains/s,PASS,
+call-chain,python,cpu-throughput,normThroughput,2250832.81,chains/s,PASS,
+call-chain,rust,cpu-throughput,normThroughput,154083204.930663,chains/s,PASS,
+call-chain,rustAvx2,cpu-throughput,normThroughput,153233220.962305,chains/s,PASS,
+call-chain,go,cpu-throughput,normThroughput,143916367.32062265,chains/s,PASS,
+call-chain,wasm,cpu-throughput,normThroughput,54808500,chains/s,PASS,"Phase 27: Galerina → WAT → binary WASM (309 bytes) → WebAssembly.instantiate | Compile (one-time): 13.8ms. Execution: pure WASM, no JS tree-walker."
+call-chain,slideReference,cpu-throughput,normThroughput,191766.39478027803,chains/s,PASS,
+call-chain,galerinaGoverned,cpu-throughput,normThroughput,56367,chains/s,PASS,
+call-chain,galerinaManifest,cpu-throughput,normThroughput,55940,chains/s,PASS,
+call-chain,galerinaPassive,cpu-throughput,normThroughput,60000,chains/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+nbody,nodejs,cpu-throughput,normThroughput,122925482,force-evals/s,PASS,Scaled-integer N-body — checksum matches Python and Galerina bit-for-bit
+nbody,python,cpu-throughput,normThroughput,1885133,force-evals/s,PASS,Scaled-integer N-body — checksum matches Node and Galerina bit-for-bit
+nbody,wasm,cpu-throughput,normThroughput,29396173,force-evals/s,PASS,"Phase 27: Galerina → WAT → binary WASM (722 bytes) → WebAssembly.instantiate | Compile (one-time): 16.1ms. Execution: pure WASM, no JS tree-walker."
+nbody,galerinaGoverned,cpu-throughput,normThroughput,67229,force-evals/s,PASS,
+nbody,galerinaManifest,cpu-throughput,normThroughput,65263,force-evals/s,PASS,
+nbody,galerinaPassive,cpu-throughput,normThroughput,67502,force-evals/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+json-parse,nodejs,io,normThroughput,1108000,records/s,PASS,Records: 500 key:value records of 5 fields each | checksum = N × (5 fields + 20 value-chars) via split/length — matches Galerina and Python | splitScan mirrors the .fungi kernel; jsonParse is the native JSON.parse path for reference
+json-parse,python,io,normThroughput,760500,records/s,PASS,Records: 500 key:value records | checksum = N x (5 fields + 20 value-chars) via split/len — matches Galerina and Node
+json-parse,galerinaGoverned,io,normThroughput,5383,records/s,PASS,
+json-parse,galerinaManifest,io,normThroughput,5475,records/s,PASS,
+json-parse,galerinaPassive,io,normThroughput,10165,records/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+mandelbrot,nodejs,cpu-throughput,normThroughput,6328022,pixels/s,PASS,"Scaled-integer Mandelbrot escape-time — checksum matches Python, Rust and Galerina bit-for-bit"
+mandelbrot,python,cpu-throughput,normThroughput,270271,pixels/s,PASS,"Scaled-integer Mandelbrot escape-time — checksum matches Node, Rust and Galerina bit-for-bit"
+mandelbrot,rust,cpu-throughput,normThroughput,23760647,pixels/s,PASS,
+mandelbrot,rustAvx2,cpu-throughput,normThroughput,23826854,pixels/s,PASS,
+mandelbrot,wasm,cpu-throughput,normThroughput,9146040,pixels/s,PASS,"Phase 27: Galerina → WAT → binary WASM (582 bytes) → WebAssembly.instantiate | Compile (one-time): 16.2ms. Execution: pure WASM, no JS tree-walker."
+mandelbrot,galerinaGoverned,cpu-throughput,normThroughput,8277,pixels/s,PASS,
+mandelbrot,galerinaManifest,cpu-throughput,normThroughput,8253,pixels/s,PASS,
+mandelbrot,galerinaPassive,cpu-throughput,normThroughput,8356,pixels/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+spectral-norm,nodejs,cpu-throughput,normThroughput,240523379,A-evals/s,PASS,"Scaled-int power iteration (n=100, 10 iters); checksum is byte-identical to Python and Rust"
+spectral-norm,python,cpu-throughput,normThroughput,3397069,A-evals/s,PASS,"Scaled-int power iteration (n=100, 10 iters); checksum is byte-identical to Node and Rust"
+spectral-norm,rust,cpu-throughput,normThroughput,377438251,A-evals/s,PASS,"Scaled-int power iteration (n=100, 10 iters); checksum is byte-identical to Node and Python"
+spectral-norm,rustAvx2,cpu-throughput,normThroughput,372749062,A-evals/s,PASS,"Scaled-int power iteration (n=100, 10 iters); checksum is byte-identical to Node and Python"
+binary-trees,nodejs,memory,normThroughput,73789582,nodes/s,PASS,One op = one allocated tree node (135854/run). Headline metric = bytesPerOperation.
+binary-trees,python,memory,normThroughput,5195658,nodes/s,PASS,"One op = one allocated tree node (135854/run). Headline metric = bytesPerOperation. | binary-trees churns: most trees are freed immediately, so heapUsedDelta (surviving) is tiny; tracemallocPeak is the live high-water mark of the largest simultaneous tree."
+binary-trees,rust,memory,normThroughput,20267037,nodes/s,PASS,
+binary-trees,rustAvx2,memory,normThroughput,20046037,nodes/s,PASS,
+binary-trees,wasm,memory,normThroughput,584673501,nodes/s,PASS,"Phase 27: Galerina → WAT → binary WASM (472 bytes) → WebAssembly.instantiate | Compile (one-time): 14.8ms. Execution: pure WASM, no JS tree-walker."
+binary-trees,galerinaGoverned,memory,normThroughput,367640,nodes/s,PASS,
+binary-trees,galerinaManifest,memory,normThroughput,391183,nodes/s,PASS,
+binary-trees,galerinaPassive,memory,normThroughput,442884,nodes/s,PASS,setupMs: one-time compile+governance cost (not charged to execution) | throughput (iterationsPerSecond) = COLD rate: real per-call recompute — the apples-to-apples cross-runtime number | warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call) | coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above
+spore-container,nodejs,io,normThroughput,49498,containers/s,PASS,"One op = build the canonical golden .spore (203 bytes, root asserted): SHAKE256 leaf/node/root + LE packing"
+spore-container,python,io,normThroughput,87941,containers/s,PASS,Python reference impl (hashlib.shake_256) — byte-identical to the Galerina engine
+spore-container,rust,io,normThroughput,172535,containers/s,PASS,
+spore-container,rustAvx2,io,normThroughput,171162,containers/s,PASS,
+framework-pipeline,nodejs,io,normThroughput,145476,requests/s,PASS,One op = one full successful request through the fixed governed pipeline to a handler | Kernel is async (Tri-Pipe audit off critical path); the sync architecture[] figures isolate gate cost
+framework-pipeline,python,io,normThroughput,168530,requests/s,PASS,Hand-rolled stdlib middleware chain (same gates); a real framework would be slower
+http-throughput,nodejs,io,,,,UNMEASURED,"Raw Node.js HTTP: 3,364 req/sec | p50 latency: 0.257ms | p99 latency: 0.609ms | Sequential (not concurrent) — isolates server throughput from client parallelism"
+naming-check,nodejs,io,filesPerSecond,7063,,PASS,Corpus: 31 files | Findings: 33/sweep | 7063 files/sec
+context-receipt,nodejs,io,receiptsPerSecond,18195,,PASS,"Corpus: 31 files, 116 flows | Avg token reduction: 88.7% | Receipt throughput: 18195 receipts/sec"
+intelligence-search,nodejs,io,queriesPerSecond,106839,,PASS,"116 flows indexed | 106839 queries/sec | Top ""verify password"": verifyPassword"
+provenance-trace,nodejs,io,filesPerSecond,340,,PASS,"Corpus: 31 files, 0 flows | Graph: 208 nodes, 42 edges per sweep | Risk flows detected: 0 | Throughput: 340 files/sec"

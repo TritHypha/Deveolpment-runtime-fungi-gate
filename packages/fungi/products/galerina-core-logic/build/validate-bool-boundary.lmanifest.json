@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:e2ca55143cac5d5ac620847a28237f2fab3147abfe646978737b12aec1afa462",
+  "sourceFile": "validate-bool-boundary.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:7f514895ac90f810447ac710f454db305bffe8a70d7c036873d2ef2b1f618938",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:24.591Z"
+  },
+  "behavioralFingerprint": "sha256:2e4cdb36de9c2e1e65ca182d8ef13b69e0289a4bc77276496266aa37787d5809",
+  "derivedConstraints": [
+    "validateBoolBoundary: Flow validateBoolBoundary has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateBoolBoundary",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:24.592Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "e788db4ec503c4bc",
+    "signature": "IYFm4M25arhIEgZxBwTChMVNmg6CCq9hKG1MoJlYI7pQ2PtQulgBkqYtQwGxYp0itHTqkzf+ahMy3Dqx/NDBAA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:24.599Z"
+  }
+}

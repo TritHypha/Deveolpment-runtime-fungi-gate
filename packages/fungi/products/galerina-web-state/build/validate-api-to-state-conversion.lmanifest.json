@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:cdba44cac637b85536410ae3157bd674540631a600b055dd842a7ed5d0d76896",
+  "sourceFile": "validate-api-to-state-conversion.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:25a26df4c438b8b2efc94685c8c721041e5796577d061a64c72387026727dd41",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:53.819Z"
+  },
+  "behavioralFingerprint": "sha256:2cec68f4f1c7b346e27bbd45e3e888e006d11d3597cf78ca04eb0a3082c0c623",
+  "derivedConstraints": [
+    "validateApiToStateConversion: Flow validateApiToStateConversionAtPath has a contract declaration [via contract]",
+    "validateApiToStateConversionAtPath: Flow validateApiToStateConversionAtPath has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateApiToStateConversionAtPath",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateApiToStateConversion",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:53.819Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "e5ce050c034e940c",
+    "signature": "aLztlCBKNVHem0BOeRHpc4Wpwrt/uDYeOuM3/yNx1Qo1V3N7RU1e9b2KOpSeBe92N68JEDFPw/985lNG1i9jCg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:53.828Z"
+  }
+}

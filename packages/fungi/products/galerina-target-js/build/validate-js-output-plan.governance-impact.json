@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-js-output-plan.fungi",
+  "sourceHash": "sha256:74f63270d5f65a915caabc8d765368b33d4dbf3e18ab42f6ebd5e9407168e68a",
+  "generatedAt": "2026-09-13T17:46:50.908Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "isServerOnlyImport",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateJsOutputPlan",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

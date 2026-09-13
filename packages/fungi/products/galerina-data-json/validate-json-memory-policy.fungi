@@ -1,0 +1,83 @@
+@version 1
+
+/// Bounded direct-package translation of validateJsonMemoryPolicy from
+/// packages-ts/galerina-data-json/src/index.ts.
+///
+/// The TypeScript JSON decoder, JavaScript object admission and stream
+/// runtime remain shadowed. This pure flow validates only memory bounds; it
+/// grants no decoding, allocation or data handling authority.
+
+record JsonMemoryPolicy {
+  maxDepth: Float64
+  maxDocumentBytes: Float64
+  maxStringBytes: Option<Float64>
+}
+
+record JsonDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if Float64.isFinite(value) == false { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow validateJsonMemoryPolicy(
+  memoryPolicy: JsonMemoryPolicy,
+  path_: String,
+) -> Array<JsonDiagnostic>
+contract { intent { "Validate positive finite safe depth and document bounds plus an optional string bound." } }
+{
+  mut diagnostics: Array<JsonDiagnostic> = Array.empty()
+
+  if isPositiveSafeInteger(memoryPolicy.maxDepth) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_JSON_DEPTH_LIMIT_REQUIRED"
+      severity: "error"
+      message: "JSON memory policy requires a positive integer maxDepth; unbounded nesting is unsafe."
+      path: path_ + ".maxDepth"
+    })
+  }
+
+  if isPositiveSafeInteger(memoryPolicy.maxDocumentBytes) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_JSON_DOCUMENT_LIMIT_REQUIRED"
+      severity: "error"
+      message: "JSON memory policy requires a positive integer maxDocumentBytes; unbounded documents are unsafe."
+      path: path_ + ".maxDocumentBytes"
+    })
+  }
+
+  match memoryPolicy.maxStringBytes {
+    Some(value) => {
+      if isPositiveSafeInteger(value) == false {
+        diagnostics = diagnostics.append({
+          code: "Galerina_DATA_JSON_STRING_LIMIT_INVALID"
+          severity: "error"
+          message: "JSON memory policy maxStringBytes, when set, must be a positive integer."
+          path: path_ + ".maxStringBytes"
+        })
+      }
+    }
+    None => {}
+    _ => {}
+  }
+
+  return diagnostics
+}
+
+pure flow validateJsonMemoryPolicyDefault(memoryPolicy: JsonMemoryPolicy) -> Array<JsonDiagnostic>
+contract { intent { "Validate a JSON memory policy using the source default memory path." } }
+{
+  return validateJsonMemoryPolicy(memoryPolicy, "memory")
+}

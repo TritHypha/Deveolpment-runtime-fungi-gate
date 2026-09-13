@@ -1,0 +1,95 @@
+@version 1
+
+/// Bounded translation of validateDatabaseChecksum from
+/// packages-ts/galerina-data-database/src/index.ts.
+///
+/// The host supplies an admitted checksum record. This pure leaf preserves the
+/// known algorithm lengths, source lowercase normalization, hex validation,
+/// early unknown-algorithm refusal, and diagnostic path selection.
+
+record DatabaseChecksum {
+  algorithm: String
+  digestHex: String
+}
+
+record DatabaseDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isHexDigit(character: Char) -> Bool
+contract { intent { "Recognize one ASCII hexadecimal digit after source lowercase normalization." } }
+{
+  let codePoint: Int = character.codePoint()
+  if codePoint >= 48 and codePoint <= 57 { return true }
+  if codePoint >= 97 and codePoint <= 102 { return true }
+  return false
+}
+
+pure flow validateDatabaseChecksumAtPath(
+  checksum: DatabaseChecksum,
+  path_: String,
+) -> Array<DatabaseDiagnostic>
+contract { intent { "Validate a known database checksum algorithm and fixed-length hexadecimal digest." } }
+{
+  mut expectedLength: Int = 0
+  match checksum.algorithm {
+    "sha256" => { expectedLength = 64 }
+    "sha384" => { expectedLength = 96 }
+    "sha512" => { expectedLength = 128 }
+    "blake3" => { expectedLength = 64 }
+    _ => {}
+  }
+
+  if expectedLength == 0 {
+    return Array.empty().append({
+      code: "Galerina_DATA_DATABASE_CHECKSUM_ALGORITHM_UNKNOWN"
+      severity: "error"
+      message: "Checksum algorithm " + Char.fromCode(34).toString() + checksum.algorithm + Char.fromCode(34).toString() + " is not in the known set."
+      path: path_ + ".algorithm"
+    })
+  }
+
+  let digest: String = checksum.digestHex.toLower()
+  if digest.length() != expectedLength {
+    return Array.empty().append({
+      code: "Galerina_DATA_DATABASE_DIGEST_INVALID"
+      severity: "error"
+      message: "Checksum digest must be " + expectedLength.toString() + " lowercase hex characters for " + checksum.algorithm + "."
+      path: path_ + ".digestHex"
+    })
+  }
+
+  mut valid: Bool = true
+  mut index: Int = 0
+  while index < expectedLength {
+    let characterOpt: Option<Char> = digest.charAt(index)
+    match characterOpt {
+      Some(character) => {
+        if isHexDigit(character) == false { valid = false }
+      }
+      None => { valid = false }
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  if valid == false {
+    return Array.empty().append({
+      code: "Galerina_DATA_DATABASE_DIGEST_INVALID"
+      severity: "error"
+      message: "Checksum digest must be " + expectedLength.toString() + " lowercase hex characters for " + checksum.algorithm + "."
+      path: path_ + ".digestHex"
+    })
+  }
+
+  return Array.empty()
+}
+
+pure flow validateDatabaseChecksum(checksum: DatabaseChecksum) -> Array<DatabaseDiagnostic>
+contract { intent { "Validate a database checksum using the source default diagnostic path." } }
+{
+  return validateDatabaseChecksumAtPath(checksum, "checksum")
+}

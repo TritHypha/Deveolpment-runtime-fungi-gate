@@ -7,6 +7,110 @@ authorize production execution. The separation is binding and fail closed. A
 tracked, strict-clean, hash-pinned or reference-executable source is not thereby
 production-authorized.
 
+## RD-0361 secret-gate Option-ABI re-baseline - 2026-09-13
+
+At Galerina `main` HEAD `e716fc677d3ca609b016cf76d7f994b67fd36466` / tree
+`80aa41e53fd9cacd608bf0ba392b1d8f2c005e0a`, the enforcing twin hash check is
+now **29/29**. The prior sole failure was `secret-gate.fungi`; its stale
+historical digest was `ce662c325ef9ba682688a4b18097f5020fe54235ce522773f20e13d0cfda3c36`.
+
+The source twin is unchanged since `1cdeb8a0a`; commit `ca2bc2fb5` changed the
+compiler/runtime Option ABI from sentinel payloads to explicit registry handles.
+That change makes this twin emit six versioned Option/array imports and a
+365-byte module instead of the historical 278-byte module. The authoritative
+pin now records
+`f062217154df66e3a72bc6adc82e47e72392c5a8d56bc8d40442090a8c8c9166`.
+Bounded current checks pass: secret-gate differential **1/1**, Option
+ABI/wildcard regressions **22/22**, hash-tool self-test **4/4**, and the full
+authority hash/admission check **29/29**.
+
+The targeted secret-gate mutation probe is non-vacuous: its anchor check is
+**1/1**, the fail-open mutant is killed **1/1**, and restoration leaves no
+target file dirty.
+
+This is a controlled identity re-baseline after the cause was demonstrated; it
+does not waive R4. Caller-route/shadow-bake proof, independent executable SLIDE
+integration and production authority remain required. RD-0361 remains **HOLD**
+for those gates, and no consumer switch, TypeScript retirement, production
+authority or Fungi translation follows. Full details:
+`docs/reports/rd0361-option-abi-drift-2026-09-13.md`.
+
+## Registry durability production release seam - 2026-09-13
+
+The registry durability admission now has two explicit stages. The existing
+`admitRegistryDurabilityProfile` function mints a frozen, process-local
+candidate and deliberately keeps `authorityReleased: false` and
+`productionAuthorizing: false`. The new
+`activateRegistryDurabilityProfile` function is the only promotion seam: it
+requires a separate owner-signed authorization bound to the candidate's exact
+evidence and generation, a bounded validity window, owner-key separation and a
+native verifier that returns exactly `true`. Copied candidates, target
+substitution, stale or over-broad windows, key-role reuse and verifier failure
+refuse closed. A promoted object is immutable, process-local and carries both
+authority flags as `true`.
+
+This is an implementation seam, not a production receipt. No real owner
+authorization, live native provider, platform durability receipt or production
+consumer activation has been issued on this host; the production authority
+gate remains **HOLD**. The full app-kernel suite is **233/233**.
+
+## I/O – OS kernel review checkpoint - 2026-09-13
+
+This non-authorizing checkpoint binds the current Galerina implementation point
+`main` at `e716fc677d3ca609b016cf76d7f994b67fd36466`. GPT-6 Astra reviewed the
+current source and evidence. Bounded kernel admission, host-floor, auth/fuse,
+secret, egress, inbound and durability checks pass `152/152` across 17 suites;
+the current execution registry records 29 authoritative twins.
+
+The result does not issue a production receipt. General inbound/outbound I/O
+operations still refuse in the app-kernel fuse loader, the native durability
+production allow-list is empty, and admitted profiles retain
+`authorityReleased: false` and `productionAuthorizing: false`. Hostile-code
+containment, complete resource limits, authenticated crash/termination evidence,
+named-platform restart/power-loss durability and external production authority
+remain open. The row stays `72% asserted`.
+
+The focused current-head seam checks remain green: production
+durability/boot-posture **12/12** and fuse-loader/composition **37/37**. They
+confirm fail-closed refusal and composition boundaries only; they do not issue
+a production receipt or complete the general network adapters.
+
+The linked-host executable and bounded Windows checks remain research evidence
+only. The older July 28-twin handover is retained as history and must not be
+used as the current count. No production array, verification time, consumer
+switch or TypeScript retirement changes in this checkpoint. The existing
+untracked `gate-selftests-local.json` is outside scope and remains untouched.
+
+## RD-0361 authority-hash and shadow-bake checkpoint - 2026-09-13
+
+This earlier checkpoint is superseded by the re-baseline above; its 28/29
+result is retained as the historical pre-repair observation.
+
+This entry records a fresh non-authorizing RD-0361 check at Galerina `main`
+HEAD `e716fc677d3ca609b016cf76d7f994b67fd36466` / tree
+`80aa41e53fd9cacd608bf0ba392b1d8f2c005e0a`. The execution lane passes
+**26/26** across 25 files and the twin syntax/presence audit passes
+**103/103** with 29 declared authoritative entries. These are bounded checks;
+they do not prove live caller routing or TypeScript-shadow retirement.
+
+The enforcing authority-hash/admission check exits 1 at **28/29**. The sole
+failure is
+`packages-ts/galerina-framework-app-kernel/src/self-hosted/secret-gate.fungi`:
+the ledger pin is
+`ce662c325ef9ba682688a4b18097f5020fe54235ce522773f20e13d0cfda3c36`, while the
+current derived digest is
+`f062217154df66e3a72bc6adc82e47e72392c5a8d56bc8d40442090a8c8c9166`.
+WAT assembly is faithful. The mismatch is therefore a fail-closed HOLD; no
+digest was repinned.
+
+GPT-6 Astra independently classifies RD-0361 **HOLD**. Reproduction from an
+immutable committed compiler/toolchain closure, cause identification, repair,
+fresh hash/admission and differential evidence, and caller-route/shadow-bake
+proof remain required. The older 29/29 hash-integrity wording is historical
+until those checks pass. The full record is
+`docs/reports/rd0361-housekeeping-2026-09-13.md`; the compact resume route is
+`docs/handover/COMPACT-HANDOFF-rd0361-housekeeping-2026-09-13.md`.
+
 ## Current RD-0873 housekeeping and scope checkpoint - 2026-09-12
 
 At the start of this housekeeping pass, the Galerina implementation line was

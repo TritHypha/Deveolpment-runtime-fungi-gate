@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:ed493938da3b764ce21ca7f0b194e0eea7db217a2f275d6aee1073ae9bd290ce",
+  "sourceFile": "validate-link-target.fungi",
+  "flowCount": 5,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:223b582036811f1c72e4774b1025e71e90b6d1f7655a39bf7e35e08ce961adcc",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:53.420Z"
+  },
+  "behavioralFingerprint": "sha256:6596e555a5053f7bc4df0ba04b29d9c05c61be040788255f91515b22f75d322f",
+  "derivedConstraints": [
+    "charCodeAt: Flow charCodeAt has a contract declaration [via contract]",
+    "compactLink: Flow charCodeAt has a contract declaration [via contract]",
+    "extractScheme: Flow charCodeAt has a contract declaration [via contract]",
+    "httpHostIsLocalhost: Flow charCodeAt has a contract declaration [via contract]",
+    "validateLinkTarget: Flow charCodeAt has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "charCodeAt",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "compactLink",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "extractScheme",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "httpHostIsLocalhost",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateLinkTarget",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:53.420Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "316269a319025043",
+    "signature": "c8ZAeok4pyhBhSHSUTQNHG5gPoZ0/mokmn2g1bNHS7qgtFixLtUeoURflsLNMCM6ZlC5GKL9yO3QHvvTsT1aBw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:53.428Z"
+  }
+}

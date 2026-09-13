@@ -1,0 +1,14 @@
+@version 1
+
+/// Bounded direct-package translation of the exported
+/// RESTORE_VERDICT_EXPORT_NAME constant from
+/// packages-ts/galerina-core-sentinel-state/src/cold-boot.ts.
+///
+/// The TypeScript lifecycle and authority checks remain the differential
+/// shadow; this pure constant grants no restore authority.
+
+pure flow restoreVerdictExportName() -> String
+contract { intent { "Return the exact restore decision-port export name." } }
+{
+  return "restoreVerdict"
+}

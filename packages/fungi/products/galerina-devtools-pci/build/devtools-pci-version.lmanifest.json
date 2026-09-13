@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:855ca749343225c6551d0fb89c7234076fc388a39c83fc70c6a0ce425a85f780",
+  "sourceFile": "devtools-pci-version.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:27a84599785bbd87104170cceedd4f445d9367bf7baab6b0c4f330f54b4617b8",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:49.235Z"
+  },
+  "behavioralFingerprint": "sha256:dca487d9677692c5291158b00a809aae8bed17115accecb0a803a87b225b903b",
+  "derivedConstraints": [
+    "devtoolsPciVersion: Flow devtoolsPciVersion has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "devtoolsPciVersion",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:49.235Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "536f3ce365f55bbc",
+    "signature": "KDNZasqZU+6JTE7d3dbQjdBaBtC5yUotHKoePLWfd2QYReXlqw5BveHJ046LsidAMjliiRe5jGSlLQfLRhmCAQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:49.242Z"
+  }
+}

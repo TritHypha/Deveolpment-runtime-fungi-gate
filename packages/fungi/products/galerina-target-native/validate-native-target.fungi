@@ -1,0 +1,103 @@
+@version 1
+
+/// Bounded translation of validateNativeTarget from
+/// packages-ts/galerina-target-native/src/index.ts.
+///
+/// The host supplies an inert target description. Optional ABI presence uses
+/// Fungi's Option ABI; native execution, binary loading, and machine effects
+/// remain outside this pure validation leaf.
+
+record NativeTarget {
+  triple: String
+  os: String
+  architecture: String
+  abi: Option<String>
+  executionMode: String
+}
+
+record NativeDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateNativeTargetAtPath(
+  target_: NativeTarget,
+  path_: String,
+) -> Array<NativeDiagnostic>
+contract { intent { "Validate required native target identity, optional ABI vocabulary, and execution mode in source diagnostic order." } }
+{
+  mut diagnostics: Array<NativeDiagnostic> = Array.empty()
+
+  if target_.triple.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_NATIVE_TARGET_FIELD_REQUIRED"
+      severity: "error"
+      message: "Native target requires triple."
+      path: path_ + ".triple"
+    })
+  }
+  if target_.os.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_NATIVE_TARGET_FIELD_REQUIRED"
+      severity: "error"
+      message: "Native target requires os."
+      path: path_ + ".os"
+    })
+  }
+  if target_.architecture.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_NATIVE_TARGET_FIELD_REQUIRED"
+      severity: "error"
+      message: "Native target requires architecture."
+      path: path_ + ".architecture"
+    })
+  }
+
+  match target_.abi {
+    Some(abi_) => {
+      mut knownAbi: Bool = false
+      match abi_ {
+        "c" => { knownAbi = true }
+        "wasm" => { knownAbi = true }
+        "system" => { knownAbi = true }
+        "plugin" => { knownAbi = true }
+        _ => {}
+      }
+      if knownAbi == false {
+        diagnostics = diagnostics.append({
+          code: "Galerina_NATIVE_TARGET_ABI_INVALID"
+          severity: "error"
+          message: "Native target ABI must be one of: c, wasm, system, plugin."
+          path: path_ + ".abi"
+        })
+      }
+    }
+    None => {}
+    _ => {}
+  }
+
+  mut knownExecutionMode: Bool = false
+  match target_.executionMode {
+    "future-native-executable" => { knownExecutionMode = true }
+    "native-abi-boundary" => { knownExecutionMode = true }
+    _ => {}
+  }
+  if knownExecutionMode == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_NATIVE_TARGET_EXECUTION_MODE_INVALID"
+      severity: "error"
+      message: "Native target execution mode must be one of: future-native-executable, native-abi-boundary."
+      path: path_ + ".executionMode"
+    })
+  }
+
+  return diagnostics
+}
+
+pure flow validateNativeTarget(target_: NativeTarget) -> Array<NativeDiagnostic>
+contract { intent { "Validate a native target using the source default diagnostic path." } }
+{
+  return validateNativeTargetAtPath(target_, "target")
+}

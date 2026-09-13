@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:2f71c9d5ce95e6c663d9abba2300a3157b88dbb18c6f38fa2c22952ed974f6d7",
+  "sourceFile": "select-ternary-bridge.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:a60f3995d8a03c1a2c6eb2854cb64ee11e4e7ccc17251f1696226683044a7223",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:10.314Z"
+  },
+  "behavioralFingerprint": "sha256:4f63d9626c340c1cacff0f3b0b00a9a3fd6890eadc970100e6130f05bf138597",
+  "derivedConstraints": [
+    "selectTernaryBridgeTechnique: Flow selectTernaryBridgeTechnique has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "selectTernaryBridgeTechnique",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:10.314Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "798221468537a2d9",
+    "signature": "vxyv7Jr4bOQK/nzcC8I4Vzr92eOR59TEi3EazAV/hytu4SGDcSMA9ZrPFnh15l3RvujAHmX+UR1RE3kfnAMoAg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:10.322Z"
+  }
+}

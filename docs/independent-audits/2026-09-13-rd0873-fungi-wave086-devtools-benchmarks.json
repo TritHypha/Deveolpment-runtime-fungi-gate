@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-086-BENCHMARKS",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-devtools-benchmarks/src/audit-benchmark-integrity.mjs#EXTREME_SLOWER",
+  "sourceSha256": "17bd4881bd82562182695bfad38c4ac704078c30027fb757145cd7cdc0213fb9",
+  "target": "packages/fungi/products/galerina-devtools-benchmarks/extreme-slower.fungi",
+  "targetBytes": 477,
+  "targetSha256": "11f527622a3ac06ee4545dd45a1a7fd382fab0abce80f6d321c828bf97ca4cb1",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "113/113",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The EXTREME_SLOWER constant is exactly 10000. Benchmark runners, measurements, effects, reporting and publication authority remain in the MJS/host boundary.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 241,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

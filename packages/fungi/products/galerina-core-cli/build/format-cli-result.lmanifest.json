@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:8f13b998c483f34b5ba521754bc1a90ab925dbbb5ede00e0d81fe701691e3c44",
+  "sourceFile": "format-cli-result.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:0207ecba2b87f6d1266be1bed96668b8a713b511b087389af7dd7e048187017c",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:33.237Z"
+  },
+  "behavioralFingerprint": "sha256:dcaabf64157d836b04359a3a4db70b956ab90501fe39c18232d0235360dc2055",
+  "derivedConstraints": [
+    "formatCliResult: Flow joinMarkers has a contract declaration [via contract]",
+    "joinMarkers: Flow joinMarkers has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "joinMarkers",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "formatCliResult",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:33.237Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "aa5db31e7b4394fc",
+    "signature": "La6t8j46lLhrB54Ot3noiWqTS++9J9HGREVi0gdLj2GHffT0zOfuVwgnJwp2BZGeqgsCuY8oxVQayYLB+uwoAA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:33.245Z"
+  }
+}

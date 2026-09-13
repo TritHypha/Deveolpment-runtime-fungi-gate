@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "format-cli-result.fungi",
+  "sourceHash": "sha256:8f13b998c483f34b5ba521754bc1a90ab925dbbb5ede00e0d81fe701691e3c44",
+  "generatedAt": "2026-09-13T17:46:33.237Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "joinMarkers",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "formatCliResult",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

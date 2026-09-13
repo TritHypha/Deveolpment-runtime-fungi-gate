@@ -1,0 +1,154 @@
+@version 1
+
+/// Bounded translation of validateBoolBoundary from
+/// packages-ts/galerina-core-logic/src/bool-boundary/bool-enforce.ts:32-98.
+///
+/// The TypeScript union and structural isTriState guard remain the
+/// compatibility shadow. The typed Fungi boundary makes that branch family
+/// explicit with isTriState; unused context fields stay outside this leaf.
+
+record UnknownReason {
+  code: String
+  message: String
+}
+
+record BoolBoundaryInput {
+  isTriState: Bool
+  kind: String
+  reason: String
+  triReasons: Array<UnknownReason>
+  decisionUnknownReasons: Array<UnknownReason>
+}
+
+record BoolBoundaryContext {
+  boundaryName: String
+}
+
+record LogicDiagnostic {
+  code: String
+  name: String
+  severity: String
+  message: String
+  path: Option<String>
+}
+
+record BoolBoundaryResult {
+  allowed: Bool
+  value: Bool
+  diagnostics: Array<LogicDiagnostic>
+  reason: String
+}
+
+pure flow validateBoolBoundary(input_: BoolBoundaryInput, context: BoolBoundaryContext) -> BoolBoundaryResult
+contract { intent { "Convert TriState or Decision to a boolean while failing closed for unknown and review." } }
+{
+  if input_.isTriState == true {
+    if input_.kind == "true" {
+      return BoolBoundaryResult {
+        allowed: true
+        value: true
+        diagnostics: Array.empty()
+        reason: "TriState is true."
+      }
+    }
+
+    if input_.kind == "false" {
+      return BoolBoundaryResult {
+        allowed: true
+        value: false
+        diagnostics: Array.empty()
+        reason: "TriState is false."
+      }
+    }
+
+    mut diagnostics: Array<LogicDiagnostic> = Array.empty()
+    diagnostics = diagnostics.append({
+      code: "FUNGI-BOOL-BOUNDARY-001",
+      name: "FAILED_CLOSED",
+      severity: "error",
+      message: "State kind \"unknown\" reached boolean boundary \"" + context.boundaryName + "\" and failed closed. Only allow/true passes.",
+      path: Some(context.boundaryName)
+    })
+
+    mut index: Int = 0
+    while index < input_.triReasons.count() {
+      let reasonOpt: Option<UnknownReason> = input_.triReasons.get(index)
+      match reasonOpt {
+        Some(unknownReason) => {
+          diagnostics = diagnostics.append({
+            code: "FUNGI-BOOL-BOUNDARY-002",
+            name: "UNKNOWN_REASON",
+            severity: "info",
+            message: "[" + unknownReason.code + "] " + unknownReason.message,
+            path: None
+          })
+        }
+        None => {}
+        _ => {}
+      }
+      index = index + 1
+    }
+
+    return BoolBoundaryResult {
+      allowed: false
+      value: false
+      diagnostics: diagnostics
+      reason: "TriState unknown at boundary \"" + context.boundaryName + "\". Failing closed."
+    }
+  }
+
+  if input_.kind == "allow" {
+    return BoolBoundaryResult {
+      allowed: true
+      value: true
+      diagnostics: Array.empty()
+      reason: input_.reason
+    }
+  }
+
+  if input_.kind == "deny" {
+    return BoolBoundaryResult {
+      allowed: true
+      value: false
+      diagnostics: Array.empty()
+      reason: input_.reason
+    }
+  }
+
+  mut diagnostics: Array<LogicDiagnostic> = Array.empty()
+  diagnostics = diagnostics.append({
+    code: "FUNGI-BOOL-BOUNDARY-001",
+    name: "FAILED_CLOSED",
+    severity: "error",
+    message: "State kind \"" + input_.kind + "\" reached boolean boundary \"" + context.boundaryName + "\" and failed closed. Only allow/true passes.",
+    path: Some(context.boundaryName)
+  })
+
+  if input_.kind == "unknown" {
+    mut index: Int = 0
+    while index < input_.decisionUnknownReasons.count() {
+      let reasonOpt: Option<UnknownReason> = input_.decisionUnknownReasons.get(index)
+      match reasonOpt {
+        Some(unknownReason) => {
+          diagnostics = diagnostics.append({
+            code: "FUNGI-BOOL-BOUNDARY-002",
+            name: "UNKNOWN_REASON",
+            severity: "info",
+            message: "[" + unknownReason.code + "] " + unknownReason.message,
+            path: None
+          })
+        }
+        None => {}
+        _ => {}
+      }
+      index = index + 1
+    }
+  }
+
+  return BoolBoundaryResult {
+    allowed: false
+    value: false
+    diagnostics: diagnostics
+    reason: "Decision \"" + input_.kind + "\" at boundary \"" + context.boundaryName + "\". Failing closed. " + input_.reason
+  }
+}

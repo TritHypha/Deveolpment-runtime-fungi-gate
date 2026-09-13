@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-022-CORE-PHOTONIC",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-photonic/src/index.ts#validateOpticalSignal",
+  "sourceSha256": "8e6a9a50cee3da8a28ff10305ac599e3ce45a4831cfdf2b05c0cd37f8e7d793d",
+  "target": "packages/fungi/products/galerina-core-photonic/validate-optical-signal.fungi",
+  "targetBytes": 1899,
+  "targetSha256": "53f436fb849cac3a5271c60fc14f1824340f2108df7e9d3f86f4ddce32d0fa4e",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "5/5", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Finite wavelength, phase and amplitude checks are preserved; host defaults, hostile object behavior and physical admission remain outside this leaf.",
+  "productionAuthorizing": false
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-077-SECRETS-VAULT",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-ext-secrets-vault/src/types.ts#SECRETS_GATEWAY_WIT",
+  "sourceSha256": "18bb899f34098b9cf5d59d213297ed4e17aea33e575af01ef0706e753075dd9f",
+  "target": "packages/fungi/products/galerina-ext-secrets-vault/secrets-gateway-wit.fungi",
+  "targetBytes": 696,
+  "targetSha256": "23f2a8c9cd7c8990ee1fbf02e33a086bab687d2d7831fae57ad81be9fa964879",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "24/24",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The gateway WIT text constant has exact UTF-8 parity. Vault/TPM custody, credentials, provider access and WIT host effects remain manual.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 248.1,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

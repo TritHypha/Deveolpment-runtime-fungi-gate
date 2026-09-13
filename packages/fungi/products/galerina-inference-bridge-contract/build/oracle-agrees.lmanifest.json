@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:507995f17b82e01bd73a5c45e33af4d654d9062746192240c2cc3ad37f1f3166",
+  "sourceFile": "oracle-agrees.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:18cd0098dbc48c1459b9f0f3d9b2dbd1b3870f2886f1e44848d664d57457a56b",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:11.502Z"
+  },
+  "behavioralFingerprint": "sha256:b24b2f7105b8f844bae71acc8954cb72d52d87fa17323ce0af5564747b0809a4",
+  "derivedConstraints": [
+    "oracleAgrees: Flow oracleAgrees has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "oracleAgrees",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:11.502Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "0b03ad1ff15506ee",
+    "signature": "qJn3s/U18Y2+1+5n8jrOBJKu7MmCKa4EtHJPRT/JUT8/Y3O6lve5YAc9XY2bQvntc0CdFqnMeYXvFaW29n4dCg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:11.510Z"
+  }
+}

@@ -1,0 +1,33 @@
+@version 1
+
+/// Bounded translation of deriveDataReportStatus from
+/// packages-ts/galerina-data-reports/src/index.ts.
+///
+/// This pure leaf consumes only diagnostic severity. Report construction,
+/// persistence, and host array/proxy behavior remain manual boundaries.
+
+record DataReportDiagnostic {
+  severity: String
+}
+
+pure flow deriveDataReportStatus(diagnostics: Array<DataReportDiagnostic>) -> String
+contract { intent { "Derive failed for any error, partial for warnings alone, and success for a clean diagnostic list." } }
+{
+  mut hasWarning: Bool = false
+  mut index: Int = 0
+  while index < diagnostics.count() {
+    let diagnosticOpt: Option<DataReportDiagnostic> = diagnostics.get(index)
+    match diagnosticOpt {
+      Some(diagnostic) => {
+        if diagnostic.severity == "error" { return "failed" }
+        if diagnostic.severity == "warning" { hasWarning = true }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  if hasWarning == true { return "partial" }
+  return "success"
+}
+

@@ -7,7 +7,8 @@ The bounded gate-closure work is active at Galerina `e716fc677d3ca609b016cf76d7f
 - Exact head and tree were re-read with the approved local Git 2.55.0.windows.2 executable (digest `22fead...05a`). Node is v24.18.0, npm 12.0.2, and TypeScript 5.9.3. `wat2wasm` is not available in PATH.
 - The working-tree RD-0361 verifier reports `29/29`, `allClean=true`, but the committed ledger at the same head still records the older `secret-gate` digest `ce662c...3c36`; the dirty ledger records `f0622171...9166`. This is `HOLD_TOOLCHAIN_DRIFT`, not permission to repin.
 - Checked-snapshot/GIR suites passed 15/15 with no skips.
-- The sandbox suite passed 79/80. The failing discovery assertion expects a physical String-parameter refusal that was not present in the first ten discovered scopes; this is retained as a test/environment defect, not treated as a green gate.
+- The original sandbox measurement was 79/80 because the discovery assertion depended on the first ten lexical scopes containing a physical String-parameter candidate. After the test was anchored immediately before the first stable candidate, the focused check passed 1/1 and all 51 sandbox test cases passed; the formerly missing physical-refusal assertion is now exercised. This is a test-determinism repair and does not change production behavior.
+- The bounded caller-route/shadow fixture `scripts/tests/rd0873-caller-route-shadow-bake.test.mjs` now exercises the retained TypeScript secret gate, the real gate-9.5 app-kernel route and the admitted Fungi twin over eight cases; it passes 1/1 with one in-memory route receipt per case. This is non-authorizing evidence and does not retire the TypeScript shadow.
 - RD-0873 first-native-slice tests passed 3/3. Governance algebra self-test passed 169/169.
 - The RD-0873 audit-map test first refused missing owner/Git inputs; with the explicit owner root and approved pinned Git executable it completed its bounded run at **30/30**, 0 failed, 0 skipped. This is a local audit-map result, not an admission or production-authority receipt.
 
@@ -21,7 +22,7 @@ The bounded gate-closure work is active at Galerina `e716fc677d3ca609b016cf76d7f
 1. Freeze a reviewed implementation revision and reproduce the compiler/toolchain without the dirty ledger.
 2. Add the acyclic identity envelope and substitution/refusal fixtures.
 3. Extend journal recovery tests for stale locks, torn tails, crash-before-seal and publication reconciliation.
-4. Add caller-route/shadow-bake and profile-label fixtures.
+4. Caller-route/shadow-bake coverage is now present; add the remaining profile-label and restart fixtures.
 5. Validate a non-empty, four-symbol, scalar-1 manifest without signing or authorizing it.
 
 ## What cannot be closed by local work alone
@@ -51,3 +52,24 @@ The plan and four-symbol manifest are now ready for local implementation work, b
 - Non-authorizing manifest SHA-256: `9b707d9ed46845078c570ff8839eb2e649ece159879aaabb249a98c54f6618e8`.
 - Toolchain reproduction receipt SHA-256: `476b65561f72de2cce79d0979e4d3c3d056a1d5cc8639aadf442038464044019`.
 - Corrected plan SHA-256: `a67d30d954d131a35244cd5470ca2b786e4f443ab05fe132c0cf088876937651`.
+
+## Owner-authorized pilot conversion - 2026-09-13
+
+The owner authorized a bounded `.fungi` conversion run. The first wave used the
+four already selected scalar symbol scopes under profile `scalar-1`, with one
+symbol/source file per step, concurrency `1`, zero retries, and a chapter
+aggregate only after all four items. The exact current-head record is
+`docs/independent-audits/2026-09-13-rd0873-fungi-pilot-conversion.json`.
+
+The product-tree twins were already present from the earlier bounded wave, so
+this run verified their exact bytes and behavior rather than rewriting identical
+outputs. Strict checker results were **4/4**, and the four retained
+TypeScript/Fungi package suites passed **8/8** with no failures or skips. The
+TypeScript shadows remain active; no consumer, production authority, profile
+promotion or retirement changed.
+
+Successes, issues and improvements are recorded in the companion report
+`docs/reports/2026-09-13-rd0873-fungi-pilot-conversion.md`. The older
+four-item authority manifest is stale at this head and was not reused. Current
+snapshot/GIR/SLIDE/VOK receipts and independent review remain separate gates;
+the next wave requires a fresh exact-head manifest naming its scope and limits.

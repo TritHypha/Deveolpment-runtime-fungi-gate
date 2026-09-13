@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "read-egress-ledger.fungi",
+  "sourceHash": "sha256:31fe042dc6cc8183d1f9b018f7bc903cc235ea82ec2e2b535f4146d992194c38",
+  "generatedAt": "2026-09-13T17:46:33.625Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "readEgressLedger",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-021-DATA-JSON",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-data-json/src/index.ts#validateJsonMemoryPolicy",
+  "sourceSha256": "11a177d4b21f1cc82d483e90e453b611d08a1f378384b116d25e2b8b5aa5d1be",
+  "target": "packages/fungi/products/galerina-data-json/validate-json-memory-policy.fungi",
+  "targetBytes": 2719,
+  "targetSha256": "b15d18506335c410b2f39589b38ea22a1dea3c1257b79f00815172f80b67889f",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "16/16", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Numeric and optional string memory limits refuse invalid, noninteger and NaN values; JSON decoding, streams and allocation remain host-owned.",
+  "productionAuthorizing": false
+}

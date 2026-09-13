@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-041-DB-MYSQL",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-db-mysql/src/index.ts#validateMysqlCredentialRef",
+  "sourceSha256": "63ffb8a02b933574c364d0f7f3ae72d58529487d1d5111198554bb6a167f5d69",
+  "target": "packages/fungi/products/galerina-db-mysql/validate-mysql-credential-ref.fungi",
+  "targetBytes": 5196,
+  "targetSha256": "4ef1a8a0f40571ea478aca3e67a340c95646230b60ac5199b3ed8f64ae0f68a2",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Credential-reference parity covers external refs, invalid kinds, empty refs, inline credentials, userinfo, TLS and diagnostic ordering; payload scan Bool comparison was made explicit. Credential resolution, secret custody, provider/network effects, malformed objects, physical ABI admission and host marshalling remain host-owned.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 244.0,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

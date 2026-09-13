@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "is-some.fungi",
+  "sourceHash": "sha256:d86bac58a8880413efd874d13ce861a3a56ed99ce569afbc2648c6101a0f3e99",
+  "generatedAt": "2026-09-13T17:46:28.251Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "isSome",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

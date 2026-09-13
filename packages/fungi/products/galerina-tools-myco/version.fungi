@@ -1,0 +1,12 @@
+@version 1
+
+/// Bounded pure leaf for VERSION in the Myco tool package index.ts.
+/// TypeScript shadow: packages-ts/galerina-tools-myco/src/index.ts#VERSION
+/// Myco indexing, term extraction, regex handling, filesystem access, CLI
+/// behavior, and authority remain in the TypeScript/host boundary.
+
+pure flow mycoVersion() -> String
+contract { intent { "Return the exact Galerina Myco tool package version." } }
+{
+  return "0.2.2"
+}

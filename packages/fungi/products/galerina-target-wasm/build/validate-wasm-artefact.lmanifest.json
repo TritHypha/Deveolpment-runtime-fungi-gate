@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:a1949c813837efdffd4496b22f47fdac9723f3bcdd78efd5a899ef4f5438e7b6",
+  "sourceFile": "validate-wasm-artefact.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:38b9b29bd5d57e8f79fdb5e79bc8f3d1b91467b407f469724f70d9072072fe63",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:32.029Z"
+  },
+  "behavioralFingerprint": "sha256:93330ad1f8ea19bedb9d98644fb77ab5f3f6281d0092b2c76fe0ea98064f330d",
+  "derivedConstraints": [
+    "validateWasmArtefact: Flow validateWasmArtefact has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateWasmArtefact",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:32.029Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "60474161e4d26e98",
+    "signature": "Mc0/0AgF7cBzQjVu3LwpY0UUNrrDA/739S22LH0YL8dkT3jyprGdPsbeofVL0A9UJvVttCCbm2lL36MJqQ44Dw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:32.037Z"
+  }
+}

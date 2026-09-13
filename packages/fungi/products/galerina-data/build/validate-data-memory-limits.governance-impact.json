@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-data-memory-limits.fungi",
+  "sourceHash": "sha256:b24c362a44dec3cec07d952c7bff634567c0b0b614d09f6896acf2067f77439a",
+  "generatedAt": "2026-09-13T17:46:08.998Z",
+  "flowCount": 3,
+  "flows": [
+    {
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateDataMemoryLimits",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateDataMemoryLimitsDefault",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 3,
+  "derivedConstraintCount": 3
+}

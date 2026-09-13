@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:7fe32e21b783bd34074d18b526ffbab7b5d94aaa0d105d2e2c19e6627cfb1b77",
+  "sourceFile": "validate-agent-limits.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:7f18f8924d138bcaeced725879df1bd27cb952bb2a4f6a6a75874002769bddec",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:06.172Z"
+  },
+  "behavioralFingerprint": "sha256:50c29f1e603f4a795f289b45c9fd9cbf28ff8e6906140f08fa8191a2cac7d37b",
+  "derivedConstraints": [
+    "validateAgentLimits: Flow validateAgentLimitsAtPath has a contract declaration [via contract]",
+    "validateAgentLimitsAtPath: Flow validateAgentLimitsAtPath has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateAgentLimitsAtPath",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateAgentLimits",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:06.172Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "429b71f164b6f4fa",
+    "signature": "EegwbxOQhp2F/YYsLlbrq8xF2q8R9lx4f+X7p9KMX6ofRppPN396glGPv01MdMvQJquUMaKrWF0MVRLQ1VQ+Dw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:06.183Z"
+  }
+}

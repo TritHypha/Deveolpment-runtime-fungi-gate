@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:f67b5fce9450cbbd13a57a1415e117211f34e4547bb42780eb717b0bb350ec05",
+  "sourceFile": "validate-matrix-type.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:22ac6e0fefb82cab6a17eaaa68db9e8370de3b4db885c7d19a5a9449c7b94886",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:02.747Z"
+  },
+  "behavioralFingerprint": "sha256:45960cc60c9c5a0fa4f109c3b276c0ba9d8335058a6e57cc230e29d65c169ed6",
+  "derivedConstraints": [
+    "isPositiveSafeInteger: Flow isPositiveSafeInteger has a contract declaration [via contract]",
+    "validateMatrixType: Flow isPositiveSafeInteger has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isPositiveSafeInteger",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateMatrixType",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:02.748Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "b4eb608f2f4b38fa",
+    "signature": "Pi7Zr40jQuEC0CooLIPTxy5ADCesNWMgy4yjJWdtNLJj5EXuiqkdO4xfsUvD0xJpb/iM0brE46Y51kkYA2oBCw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:02.756Z"
+  }
+}

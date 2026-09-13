@@ -1,0 +1,28 @@
+@version 1
+
+/// Bounded direct-package translation of flipProbability from
+/// packages-ts/galerina-substrate-math/src/index.ts.
+///
+/// This pure leaf maps the three physical flip contributors and clamps the
+/// result to [0,1]. Parameter validation, simulator state, substrate I/O and
+/// governance or authority decisions remain outside this flow. The source
+/// accepts finite values outside [0,1] for this helper, so finite negative and
+/// over-one inputs retain the source clamp semantics. The current Fungi
+/// Float64 runtime traps nonfinite arithmetic; NaN and Infinity remain a
+/// documented host/manual boundary.
+
+record SubstrateNoiseParams {
+  phaseDriftSigma: Float64
+  crosstalkCoeff: Float64
+  laneFailureProb: Float64
+  readoutSigma: Float64
+}
+
+pure flow flipProbability(params: SubstrateNoiseParams) -> Float64
+contract { intent { "Compute the per-lane survive-but-flip probability and clamp it to the closed interval [0,1]." } }
+{
+  let raw: Float64 = params.phaseDriftSigma * 1.0 + params.crosstalkCoeff * 0.5 + params.readoutSigma * 0.5
+  if raw < 0.0 { return 0.0 }
+  if raw > 1.0 { return 1.0 }
+  return raw
+}

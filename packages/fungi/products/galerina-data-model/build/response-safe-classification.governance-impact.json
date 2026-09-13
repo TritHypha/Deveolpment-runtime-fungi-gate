@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "response-safe-classification.fungi",
+  "sourceHash": "sha256:c5e449eb10a15ea75a3e90c21e2d8504b8a8cd9c5d4cc7e481e2e1c2d57cb4f6",
+  "generatedAt": "2026-09-13T17:46:03.119Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "isResponseSafeClassification",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

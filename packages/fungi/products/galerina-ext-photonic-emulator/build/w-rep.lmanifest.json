@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:a1e61d7f16ce5943b91833b9e5d00a2d2f7e74b3d169d8928b18e030fa2ae7d6",
+  "sourceFile": "w-rep.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:649f33a36b8698a9ef7ae78436fe80bd259710dbb332036378b8188d46618db7",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:55.698Z"
+  },
+  "behavioralFingerprint": "sha256:5466e53ba8a3f84345ccc968a1e72af46a8659e124843ef1fbc0e8c619d6bb24",
+  "derivedConstraints": [],
+  "proofObligations": [
+    {
+      "flowName": "wRep",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:55.698Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "c16649d3fed1d04e",
+    "signature": "4jcDJRTw5SbV5AWgLYIUv/66Juz0e6Aflz4Xum9GCQ2eZ/ymZT55AZyTFoLnZgBItaowFnK+fvGHjbNJXl8yAg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:55.706Z"
+  }
+}

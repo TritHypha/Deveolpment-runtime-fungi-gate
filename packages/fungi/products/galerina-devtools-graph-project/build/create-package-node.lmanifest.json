@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:1628fb02d35a82f5c65098acf68dc4fdd816c804d40645c97b5a540243a2dd43",
+  "sourceFile": "create-package-node.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:69899f033375ea862ba8185f66c0a6d657beda5d9d3f9c627804f90e269a0fd6",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:34.048Z"
+  },
+  "behavioralFingerprint": "sha256:a29a5efc11f24dae11f28023f438b1c9639664dcf57a3449d454ee18c168f2d9",
+  "derivedConstraints": [
+    "createPackageNode: Flow createPackageNode has a contract declaration [via contract]",
+    "createPackageNodeDefault: Flow createPackageNode has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "createPackageNode",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "createPackageNodeDefault",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:34.049Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "14a36e8ece028e87",
+    "signature": "d/ZFLe3VyCTVGwCbJlbCo1lv0SFLkMzn4LqYcvLeOPJRP9bO4hupB4GFh9eN/fn52ZPcYAAcq19a7eFnOutCAA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:34.057Z"
+  }
+}

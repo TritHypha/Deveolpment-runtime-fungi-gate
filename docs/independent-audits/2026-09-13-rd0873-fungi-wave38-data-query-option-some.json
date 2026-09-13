@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-038-DATA-QUERY-OPTION-SOME",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-data-query/src/index.ts#optionSome",
+  "sourceSha256": "b2351ff6ddf0c9a2fc18b0c7c0ba69e0dfc29fac72d79c3760d48f3039d12a36",
+  "target": "packages/fungi/products/galerina-data-query/option-some.fungi",
+  "targetBytes": 483,
+  "targetSha256": "c6e61a72bd8b8ea9549bc2894bdc162e6b98446180e02825e5c4f54d68fc8cfb",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "12/12", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Some wraps the supplied String payload. Arbitrary generic types, malformed objects and host marshalling remain outside scope; no production authority is claimed.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {"iterations": 10, "allPassed": true, "meanCheckMs": 242.0, "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup", "cliBenchmarkCommand": "unimplemented diagnostic"}
+}

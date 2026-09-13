@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:5e92345047b626762f8fa950d94094ee19f73222ac1943c5ebbb721b7cb1a4b6",
+  "sourceFile": "circuit-id.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:9b3456e2c266fde45b07dc5564fcdea4194189de34019431a2c6392107663d49",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:55.331Z"
+  },
+  "behavioralFingerprint": "sha256:0d29dd6a5052a6d7ce61eca7f09a37c435034abf8c3241f4be43df2552ddb10d",
+  "derivedConstraints": [],
+  "proofObligations": [
+    {
+      "flowName": "circuitId",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:55.332Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "85fe57af302d588d",
+    "signature": "x6nYYidXdZD/OGdtgKYi4cCU9U7qQC9YDIkRcRmuEI1KrTba2Un+GJTmD+C6g0qFR33os0r9F5EvlygFxg9HCQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:55.339Z"
+  }
+}

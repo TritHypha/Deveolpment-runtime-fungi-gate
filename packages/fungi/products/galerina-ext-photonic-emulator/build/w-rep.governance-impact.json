@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "w-rep.fungi",
+  "sourceHash": "sha256:a1e61d7f16ce5943b91833b9e5d00a2d2f7e74b3d169d8928b18e030fa2ae7d6",
+  "generatedAt": "2026-09-13T17:46:55.698Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "wRep",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 0
+}

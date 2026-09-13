@@ -1,0 +1,13 @@
+@version 1
+
+/// Bounded translation of DEVTOOLS_NAMING_VERSION from
+/// packages-ts/galerina-devtools-naming/src/index.ts:22.
+///
+/// The TypeScript constant remains the compatibility shadow. This metadata
+/// leaf has no naming-audit, compiler, filesystem, or runtime authority.
+
+pure flow devtoolsNamingVersion() -> String
+contract { intent { "Return the devtools naming metadata version." } }
+{
+  return "0.1.0"
+}

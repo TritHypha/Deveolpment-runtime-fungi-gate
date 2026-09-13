@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-029-DATA-PIPELINE",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-data-pipeline/src/index.ts#validateBackpressurePolicy",
+  "sourceSha256": "ca6e5b3d493717316b25d747fe4dc4c34be42592b02b88c9080654bb22b0e712",
+  "target": "packages/fungi/products/galerina-data-pipeline/validate-backpressure-policy.fungi",
+  "targetBytes": 3431,
+  "targetSha256": "6b5221b21e46039f1f0fcdd413db7e707afa72a4701b2b072cd265756391dd5c",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "12/12", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Bounded policy diagnostics and ordering are preserved. Host objects/proxies, marshalling, consumer cutover and production authority remain host-owned. A Truth/Falsy warning was repaired to explicit boolean equality before the passing recheck.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {"iterations": 10, "allPassed": true, "meanCheckMs": 247.8, "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup", "cliBenchmarkCommand": "unimplemented diagnostic"}
+}

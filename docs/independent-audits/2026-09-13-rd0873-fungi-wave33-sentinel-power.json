@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-033-SENTINEL-POWER",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-sentinel-power/src/thermal-envelope.ts#validateEnvelope",
+  "sourceSha256": "613081b3821f7ca67b2a88cad0300d7ddb2cd32430fdcf95dd99cf5e98d876f8",
+  "target": "packages/fungi/products/galerina-core-sentinel-power/validate-envelope.fungi",
+  "targetBytes": 1819,
+  "targetSha256": "a080910f4dc351debd8b13b6486aa62e4ca6b2ee679d224028daf91e9e92aaeb",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "10/10",
+    "finiteInterpreter": "10/10",
+    "finiteSignedWasm": "10/10",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Valid envelope returns Ok(true) and PowerFault returns Err(message); nonfinite thresholds remain host/manual because the Fungi runtime/WAT traps before the source message is formed. Thermal sensing, governor transitions and enforcement remain TypeScript-owned; no production authority is claimed.",
+  "manualHostBoundary": "Nonfinite threshold handling and thermal sensing/governor enforcement; host restores LSP-ENV-001",
+  "productionAuthorizing": false
+}

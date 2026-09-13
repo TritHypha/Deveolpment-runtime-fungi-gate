@@ -1,0 +1,95 @@
+@version 1
+
+/// Bounded direct-package translation of validateChecksumRef from
+/// packages-ts/galerina-data-archive/src/index.ts.
+///
+/// The caller supplies an admitted checksum record and path. Host object
+/// admission, JavaScript defaults and archive consumers remain shadowed in
+/// TypeScript; this pure flow grants no storage or integrity authority.
+
+record ChecksumRef {
+  algorithm: String
+  digestHex: String
+}
+
+record ArchiveDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isHexDigit(character: Char) -> Bool
+contract { intent { "Recognize one ASCII hexadecimal digit after source lowercase normalization." } }
+{
+  let codePoint: Int = character.codePoint()
+  if codePoint >= 48 and codePoint <= 57 { return true }
+  if codePoint >= 97 and codePoint <= 102 { return true }
+  return false
+}
+
+pure flow validateChecksumRef(
+  checksum: ChecksumRef,
+  path_: String,
+) -> Array<ArchiveDiagnostic>
+contract { intent { "Validate a known checksum algorithm and its fixed-length hexadecimal digest." } }
+{
+  mut expectedLength: Int = 0
+  match checksum.algorithm {
+    "sha256" => { expectedLength = 64 }
+    "sha384" => { expectedLength = 96 }
+    "sha512" => { expectedLength = 128 }
+    "blake3" => { expectedLength = 64 }
+    _ => {}
+  }
+
+  if expectedLength == 0 {
+    return Array.empty().append({
+      code: "Galerina_DATA_ARCHIVE_CHECKSUM_ALGORITHM_UNKNOWN"
+      severity: "error"
+      message: "Checksum algorithm " + checksum.algorithm + " is not in the known set."
+      path: path_ + ".algorithm"
+    })
+  }
+
+  let digest: String = checksum.digestHex.toLower()
+  if digest.length() != expectedLength {
+    return Array.empty().append({
+      code: "Galerina_DATA_ARCHIVE_DIGEST_INVALID"
+      severity: "error"
+      message: "Checksum digest must be " + expectedLength.toString() + " lowercase hex characters for " + checksum.algorithm + "."
+      path: path_ + ".digestHex"
+    })
+  }
+
+  mut valid: Bool = true
+  mut index: Int = 0
+  while index < expectedLength {
+    let characterOpt: Option<Char> = digest.charAt(index)
+    match characterOpt {
+      Some(character) => {
+        if isHexDigit(character) == false { valid = false }
+      }
+      None => { valid = false }
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  if valid == false {
+    return Array.empty().append({
+      code: "Galerina_DATA_ARCHIVE_DIGEST_INVALID"
+      severity: "error"
+      message: "Checksum digest must be " + expectedLength.toString() + " lowercase hex characters for " + checksum.algorithm + "."
+      path: path_ + ".digestHex"
+    })
+  }
+
+  return Array.empty()
+}
+
+pure flow validateChecksumRefDefault(checksum: ChecksumRef) -> Array<ArchiveDiagnostic>
+contract { intent { "Validate a checksum reference using the source default path." } }
+{
+  return validateChecksumRef(checksum, "checksum")
+}

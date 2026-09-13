@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "terminal-scope.fungi",
+  "sourceHash": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+  "generatedAt": "2026-09-13T17:46:00.774Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "isTerminalScope",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

@@ -1,0 +1,110 @@
+@version 1
+
+/// Bounded direct-package translation of validateGpuKernelPlan from
+/// packages-ts/galerina-target-gpu/src/index.ts.
+///
+/// The host supplies an inert plan and advertised capabilities. This pure leaf
+/// preserves plan diagnostics only; GPU device discovery, dispatch, lowering,
+/// execution, allocation and provider effects remain host/runtime boundaries.
+/// It grants no hardware or production authority.
+
+record GpuTargetCapability {
+  name: String
+  backend: String
+  features: Array<String>
+}
+
+record GpuKernelPlan {
+  flow: String
+  backend: String
+  operations: Array<String>
+}
+
+record GpuDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateGpuKernelPlan(
+  plan: GpuKernelPlan,
+  capabilities: Array<GpuTargetCapability>,
+  path_: String,
+) -> Array<GpuDiagnostic>
+contract { intent { "Validate flow identity, known backend, advertised backend availability and non-empty GPU operations in source diagnostic order." } }
+{
+  mut diagnostics: Array<GpuDiagnostic> = Array.empty()
+
+  if plan.flow.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_GPU_PLAN_FLOW_REQUIRED"
+      severity: "error"
+      message: "GPU kernel plan requires a flow."
+      path: path_ + ".flow"
+    })
+  }
+
+  mut knownBackend: Bool = false
+  match plan.backend {
+    "cuda" => { knownBackend = true }
+    "rocm" => { knownBackend = true }
+    "webgpu" => { knownBackend = true }
+    "vulkan" => { knownBackend = true }
+    "plan-only" => { knownBackend = true }
+    _ => {}
+  }
+
+  if knownBackend == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_GPU_PLAN_BACKEND_INVALID"
+      severity: "error"
+      message: "GPU kernel plan backend must be one of: cuda, rocm, webgpu, vulkan, plan-only."
+      path: path_ + ".backend"
+    })
+  }
+  if knownBackend == true {
+    mut available: Bool = false
+    mut capabilityIndex: Int = 0
+    while capabilityIndex < capabilities.count() {
+      let capabilityOpt: Option<GpuTargetCapability> = capabilities.get(capabilityIndex)
+      match capabilityOpt {
+        Some(capability) => {
+          if capability.backend == plan.backend { available = true }
+        }
+        None => {}
+        _ => {}
+      }
+      capabilityIndex = capabilityIndex + 1
+    }
+    if available == false {
+      let quote: Char = Char.fromCode(34)
+      diagnostics = diagnostics.append({
+        code: "Galerina_GPU_PLAN_BACKEND_UNAVAILABLE"
+        severity: "error"
+        message: "GPU kernel plan targets backend " + quote.toString() + plan.backend + quote.toString() + " which no advertised capability provides."
+        path: path_ + ".backend"
+      })
+    }
+  }
+
+  if plan.operations.count() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_GPU_PLAN_NO_OPERATIONS"
+      severity: "error"
+      message: "GPU kernel plan lists no operations; it would do nothing."
+      path: path_ + ".operations"
+    })
+  }
+
+  return diagnostics
+}
+
+pure flow validateGpuKernelPlanDefault(
+  plan: GpuKernelPlan,
+  capabilities: Array<GpuTargetCapability>,
+) -> Array<GpuDiagnostic>
+contract { intent { "Validate a GPU kernel plan using the source default plan path." } }
+{
+  return validateGpuKernelPlan(plan, capabilities, "plan")
+}

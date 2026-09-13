@@ -1,0 +1,202 @@
+@version 1
+
+/// Bounded translation of validateJsOutputPlan from
+/// packages-ts/galerina-target-js/src/index.ts:114-215.
+///
+/// The TypeScript plan contract remains the compatibility shadow. This leaf
+/// validates declared plan metadata only; emitted bundle inspection and host
+/// runtime behavior remain outside this pure boundary.
+
+record JsSourceMapRule {
+  mode: String
+  includeSourcesContent: Bool
+  production: Bool
+}
+
+record JsOutputPlan {
+  flow: String
+  runtime: String
+  moduleFormat: String
+  imports: Array<String>
+  accessesEnvironment: Bool
+  accessesSecrets: Bool
+  sourceMap: JsSourceMapRule
+}
+
+record JsTargetDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isServerOnlyImport(specifier: String) -> Bool
+contract { intent { "Recognize node-scheme and deny-by-default server-only module specifiers." } }
+{
+  let value: String = specifier.trim()
+  if value.startsWith("node:") { return true }
+  match value {
+    "fs" => { return true }
+    "path" => { return true }
+    "os" => { return true }
+    "process" => { return true }
+    "child_process" => { return true }
+    "cluster" => { return true }
+    "worker_threads" => { return true }
+    "net" => { return true }
+    "tls" => { return true }
+    "dns" => { return true }
+    "dgram" => { return true }
+    "http" => { return true }
+    "https" => { return true }
+    "http2" => { return true }
+    "crypto" => { return true }
+    "stream" => { return true }
+    "buffer" => { return true }
+    "v8" => { return true }
+    "vm" => { return true }
+    "module" => { return true }
+    "readline" => { return true }
+    "repl" => { return true }
+    "zlib" => { return true }
+    "util" => { return true }
+    "assert" => { return true }
+    "async_hooks" => { return true }
+    "perf_hooks" => { return true }
+    "inspector" => { return true }
+    _ => {}
+  }
+  return false
+}
+
+pure flow validateJsOutputPlan(plan_: JsOutputPlan, path_: String) -> Array<JsTargetDiagnostic>
+contract { intent { "Validate JavaScript target plan metadata and fail closed on unsafe browser declarations." } }
+{
+  mut diagnostics: Array<JsTargetDiagnostic> = Array.empty()
+
+  if plan_.flow.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_JS_PLAN_FLOW_REQUIRED",
+      severity: "error",
+      message: "JS output plan requires a flow.",
+      path: path_ + ".flow"
+    })
+  }
+
+  mut runtimeKnown: Bool = false
+  match plan_.runtime {
+    "browser" => { runtimeKnown = true }
+    "node" => { runtimeKnown = true }
+    _ => {}
+  }
+  if runtimeKnown == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_JS_RUNTIME_INVALID",
+      severity: "error",
+      message: "JS output runtime must be one of: browser, node.",
+      path: path_ + ".runtime"
+    })
+    return diagnostics
+  }
+
+  mut moduleFormatKnown: Bool = false
+  match plan_.moduleFormat {
+    "esm" => { moduleFormatKnown = true }
+    "cjs" => { moduleFormatKnown = true }
+    _ => {}
+  }
+  if moduleFormatKnown == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_JS_MODULE_FORMAT_INVALID",
+      severity: "error",
+      message: "JS module format must be one of: esm, cjs.",
+      path: path_ + ".moduleFormat"
+    })
+  } else {
+    if plan_.runtime == "browser" and plan_.moduleFormat != "esm" {
+      diagnostics = diagnostics.append({
+        code: "Galerina_JS_BROWSER_REQUIRES_ESM",
+        severity: "error",
+        message: "Browser JS output is ES-module-only; cjs is reserved for the optional Node target.",
+        path: path_ + ".moduleFormat"
+      })
+    }
+  }
+
+  if plan_.runtime == "browser" {
+    mut importIndex: Int = 0
+    while importIndex < plan_.imports.count() {
+      let specifierOpt: Option<String> = plan_.imports.get(importIndex)
+      match specifierOpt {
+        Some(specifier) => {
+          if isServerOnlyImport(specifier) {
+            diagnostics = diagnostics.append({
+              code: "Galerina_JS_SERVER_ONLY_IMPORT_IN_BROWSER",
+              severity: "error",
+              message: "Browser JS plan imports server-only module " + Char.fromCode(34).toString() + specifier + Char.fromCode(34).toString() + " — blocked (deny-by-default).",
+              path: path_ + ".imports." + importIndex.toString()
+            })
+          }
+        }
+        None => {}
+        _ => {}
+      }
+      importIndex = importIndex + 1
+    }
+
+    if plan_.accessesEnvironment == true {
+      diagnostics = diagnostics.append({
+        code: "Galerina_JS_BROWSER_ENVIRONMENT_ACCESS_DENIED",
+        severity: "error",
+        message: "Browser JS output must not access the host environment.",
+        path: path_ + ".accessesEnvironment"
+      })
+    }
+
+    if plan_.accessesSecrets == true {
+      diagnostics = diagnostics.append({
+        code: "Galerina_JS_BROWSER_SECRET_ACCESS_DENIED",
+        severity: "error",
+        message: "Browser JS output must not access secret material — a shipped bundle is public text.",
+        path: path_ + ".accessesSecrets"
+      })
+    }
+  }
+
+  mut sourceMapModeKnown: Bool = false
+  match plan_.sourceMap.mode {
+    "external" => { sourceMapModeKnown = true }
+    "inline" => { sourceMapModeKnown = true }
+    "none" => { sourceMapModeKnown = true }
+    _ => {}
+  }
+  if sourceMapModeKnown == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_JS_SOURCE_MAP_MODE_INVALID",
+      severity: "error",
+      message: "Source-map mode must be one of: external, inline, none.",
+      path: path_ + ".sourceMap.mode"
+    })
+  } else {
+    if plan_.sourceMap.production and plan_.runtime == "browser" {
+      if plan_.sourceMap.mode == "inline" {
+        diagnostics = diagnostics.append({
+          code: "Galerina_JS_SOURCE_MAP_INLINE_IN_PRODUCTION",
+          severity: "warning",
+          message: "Inline source maps in a production browser bundle disclose source structure.",
+          path: path_ + ".sourceMap.mode"
+        })
+      }
+      if plan_.sourceMap.includeSourcesContent and plan_.sourceMap.mode != "none" {
+        diagnostics = diagnostics.append({
+          code: "Galerina_JS_SOURCES_CONTENT_IN_PRODUCTION",
+          severity: "error",
+          message: "sourcesContent embeds original sources — never acceptable in production browser output.",
+          path: path_ + ".sourceMap.includeSourcesContent"
+        })
+      }
+    }
+  }
+
+  return diagnostics
+}

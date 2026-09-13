@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-069-DEVTOOLS-IMPACT",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-devtools-impact/src/impact-plan.mjs#isDocumentation",
+  "sourceSha256": "e66b11c6642a3b6dc10adea8d37943570326eca02ba7fa0ef7a108694bce9ae0",
+  "target": "packages/fungi/products/galerina-devtools-impact/build-impact-plan.fungi",
+  "targetBytes": 255,
+  "targetSha256": "4278b24440bf85ce5307d548b8461e4c710ce80713732b09477e4e0691c4dcfb",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "10/10",
+    "parity": "10/10 interpreter and signed-Wasm",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "9/9",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Pure documentation-path classification is exact; the full planner remains host-bound for filesystem/workspace reads, path resolution, dependency closure, JSON hashing and command planning. Filesystem reads, package discovery, hashing and command execution remain host/toolchain boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 243.2,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

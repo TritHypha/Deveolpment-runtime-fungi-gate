@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:7041af038ae777845a6082595caa22326d217ddf01d26a9c56d5205567c2d68f",
+  "sourceFile": "wat-heap-base.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:d83b662a9cc0bc8ab80c3a3611af49f00e167128de8c607f2e7f0e09d4792bac",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:24.151Z"
+  },
+  "behavioralFingerprint": "sha256:b9aba6337700ff197ad8951c9979c0ed3776347669a91eb9ed28d4369570b1ab",
+  "derivedConstraints": [],
+  "proofObligations": [
+    {
+      "flowName": "watHeapBase",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:24.151Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "01be259bf92c3038",
+    "signature": "Jhu9nM+MMIE28x1jMCowhQpYfN+Flj7vj+hAanVJAof+9YB2xLLdNL38kh9FzAMp7GC+3iTuKG+nmMT0e4wXAg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:24.158Z"
+  }
+}

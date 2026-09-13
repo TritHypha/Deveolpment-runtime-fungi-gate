@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-081-INFERENCE-ORACLE",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-inference-bridge-contract/src/oracle.ts#oracleAgrees",
+  "sourceSha256": "6f8eed1244969c00664f2ec7c5d641f2e3acbfa0881d0ae58b8d4303de1e5382",
+  "target": "packages/fungi/products/galerina-inference-bridge-contract/oracle-agrees.fungi",
+  "targetBytes": 982,
+  "targetSha256": "507995f17b82e01bd73a5c45e33af4d654d9062746192240c2cc3ad37f1f3166",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12 interpreter and signed-Wasm",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "12/12",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Signed-i32 accumulator agreement preserves equality after source coercion. Fractional, nonfinite and out-of-i32 inputs remain host/manual. Bridge execution, inference providers, cryptographic evidence and production authority remain host boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 241.5,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

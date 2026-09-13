@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "capability-preimage.fungi",
+  "sourceHash": "sha256:ad430a633e2d6acdc8231e2b46dd53a9c0c99b104bc0ca3b8b28680acdc5bc82",
+  "generatedAt": "2026-09-13T17:47:10.710Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "capabilityPreimage",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

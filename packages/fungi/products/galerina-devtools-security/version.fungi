@@ -1,0 +1,12 @@
+@version 1
+
+/// Bounded pure leaf for DEVTOOLS_SECURITY_VERSION in index.ts.
+/// TypeScript shadow: packages-ts/galerina-devtools-security/src/index.ts#DEVTOOLS_SECURITY_VERSION
+/// Audit execution, filesystem/path checks, CLI behavior, and security
+/// authority remain in the TypeScript/host boundary.
+
+pure flow devtoolsSecurityVersion() -> String
+contract { intent { "Return the exact developer security tool package version." } }
+{
+  return "0.1.0"
+}

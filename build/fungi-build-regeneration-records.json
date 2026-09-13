@@ -1,0 +1,3206 @@
+[
+  {
+    "source": "packages/fungi/products/galerina-core-config/environment-mode.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-config\\build\\environment-mode.wasm",
+        "bytes": 146,
+        "sha256": "01da1412023907b0b861e940ef7cc28df45aaa51d794107c83e680a9d7201b7b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-config\\build\\environment-mode.wat",
+        "bytes": 989,
+        "sha256": "4db2ab179d712c7da5da769ed2bb92ceda25c100fa37d429530f97f9e67ef175"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-config\\build\\environment-mode.lmanifest",
+        "bytes": 1237,
+        "sha256": "dcd484529a1ec4a106c30c34f66524a7363bab77d5a43b9b436d789b51ab2c10"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-config\\build\\environment-mode.lmanifest.json",
+        "bytes": 1573,
+        "sha256": "a2edd89eedafdaa840c0187f61dcb952e6fec2c311baa6a464279014b3b538c1"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-config\\build\\environment-mode.governance-impact.json",
+        "bytes": 591,
+        "sha256": "8f42d3f92669562903c045be6f4d72bafb6d0b9b2dfb698736cbb0e1a583475b"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:10.5837153+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-runtime/terminal-scope.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime\\build\\terminal-scope.wasm",
+        "bytes": 144,
+        "sha256": "6f046147d652bc749cd4c38215beed02d23e38859140a43d6dd95dfc87b40910"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime\\build\\terminal-scope.wat",
+        "bytes": 981,
+        "sha256": "79ee5583931bc838e6facb927bc1a7a644a8fb3d1c2d587597687aed2ce05731"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime\\build\\terminal-scope.lmanifest",
+        "bytes": 1229,
+        "sha256": "c988abd272a27ce12b563c1d211a3d62215849fe03d60a7bc7703398db51eeba"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime\\build\\terminal-scope.lmanifest.json",
+        "bytes": 1565,
+        "sha256": "fff98b44a027d00f43efcaf2c31da237af620b001c03bccd1a989fa661cac2b3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime\\build\\terminal-scope.governance-impact.json",
+        "bytes": 587,
+        "sha256": "520cc584fdf911f6d301287bad2f593002792d31024621022f81012fb3637e02"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:10.9758427+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-compute/validate-compute-plan.fungi",
+    "status": "FAIL",
+    "exitCode": 1,
+    "outputs": [],
+    "diagnostic": "Compilation failed: WAT module calls function(s) that are neither defined nor imported: $includes — this is an A2 emitter defect (the callee was not lowered to a host import or a local function). Fix: define/import the callee, or emit (unreachable) at the call site.",
+    "completedAt": "2026-09-13T17:43:11.3183336+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-economics/select-vector-tier.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-economics\\build\\select-vector-tier.wasm",
+        "bytes": 66,
+        "sha256": "113c47954516caad2b346ffb2d99f45168571496239500ec874b3788f3ea7332"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-economics\\build\\select-vector-tier.wat",
+        "bytes": 227,
+        "sha256": "5b5782d6bde1fdfb39c275144b4bfb6f685c775a59ab548684fceff91fde81c7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-economics\\build\\select-vector-tier.lmanifest",
+        "bytes": 1237,
+        "sha256": "8fdc93b42f02490251f7e0823571890016cefce087ab06b01bef73ebfd217779"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-economics\\build\\select-vector-tier.lmanifest.json",
+        "bytes": 1572,
+        "sha256": "ef2933de348807993f997de15ceea9d8c220c13cdd640abc434bcf14bf2a7ec1"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-economics\\build\\select-vector-tier.governance-impact.json",
+        "bytes": 592,
+        "sha256": "96b15d77ff5bbbea7cc1c2851899162b54a05d7ebf2a66a551b7c683cc7a8398"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:11.6954708+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-reports/report-status.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-reports\\build\\report-status.wasm",
+        "bytes": 225,
+        "sha256": "aeea60df0d60b0e3fd87862becebb35d4c56c2a5c65e662dc9e57ebe46c958fa"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-reports\\build\\report-status.wat",
+        "bytes": 1762,
+        "sha256": "19ca3c0c9a54cb6062f5cd4db0a1705422b7a8d75d496eb9dc07d78cf872807c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-reports\\build\\report-status.lmanifest",
+        "bytes": 1448,
+        "sha256": "8a863614ddbd182c2531eee2fdaa82851fc8c39bebbf197652e32467b4752341"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-reports\\build\\report-status.lmanifest.json",
+        "bytes": 1847,
+        "sha256": "659af1e492dfcfc644cefd9bc14101d91acfc296f0138c79693158c79ce5f424"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-reports\\build\\report-status.governance-impact.json",
+        "bytes": 720,
+        "sha256": "2d2f682d9aad65473e2807951fe6f5f818c758e037b72f3b08ff290b486770d3"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:12.0831969+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-security/is-sensitive-header-name.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-security\\build\\is-sensitive-header-name.wasm",
+        "bytes": 180,
+        "sha256": "6cfd86eeb9ec104c42143d9c003e01fe00824dec8ffa0c041d42cdb5e20e9f99"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-security\\build\\is-sensitive-header-name.wat",
+        "bytes": 1238,
+        "sha256": "2d7384c7ea5179edc77597c40c9271661458699d08f86dadc85d59d01dee11bb"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-security\\build\\is-sensitive-header-name.lmanifest",
+        "bytes": 1258,
+        "sha256": "1aa1a9adf378b2f8cf7dbd0e4564a2229f2eada23894316f6ec047cd2b9eb663"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-security\\build\\is-sensitive-header-name.lmanifest.json",
+        "bytes": 1593,
+        "sha256": "57bd28590d99e84232c0d74e822f97486233ec3a24f0079f32586aa8f1a2c15b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-security\\build\\is-sensitive-header-name.governance-impact.json",
+        "bytes": 603,
+        "sha256": "7bdd62d47cec2618d95a95f9c328fbd9fd15c618e7f698ba1c0be3f51d4937aa"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:12.4576347+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-vector/validate-matrix-type.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-vector\\build\\validate-matrix-type.wasm",
+        "bytes": 566,
+        "sha256": "64675113e5601a05200c9c554a36d1c5eefe15a6ed1b0daddf61f337015a0411"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-vector\\build\\validate-matrix-type.wat",
+        "bytes": 4918,
+        "sha256": "c363cb0909a3bd1f22df1e0ed75b610db961f82ea2ae3e5fc9c71b6618b9a43c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-vector\\build\\validate-matrix-type.lmanifest",
+        "bytes": 1455,
+        "sha256": "47504fbeb818cd0c9502ae7a19615a427cc732d2f7e5a43d773bccdbc3ee7d18"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-vector\\build\\validate-matrix-type.lmanifest.json",
+        "bytes": 1854,
+        "sha256": "74491fd200507b2b5d6285f778416ecca4e81d12e81325664dfb192ea5e2cd3f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-vector\\build\\validate-matrix-type.governance-impact.json",
+        "bytes": 724,
+        "sha256": "efece537d15c2ee951c9660f25cc48308949ae56dc63e9550a0fc79324495ca9"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:12.8735596+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-model/response-safe-classification.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-model\\build\\response-safe-classification.wasm",
+        "bytes": 118,
+        "sha256": "b2cf069c770d0a3a49e13aab8bff1940c6bddfc27e7380d5d853d6bea37c4187"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-model\\build\\response-safe-classification.wat",
+        "bytes": 622,
+        "sha256": "bc0d726abd8a1733123430571c96e48b64e1f2139a6688f27ba899f0e074a53a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-model\\build\\response-safe-classification.lmanifest",
+        "bytes": 1284,
+        "sha256": "f85c736c12d8069facc3576c74987811222e281eff292061675c9301a922ced8"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-model\\build\\response-safe-classification.lmanifest.json",
+        "bytes": 1618,
+        "sha256": "07eb67ab643d937f669464f86de004597ccc0f669e66157616b66928d0d96d7b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-model\\build\\response-safe-classification.governance-impact.json",
+        "bytes": 614,
+        "sha256": "6a09e8490e786390d54262e2742a01476b366d178bb82ad3b243f371277ebc02"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:13.2568258+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-tasks/task-effect.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-tasks\\build\\task-effect.wasm",
+        "bytes": 262,
+        "sha256": "9011945a67c684f79bb64442ea9c03dee73c84e43cc1107e0576eb19708a8a7f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-tasks\\build\\task-effect.wat",
+        "bytes": 2090,
+        "sha256": "22a1abb3f598dcf5322ad025a352802f8976ee4de4c808cdeee4f08d8b15d2fa"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-tasks\\build\\task-effect.lmanifest",
+        "bytes": 1613,
+        "sha256": "217ab56113505113f41d4f6e9888f699f3c3db1b85e85f79c121c4456665675e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-tasks\\build\\task-effect.lmanifest.json",
+        "bytes": 2077,
+        "sha256": "b95d58e81b0b1bd41161e9a134bcde2d87e9a1b4db51e03f74ac23f1efb81821"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-tasks\\build\\task-effect.governance-impact.json",
+        "bytes": 831,
+        "sha256": "a7e31ac67bd692e96b2b6af1aef0d2b8e4d4ecea106c52fb409abe647572e449"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:13.6486887+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-sentinel-state/restore-verdict-export-name.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-state\\build\\restore-verdict-export-name.wasm",
+        "bytes": 73,
+        "sha256": "ad1b6f461c5e370ba785bcedc05f4c3db52c88c172e8122a3f15b26f732caadb"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-state\\build\\restore-verdict-export-name.wat",
+        "bytes": 241,
+        "sha256": "ea26fa88af65b3b206542ff4cc0574e76eda6bbaccdeb37de61724c4eb7c15fe"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-state\\build\\restore-verdict-export-name.lmanifest",
+        "bytes": 1271,
+        "sha256": "ea79d40aab6d10e48eb434f2c2ce48b869e2d02cb1c63f22f64c0158c0001db8"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-state\\build\\restore-verdict-export-name.lmanifest.json",
+        "bytes": 1605,
+        "sha256": "2d95065282c3f7fb9158c6650c8640a3fbd8a32c29db9f9d325bb52ceaebf827"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-state\\build\\restore-verdict-export-name.governance-impact.json",
+        "bytes": 609,
+        "sha256": "a642ff07880035f9f15f7ac0e6f364453c9c619c25c565e24a8e5f5452c13401"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:14.0178596+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-sentinel-time/synchronization-gate.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-time\\build\\synchronization-gate.wasm",
+        "bytes": 90,
+        "sha256": "7c3371c7fe8298e6532d6657be08b086d18c5e30622aa88f0c93662e549b0e05"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-time\\build\\synchronization-gate.wat",
+        "bytes": 471,
+        "sha256": "2f85c2257bde829611feac3d75f7f4fdebd379a7dab206ace3450dc91ee3136f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-time\\build\\synchronization-gate.lmanifest",
+        "bytes": 1239,
+        "sha256": "96cfdad1b47385f06aa491a772516649b393a579db4bc299310a28ed8b510a17"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-time\\build\\synchronization-gate.lmanifest.json",
+        "bytes": 1574,
+        "sha256": "cc332fd7a1290cb9f58b3f7502e382f6394f33df55f43ef95074ef85ab16b2b0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-time\\build\\synchronization-gate.governance-impact.json",
+        "bytes": 594,
+        "sha256": "6dba2878eb195ae46b7835a5d6bb0770c01ca64037512854cdd4567e418ad7bc"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:14.3945993+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-network/admission-feedback.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-network\\build\\admission-feedback.wasm",
+        "bytes": 183,
+        "sha256": "4d1e3bb6a25d2c4ec0af791f0db2e33704946f32ca1bdb28df6e7258159f3bad"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-network\\build\\admission-feedback.wat",
+        "bytes": 1410,
+        "sha256": "7226033e55efa503596153040e5f63d6df6e6da89861605b53d201b32b19d5c7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-network\\build\\admission-feedback.lmanifest",
+        "bytes": 1387,
+        "sha256": "0b5fcff400592b1f997834a7b18e9e42823a64e0a1e90212e0cb5e86ba1df1c3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-network\\build\\admission-feedback.lmanifest.json",
+        "bytes": 1786,
+        "sha256": "27ec973d4af4dc9b2e8d8bce7d0961fd1e86a5e6b55a84dc2e78a718fed1f8dd"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-network\\build\\admission-feedback.governance-impact.json",
+        "bytes": 706,
+        "sha256": "6db40f09593d56b3af1c3022768da3f6244654976a4ad7f23f5ad4d1d22a68d9"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:14.7863607+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-sentinel-io/integrity-verdict.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-io\\build\\integrity-verdict.wasm",
+        "bytes": 77,
+        "sha256": "337b03874e97dc707e3bf77e9abd4e3af887c0dba402ea8570b67d1f1245c3bd"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-io\\build\\integrity-verdict.wat",
+        "bytes": 329,
+        "sha256": "f00e0519a687a9e8287169ad2581d3f434218aff9c073402bb0b9faff6d0cd51"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-io\\build\\integrity-verdict.lmanifest",
+        "bytes": 1235,
+        "sha256": "b23a0b33f86b0e648bffe4f6cd80b3f13b1f64cb2f59d71222b8eabac7286e67"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-io\\build\\integrity-verdict.lmanifest.json",
+        "bytes": 1571,
+        "sha256": "ec9cf73722ccea834238648e1898f4b785adfef9b84a08e3b0475c93fd0b613e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-io\\build\\integrity-verdict.governance-impact.json",
+        "bytes": 591,
+        "sha256": "44ba4301a6deae217b1b483c7bfc8aec17b6edcf29d30106649ebc50006e2f34"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:15.1520278+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-sentinel-memory/align-bytes.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-memory\\build\\align-bytes.wasm",
+        "bytes": 59,
+        "sha256": "1dd1d361f9d3477f49b45cb7f7219f97bad363feeda462d733da663b648eec3a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-memory\\build\\align-bytes.wat",
+        "bytes": 186,
+        "sha256": "87f3bcce765670ec0a2f2b39d1b4cc13996421709c7e1d9a694ea323a6ab5c13"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-memory\\build\\align-bytes.lmanifest",
+        "bytes": 1211,
+        "sha256": "3b2b7d9e11401eff1cbef3cf8b05eb39dabcfd457fc77cbff504ac0ded6de5b9"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-memory\\build\\align-bytes.lmanifest.json",
+        "bytes": 1547,
+        "sha256": "b1190bcd8fc8caf5bf21824d87c015559bd74d335b55be79796633237acd2c8c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-memory\\build\\align-bytes.governance-impact.json",
+        "bytes": 579,
+        "sha256": "2a1eb90e333d7b5ed3019ace791065aa0a16723e331f1067e797ec71d1057843"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:15.5194467+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ai/define-ai-safety-policy.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ai\\build\\define-ai-safety-policy.wasm",
+        "bytes": 367,
+        "sha256": "455e0c1d558b1459f7b8acb1a81f9f4a18532429200bba2bf67eeba5caae352d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai\\build\\define-ai-safety-policy.wat",
+        "bytes": 4242,
+        "sha256": "aa839636ca4ba5f8309d966bd0e524b8a9247fb546463ebc5cefd94be2e01de6"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai\\build\\define-ai-safety-policy.lmanifest",
+        "bytes": 1254,
+        "sha256": "c5dd682793ef7e33dcd4e62b3f582b561d46001d399c15a2e93fa0122a8973d6"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai\\build\\define-ai-safety-policy.lmanifest.json",
+        "bytes": 1589,
+        "sha256": "6a894361c9913bfb9cc98df848315fb04246783cab9798de3a53f03816aad30a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai\\build\\define-ai-safety-policy.governance-impact.json",
+        "bytes": 601,
+        "sha256": "9f61eede145297bd45eaaf26cf9118df95781e43d8cbb916b41cd781c8e04b23"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:15.9149138+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ai-agent/validate-agent-limits.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-agent\\build\\validate-agent-limits.wasm",
+        "bytes": 737,
+        "sha256": "ccc2a74c5616f4f87bf69f1f6fa89b6065b20ecd8a31156a344521accdb52731"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-agent\\build\\validate-agent-limits.wat",
+        "bytes": 6972,
+        "sha256": "da40805a4106c215288bc6a3a8250ef9f9f49035e9a3d79538334e6cc4db3052"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-agent\\build\\validate-agent-limits.lmanifest",
+        "bytes": 1475,
+        "sha256": "2775519d0fd9d97d821a0e509298dca553528d6b5ad157653a613796f6d87d73"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-agent\\build\\validate-agent-limits.lmanifest.json",
+        "bytes": 1873,
+        "sha256": "5e360d9ed902bd9c3b853d9f9d631bc8b8135943cb4aef3180c3e5edfeb915eb"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-agent\\build\\validate-agent-limits.governance-impact.json",
+        "bytes": 730,
+        "sha256": "a66a171008ff0f6117a8fa9711f0f12902aa99cd08a2bf795f70bf4f832cb8a8"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:16.3237957+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-archive/validate-checksum-ref.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-archive\\build\\validate-checksum-ref.wasm",
+        "bytes": 955,
+        "sha256": "59546feba62e0e12ecdf5857fa6f7a69a6c069c4152d732e9e38e3eb1b8201ff"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-archive\\build\\validate-checksum-ref.wat",
+        "bytes": 8556,
+        "sha256": "f96e0406fff456bb35241b9e4477eac6665e4ef0af589c4cc3b5918a480d8fb3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-archive\\build\\validate-checksum-ref.lmanifest",
+        "bytes": 1621,
+        "sha256": "40c3a4767a262da70204d82ba190274c24923c38e0b6a5da71bd83e7bda09682"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-archive\\build\\validate-checksum-ref.lmanifest.json",
+        "bytes": 2083,
+        "sha256": "c48686143c623823bdb4c17ac5ab345bb934d2bb4319063de9669e2345183cce"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-archive\\build\\validate-checksum-ref.governance-impact.json",
+        "bytes": 848,
+        "sha256": "034a1f135b32d5282798ec8a25840abe07ce666a68f19cebb6cf688b8a1f2c3a"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:16.7479540+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ai-neural/is-same-tensor-shape.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neural\\build\\is-same-tensor-shape.wasm",
+        "bytes": 483,
+        "sha256": "201dec9eefa42c95554a7f7dfe9fdda0670163e9f29e3a78b538caf179bad15e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neural\\build\\is-same-tensor-shape.wat",
+        "bytes": 4071,
+        "sha256": "48470f7ded4294aa5ce679a0855868586f57570dd3e49f23efdadf4d62a92f23"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neural\\build\\is-same-tensor-shape.lmanifest",
+        "bytes": 1242,
+        "sha256": "0257dc5f766a1560488002cf0f1e206b327a6d3b331b726d75d8b09c2ffbf422"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neural\\build\\is-same-tensor-shape.lmanifest.json",
+        "bytes": 1577,
+        "sha256": "86c8d2de402ea342f186ae8c3d45a39ceb3f522d225bb86d677d5286c41034c2"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neural\\build\\is-same-tensor-shape.governance-impact.json",
+        "bytes": 595,
+        "sha256": "ef302a93eab0de357caed0aa815559db1136c3948d5bbee7f3273e339020b736"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:17.1387957+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-db/validate-db-boundary-requirements.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-db\\build\\validate-db-boundary-requirements.wasm",
+        "bytes": 468,
+        "sha256": "10d363fbef0f8ccb434095f049b6d431a9981596a7cf0836a608da602c01627a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-db\\build\\validate-db-boundary-requirements.wat",
+        "bytes": 3883,
+        "sha256": "65692829aad83cd1c6a8e3d9f1a4d6cc7ea06205a1f851e47a35e254d7a01a2d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-db\\build\\validate-db-boundary-requirements.lmanifest",
+        "bytes": 1554,
+        "sha256": "57ef4fa645fcc2362f3145cd3f9a38b69c6afb969cce365ad6dfd8d18330db03"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-db\\build\\validate-db-boundary-requirements.lmanifest.json",
+        "bytes": 1951,
+        "sha256": "023d8723f13b8a2e101512e14d972204b5a967d63dabe9e04027c6b7d058b41b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-db\\build\\validate-db-boundary-requirements.governance-impact.json",
+        "bytes": 764,
+        "sha256": "30ad201590ae9c114e586ee8993c4386098c99acf2187a99eda5443c19b18d50"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:17.5380737+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-json/validate-json-memory-policy.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-json\\build\\validate-json-memory-policy.wasm",
+        "bytes": 775,
+        "sha256": "7111136b042e062638c8e4f5119b8a26d7edd669b3f1f99c1fe82e26b0c65d8e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-json\\build\\validate-json-memory-policy.wat",
+        "bytes": 6656,
+        "sha256": "558950b4e08de1574832a08f9930f5ba5d161ba50332a82ddd690d09cab14c62"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-json\\build\\validate-json-memory-policy.lmanifest",
+        "bytes": 1703,
+        "sha256": "62b55bc3bde6aa3914ef3b60f380414c5243799a5f60ae36d68a073d83381f38"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-json\\build\\validate-json-memory-policy.lmanifest.json",
+        "bytes": 2164,
+        "sha256": "bfbd28416f9a444388ca88f3ad4b05d9b345dbd46cccdaeaffd51d3aedf58b94"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-json\\build\\validate-json-memory-policy.governance-impact.json",
+        "bytes": 875,
+        "sha256": "db2917655232ea13211d16e44327414538d922ee0cdf2a83e0c2da909ad0e58d"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:17.9498172+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-photonic/validate-optical-signal.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-photonic\\build\\validate-optical-signal.wasm",
+        "bytes": 574,
+        "sha256": "cd46aa5048abeeb5e4143c5431f23ad64dacdaee4ee198c8b897d14d9c920049"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-photonic\\build\\validate-optical-signal.wat",
+        "bytes": 5034,
+        "sha256": "806945bc490736c65b213a0e1592fb09627ac91cbb5752341450061dd463465b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-photonic\\build\\validate-optical-signal.lmanifest",
+        "bytes": 1257,
+        "sha256": "f159872bb27565ae648497a486a55c5be3a24964203be8b505d3d69bf7b8e885"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-photonic\\build\\validate-optical-signal.lmanifest.json",
+        "bytes": 1592,
+        "sha256": "3e8deba755dbf47c031fdcbf43a51cc6f8bf9be802e09f55e8594c4505e05974"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-photonic\\build\\validate-optical-signal.governance-impact.json",
+        "bytes": 602,
+        "sha256": "13e60187c06621e884355fce80f0eec5bb76a6afb5b4efe02065a68dffd791b5"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:18.3494325+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-cpu-kernels/requires-low-bit-kernel.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-cpu-kernels\\build\\requires-low-bit-kernel.wasm",
+        "bytes": 138,
+        "sha256": "2ce3b72c5bc2f6759c5fc5a21b46b7d9279d6c97d8d0834a317c8eda2b905dd8"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-cpu-kernels\\build\\requires-low-bit-kernel.wat",
+        "bytes": 849,
+        "sha256": "f3f31d45c5564073577ac91f8a16046ac3a916ed934fe2ae1f98acb95a5ef0c4"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-cpu-kernels\\build\\requires-low-bit-kernel.lmanifest",
+        "bytes": 1163,
+        "sha256": "d10445bfb17ea241e94027cd9591a0f0dbe9d81fa9826c52feb3c038419cd7d3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-cpu-kernels\\build\\requires-low-bit-kernel.lmanifest.json",
+        "bytes": 1490,
+        "sha256": "a02d6473b429b71ab16bb712765e76f25832cf1e0a93a51649d708c8f4b3736a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-cpu-kernels\\build\\requires-low-bit-kernel.governance-impact.json",
+        "bytes": 601,
+        "sha256": "4063bf35ad009e81e96e3dda3283e448864db69b594d3bff325e04a14c7a9114"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:18.7203151+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data/validate-data-memory-limits.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data\\build\\validate-data-memory-limits.wasm",
+        "bytes": 691,
+        "sha256": "ff99d9e7f0c00f57efbed13f2970ffad4a42b0ce0da4d72213e80ef3028d4589"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data\\build\\validate-data-memory-limits.wat",
+        "bytes": 6028,
+        "sha256": "99853f40fecda2c076e03291fdb21e6fe7500882dcf640796f9513c595c4c947"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data\\build\\validate-data-memory-limits.lmanifest",
+        "bytes": 1703,
+        "sha256": "65a17e8e5be5cc30ce300e737e63980ff3d6f354e1f964f2627151650cfa24f2"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data\\build\\validate-data-memory-limits.lmanifest.json",
+        "bytes": 2164,
+        "sha256": "fb70177b1cb09f0fe12d998242b15f9511ec361b82e9021d0fdb0d0fa0a72631"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data\\build\\validate-data-memory-limits.governance-impact.json",
+        "bytes": 875,
+        "sha256": "a3489bbb6589e9113eb4a81c101c1595a0db0a0079c195fc6e04aa1edba3226e"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:19.1341331+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core/has-errors.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core\\build\\has-errors.wasm",
+        "bytes": 334,
+        "sha256": "0aaf3edd1fbb8a3c8be64dd584edd12a0b001a46b83db9560c2475a84de25850"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core\\build\\has-errors.wat",
+        "bytes": 2693,
+        "sha256": "9094c0cab6de4de4a4771057e54e4a477be4c5d0f72f4a83d1034c8574fc1791"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core\\build\\has-errors.lmanifest",
+        "bytes": 1207,
+        "sha256": "ad93b4381061f0d3e85e932c1deaf7ce352caccb9bd7c805d18a714b54c91715"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core\\build\\has-errors.lmanifest.json",
+        "bytes": 1543,
+        "sha256": "201b9d59dce25a6f13bdb4e540f2a7c3017453d4f334d755f7a982c580ed4f16"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core\\build\\has-errors.governance-impact.json",
+        "bytes": 577,
+        "sha256": "5d4b153f07e426acc608ab22bf095ee9d86766c1c8339c877748dea596a2eb6f"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:19.5127353+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-database/validate-database-checksum.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-database\\build\\validate-database-checksum.wasm",
+        "bytes": 1004,
+        "sha256": "81bcbe14ef2137cc8c9e85e905d189cf15c7e85a46d9b9d6a513c68245d1c8a2"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-database\\build\\validate-database-checksum.wat",
+        "bytes": 8918,
+        "sha256": "689ee02edae2fe5c2d16786f9fb2e6a51f96b31a071c19efd03d3c33e0a8cdb5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-database\\build\\validate-database-checksum.lmanifest",
+        "bytes": 1645,
+        "sha256": "02ba7d2dced07a4927e2a5d9df038785894b42ad25dc3a83787137cd5b4f13a7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-database\\build\\validate-database-checksum.lmanifest.json",
+        "bytes": 2106,
+        "sha256": "4f0c930b2d41f1c55e510b7474dd84f0bb14b5bc9c429b869e19a1c9452c193e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-database\\build\\validate-database-checksum.governance-impact.json",
+        "bytes": 862,
+        "sha256": "52abf107b8ee7b430e9a0bcd22d310afcffaa2bb6ec654d2a24225c85f2e75c1"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:19.9543587+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-runtime-wasm/wat-heap-base.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime-wasm\\build\\wat-heap-base.wasm",
+        "bytes": 61,
+        "sha256": "5877c58cc74e14a5f79fc0abf1cee79f5ed477ef3174556593f6c743ed9038a5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime-wasm\\build\\wat-heap-base.wat",
+        "bytes": 192,
+        "sha256": "521e2e6ef9d4ac5954777423b4e6adcafb2fee282aa7ab0f83d86bdd3af97e84"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime-wasm\\build\\wat-heap-base.lmanifest",
+        "bytes": 1143,
+        "sha256": "85c35576448e531eb6dc082dd5cb3b76045dfe3e22c41d78e8a0da6e076ca0b9"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime-wasm\\build\\wat-heap-base.lmanifest.json",
+        "bytes": 1471,
+        "sha256": "7f3fccb6db53fb34d660fb184e4e0f6bf8d4dbfd70c7aa52459ca6fd8e5348d6"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-runtime-wasm\\build\\wat-heap-base.governance-impact.json",
+        "bytes": 582,
+        "sha256": "530abf509130ae1e3161cdd8cb66c7ec416ab6f6a7b5fc559647c70e7530ea90"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:20.3218495+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-logic/validate-bool-boundary.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-logic\\build\\validate-bool-boundary.wasm",
+        "bytes": 1491,
+        "sha256": "37c0fb3e099f71385be0e5005e5034bca13ade587d888cbabb2efdf580d426d3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-logic\\build\\validate-bool-boundary.wat",
+        "bytes": 14321,
+        "sha256": "f5f935a2261ddf155c30d03fde2fe8a2169a2443243c9851645ca1c386514212"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-logic\\build\\validate-bool-boundary.lmanifest",
+        "bytes": 1253,
+        "sha256": "05f509772566b3c427c05477e6860c2308c58e01d0759d60448ae20dc979280e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-logic\\build\\validate-bool-boundary.lmanifest.json",
+        "bytes": 1588,
+        "sha256": "4092c013dda97601438c100b1eb438280a3e94a8812de318ac87dd3ff4be19ce"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-logic\\build\\validate-bool-boundary.governance-impact.json",
+        "bytes": 600,
+        "sha256": "14a948850be845b8b416c547a40325d1e004635a16811c31085129d84758e122"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:20.7444725+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-pipeline/validate-backpressure-policy.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-pipeline\\build\\validate-backpressure-policy.wasm",
+        "bytes": 976,
+        "sha256": "c169771ba5914f8e7d4b5661c34fdd7cf8c1afc97120535f9395867d4162b885"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-pipeline\\build\\validate-backpressure-policy.wat",
+        "bytes": 8697,
+        "sha256": "672e16fa0bf093fb8ef2b0206f89c5455fa9c08c8d857599206c36e9fe098d63"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-pipeline\\build\\validate-backpressure-policy.lmanifest",
+        "bytes": 1710,
+        "sha256": "766298cedebba9d7a6e6796b11febaca3844d3a2aac593b2288ade46d0407756"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-pipeline\\build\\validate-backpressure-policy.lmanifest.json",
+        "bytes": 2171,
+        "sha256": "e3ad478cd69a04a6e4c1438afd6f5ec02edb6d569340566157d0c8f7eff1822c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-pipeline\\build\\validate-backpressure-policy.governance-impact.json",
+        "bytes": 879,
+        "sha256": "883f38a73a3db213d01acdcb01fa9e374c22df7408e93113de3e7555ab51fae8"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:21.1639294+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ai-lowbit/validate-low-bit-ai-model.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-lowbit\\build\\validate-low-bit-ai-model.wasm",
+        "bytes": 784,
+        "sha256": "cd1e68e0b6d0f0557af88b8aaa017d49755587a1407b08b6751957e533bdd169"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-lowbit\\build\\validate-low-bit-ai-model.wat",
+        "bytes": 7057,
+        "sha256": "7800c4c322f6f9b53e8358b60328d6d3971e494a60f322af6322049cf2b5e233"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-lowbit\\build\\validate-low-bit-ai-model.lmanifest",
+        "bytes": 1259,
+        "sha256": "a2bbbecced6ed7c416e1ddd6ab27383ed43244c1b394dd3a7df8676f234374ec"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-lowbit\\build\\validate-low-bit-ai-model.lmanifest.json",
+        "bytes": 1594,
+        "sha256": "74786e200c4d8e160decc811dd640dd5159c22e5555b09ea4ce983eccb5bdde7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-lowbit\\build\\validate-low-bit-ai-model.governance-impact.json",
+        "bytes": 604,
+        "sha256": "f81041163b7e1dcd8fae383af38e4cc090bcffae82ab59b831dce0776671d5ee"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:21.5632547+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ai-neuromorphic/validate-spike-train.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neuromorphic\\build\\validate-spike-train.wasm",
+        "bytes": 1232,
+        "sha256": "c2c2fb9704beecbf42536bf3eb2de355bf9809fed330ed88764b7284f2e7809c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neuromorphic\\build\\validate-spike-train.wat",
+        "bytes": 11756,
+        "sha256": "eadcf79b457c7c6ee3b9ac9c114ba64ff31e914153a88fc13be0ef7057d1eabd"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neuromorphic\\build\\validate-spike-train.lmanifest",
+        "bytes": 1245,
+        "sha256": "74a7874b7953f52d306cb411d5a058a0229b8ca94ce645439da91808648b39e7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neuromorphic\\build\\validate-spike-train.lmanifest.json",
+        "bytes": 1580,
+        "sha256": "1deaa59d6715ccb154dfa73ae296cc6730ab1a75a4fb9db2338122ab022b1f56"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ai-neuromorphic\\build\\validate-spike-train.governance-impact.json",
+        "bytes": 596,
+        "sha256": "215cc1ef70ea0bce61dfa4e40a9e82a6e8bb0268c61cb7e664904283b6cc4d5c"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:21.9819303+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-html/validate-html-parse-plan.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-html\\build\\validate-html-parse-plan.wasm",
+        "bytes": 885,
+        "sha256": "3b0f05e4847736c90235af323d5cef2c8cf150f7dc06ed337472fbdcbfd325a5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-html\\build\\validate-html-parse-plan.wat",
+        "bytes": 7800,
+        "sha256": "88d5e5449739ddd1be43eff534158f3c8c5111721c1e8a8c62d105b3cc54baf3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-html\\build\\validate-html-parse-plan.lmanifest",
+        "bytes": 1465,
+        "sha256": "de673db0daf235f7e8d0d4cd5cd7b3382eb7cc044ddcb1cea93f35a0e0d2b79e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-html\\build\\validate-html-parse-plan.lmanifest.json",
+        "bytes": 1864,
+        "sha256": "437e2d834b45b340786ac1da40893da5d048f2042d5d59590e7944b931ea61df"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-html\\build\\validate-html-parse-plan.governance-impact.json",
+        "bytes": 731,
+        "sha256": "612cd9d886a367bab58a1007320003edf35bbd9d282a415298bb207949114f39"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:22.4150637+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-sentinel-power/validate-envelope.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-power\\build\\validate-envelope.wasm",
+        "bytes": 406,
+        "sha256": "be6c7cab29fb9d23877c2caaac22ba876b89459b8178b00fe599d60f6ac2e88c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-power\\build\\validate-envelope.wat",
+        "bytes": 3375,
+        "sha256": "6c1295a6e521e2549c3c65ad2d6ea078211a2bcc18f2f8207dd2130a104faa68"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-power\\build\\validate-envelope.lmanifest",
+        "bytes": 1235,
+        "sha256": "7ae4fb6143f0d52c6c3fda6cf9cf452a75a4e9464f6a7806fe5cdf6c6f6dacbc"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-power\\build\\validate-envelope.lmanifest.json",
+        "bytes": 1571,
+        "sha256": "758d7c825a99b08d3a0b0dde109aedae1a0684dcc3714282500a805c3729fb82"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-power\\build\\validate-envelope.governance-impact.json",
+        "bytes": 591,
+        "sha256": "115212f555b3cc3ddf2bbdc130c78f06a100f75087d0383b3e6b60463890979e"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:22.8039383+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-auth/compose-auth-verdict.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-auth\\build\\compose-auth-verdict.wasm",
+        "bytes": 371,
+        "sha256": "8e848c825c48d26371ac9aa49c84d5eac91f25b327f094efc7544beac7d7de37"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-auth\\build\\compose-auth-verdict.wat",
+        "bytes": 3325,
+        "sha256": "9c324211583515f41fb8f111455c303be8fb5aaae54a2158c345e0f566a55303"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-auth\\build\\compose-auth-verdict.lmanifest",
+        "bytes": 1245,
+        "sha256": "2e5b3306194756acc99ccf0546daf630f8fd916471b78a7cd7d4396a3ce7e59b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-auth\\build\\compose-auth-verdict.lmanifest.json",
+        "bytes": 1580,
+        "sha256": "9367485a69db19bf218efa0d601460cf38fa8eeb4fcd34f81ba7782eb2b47b16"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-auth\\build\\compose-auth-verdict.governance-impact.json",
+        "bytes": 596,
+        "sha256": "b9a2662f2e64e2a3fa5d57dc74a4b584a333808c11e72d7bd686363298d9a3ad"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:23.1861960+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-reports/derive-data-report-status.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-reports\\build\\derive-data-report-status.wasm",
+        "bytes": 382,
+        "sha256": "e73d83a49f9b7df1842d1465a1af56e8daf9090a651e3ed140a91e53ffdf9021"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-reports\\build\\derive-data-report-status.wat",
+        "bytes": 3147,
+        "sha256": "e5e8db0d52360e49abc699d6a9c6e22c7c230424fd7cea6634de6a84de6e6e26"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-reports\\build\\derive-data-report-status.lmanifest",
+        "bytes": 1262,
+        "sha256": "0b81c07c06a3485ae88e5c484e3ec3ff14b9eb2fa3f951ae9cab6eb8ac6818db"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-reports\\build\\derive-data-report-status.lmanifest.json",
+        "bytes": 1597,
+        "sha256": "fc93becad39252416debe649cb75d0c80f0a29db9796b8480250c5dab3570bab"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-reports\\build\\derive-data-report-status.governance-impact.json",
+        "bytes": 605,
+        "sha256": "b9ea06eb36ed202a0f75780c28dd5aca39e1e15bc7c35d327549725591c1191d"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:23.5664409+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-response/validate-response-mapping.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-response\\build\\validate-response-mapping.wasm",
+        "bytes": 1843,
+        "sha256": "495b17a66510f3f69f7d4ccdada29f39c4104beea3f1852543f93e863a961bfb"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-response\\build\\validate-response-mapping.wat",
+        "bytes": 20571,
+        "sha256": "5bbdeb5e112e779bb72d4e9dc868f5c5e616a9ae4c73c501e9f2f4d95cf78ebe"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-response\\build\\validate-response-mapping.lmanifest",
+        "bytes": 1493,
+        "sha256": "c98f81782a5fc165923928132f40802753cd3052a963785dbce8bb03706f605c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-response\\build\\validate-response-mapping.lmanifest.json",
+        "bytes": 1891,
+        "sha256": "5645b2dfab7366e3be2fdf3d0d23fd6c33bf1fbf9f23eb7d62f61d91ea060a55"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-response\\build\\validate-response-mapping.governance-impact.json",
+        "bytes": 743,
+        "sha256": "d3ef44f6534a65565b8c8b0aff9aa7713aeee789278615b0766df6979f3719b2"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:24.0153808+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-query/is-some.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\is-some.wasm",
+        "bytes": 136,
+        "sha256": "1064cf279dfb8a9285f367efa1bab9f9295d6f1bcd432ea845fcef6a13b02e6d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\is-some.wat",
+        "bytes": 891,
+        "sha256": "c329af948e3c0f654df0c958484904716c9a3e29c9a63d0dd1a515c295934fc0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\is-some.lmanifest",
+        "bytes": 1195,
+        "sha256": "af96c32737242b575d4576df9bbc4ba801e51b3de490e05c9b8a1ddf4a0dcc8d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\is-some.lmanifest.json",
+        "bytes": 1531,
+        "sha256": "4e79a5908f1b4bbbf90757d64423e298149384abb7fdd87b3fe1a0ab3da894e5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\is-some.governance-impact.json",
+        "bytes": 571,
+        "sha256": "b9f8a9a9ff93134a7536e26693e7dfe47595824e21571d2a25bca7f261436be9"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:24.3829272+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-query/option-some.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\option-some.wasm",
+        "bytes": 110,
+        "sha256": "845011936296b91d9d85c6167e01926b6d5275bfceb83cac5f518333d9a609d0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\option-some.wat",
+        "bytes": 474,
+        "sha256": "a807538453a5f9c3a2d28021b1e675bcf021c523377a068f9773736be5b2780a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\option-some.lmanifest",
+        "bytes": 1211,
+        "sha256": "ebf4d3b5ce712b54c904d1676433a72d11973b522779fbf26160a954b79c3365"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\option-some.lmanifest.json",
+        "bytes": 1547,
+        "sha256": "432cf43cb939e7ac4467612fa4046098c5c16c553eaac23addd60a313e5b82f2"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-query\\build\\option-some.governance-impact.json",
+        "bytes": 579,
+        "sha256": "6496297ea67f90167a9ee51a3da3cd86bcbca1178142501cf1f88e3aabe1b011"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:24.7519648+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-data-search/validate-search-query.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-data-search\\build\\validate-search-query.wasm",
+        "bytes": 1519,
+        "sha256": "9c378dd42eae0814d5097cb5b1cf4a20116f65c4af03c4e5f718ce73dcebf205"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-search\\build\\validate-search-query.wat",
+        "bytes": 14531,
+        "sha256": "22d52287fcd29afc367f13205dbb3d9d984d37570baf7b2cd27dc6d5170ae5c7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-search\\build\\validate-search-query.lmanifest",
+        "bytes": 1672,
+        "sha256": "4e70ced5f145f5d02479b40fc2678fa22574df80d348bd1a429f9fe2c94412e8"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-search\\build\\validate-search-query.lmanifest.json",
+        "bytes": 2134,
+        "sha256": "3c6f6567040064a08d7263b77917a81f2a0cd47b8c83ce009b80f4fbdda20121"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-data-search\\build\\validate-search-query.governance-impact.json",
+        "bytes": 857,
+        "sha256": "85db8195a98c44ab00ada2d924047cc850f9fb58e42d67c4ca18e669993582f5"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:25.1829198+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-db-firestore/validate-firestore-credential-ref.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-db-firestore\\build\\validate-firestore-credential-ref.wasm",
+        "bytes": 1333,
+        "sha256": "e1531622425192262b491c463193a633d453113adbc703686148bde8b7b72847"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-firestore\\build\\validate-firestore-credential-ref.wat",
+        "bytes": 12902,
+        "sha256": "f70755c08d1bc7b0fe5c99ea3fb51c9e9a4cad42ff7b717ffa75cd1e9c6c9a20"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-firestore\\build\\validate-firestore-credential-ref.lmanifest",
+        "bytes": 1868,
+        "sha256": "e12dc838493d13a6d6494bbfd7025f352e896d69b35ee03aa9865889a4fe86c1"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-firestore\\build\\validate-firestore-credential-ref.lmanifest.json",
+        "bytes": 2393,
+        "sha256": "407c550c3861ce1bcce76955161f169b7ff64b883ebd61994af8cabe03aaaae3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-firestore\\build\\validate-firestore-credential-ref.governance-impact.json",
+        "bytes": 993,
+        "sha256": "31c5139b193ba7cedf7d9b944c53728e6cfc7b7e2f3e78d5ebf302eeed1feaf0"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:25.6219997+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-db-mysql/validate-mysql-credential-ref.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-db-mysql\\build\\validate-mysql-credential-ref.wasm",
+        "bytes": 1440,
+        "sha256": "a2088cf1487052f338fc76654f8772c8bb0f4522893a41c8c3c5d671b040a21b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-mysql\\build\\validate-mysql-credential-ref.wat",
+        "bytes": 14890,
+        "sha256": "be5d60050ee3c4fd1ea7f326612dc2254203a08a3a36c7eb9346172c66ea6463"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-mysql\\build\\validate-mysql-credential-ref.lmanifest",
+        "bytes": 1933,
+        "sha256": "7c53eb00727e7ec9c64fcbb10fc50150b105718e8729834d09b1d6920734c9e7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-mysql\\build\\validate-mysql-credential-ref.lmanifest.json",
+        "bytes": 2457,
+        "sha256": "ce314ea96ed602246667858eacbf68bdb1f559e59a2642e60c4373ee10a75453"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-mysql\\build\\validate-mysql-credential-ref.governance-impact.json",
+        "bytes": 1013,
+        "sha256": "1e2227b7cb000a0b6f3647c53070e5852b93c136613018199c321316ec4e3705"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:26.0662348+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-db-postgres/validate-postgres-credential-ref.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-db-postgres\\build\\validate-postgres-credential-ref.wasm",
+        "bytes": 1361,
+        "sha256": "36961855c6fa219e8f4a49f04d883c9bf599b37bac810ab0ab10aba30c1b1ee7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-postgres\\build\\validate-postgres-credential-ref.wat",
+        "bytes": 15876,
+        "sha256": "a3a50ea0f801ea103dcd2f176a37525cef0cbdf454bd66d47c286f5262e64329"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-postgres\\build\\validate-postgres-credential-ref.lmanifest",
+        "bytes": 1733,
+        "sha256": "10faf34e02b35e463c4b2ec9ad057491cd9d42108456a0f85dda4198e8538318"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-postgres\\build\\validate-postgres-credential-ref.lmanifest.json",
+        "bytes": 2194,
+        "sha256": "736a728bcfd978bc04ac63d01a59e052623fc5814b1e0bd891294131998a953c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-postgres\\build\\validate-postgres-credential-ref.governance-impact.json",
+        "bytes": 891,
+        "sha256": "65204fc7f00b3337aeacc418af0a3bcbc9dad09421d5752e4ea825cd492907fd"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:26.5065011+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-db-opensearch/validate-opensearch-credential-ref.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-db-opensearch\\build\\validate-opensearch-credential-ref.wasm",
+        "bytes": 1334,
+        "sha256": "aa80e728f64190ee4c83c37a847f83c0247e2ed6c798903d78243402340aed75"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-opensearch\\build\\validate-opensearch-credential-ref.wat",
+        "bytes": 12906,
+        "sha256": "a19d7b422aa58bf675b56e2687e9be5cbe57ab752bb6c37af5eeaad038370865"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-opensearch\\build\\validate-opensearch-credential-ref.lmanifest",
+        "bytes": 1871,
+        "sha256": "8e116500d3ff84e1f95c807493da5f822b7695fbfb5db058c25620928fb398c7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-opensearch\\build\\validate-opensearch-credential-ref.lmanifest.json",
+        "bytes": 2396,
+        "sha256": "e24d3479ae91669229fdfa83d915e7a9f76f23fec4b054560171299d473a49c7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-opensearch\\build\\validate-opensearch-credential-ref.governance-impact.json",
+        "bytes": 995,
+        "sha256": "006314ae0197474fcf4bd8968313d41b9ae105627d4678955ad37a90f786ed19"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:26.9473490+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-db-sqlite/validate-sqlite-credential-ref.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-db-sqlite\\build\\validate-sqlite-credential-ref.wasm",
+        "bytes": 1443,
+        "sha256": "81ddf1e6a73186403ebf547683e7e4498cecd9cd7b9c3cb3c7c0cce2ed338eda"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-sqlite\\build\\validate-sqlite-credential-ref.wat",
+        "bytes": 14899,
+        "sha256": "fffbba6b0cda9b4dced1535075f2529f0e49d0b5522c2b63824d2ebcc3e8e927"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-sqlite\\build\\validate-sqlite-credential-ref.lmanifest",
+        "bytes": 1938,
+        "sha256": "98ad21509fba84dd76d4e16ecd51d82e731a38e848c180ea0efff910e3d5b280"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-sqlite\\build\\validate-sqlite-credential-ref.lmanifest.json",
+        "bytes": 2462,
+        "sha256": "69de3138df8a6f9d9fbc776b8cc4e71172cf2ccd3e62aa658993ec3ea659db75"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-db-sqlite\\build\\validate-sqlite-credential-ref.governance-impact.json",
+        "bytes": 1016,
+        "sha256": "6ec1defa00720666ee1aa82e3497c6e500cc2152ac6431c47d97df10c3418721"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:27.3898785+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-substrate-math/flip-probability.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-substrate-math\\build\\flip-probability.wasm",
+        "bytes": 225,
+        "sha256": "bb351d7f6f7617bf1ab1f8b60845772aa09b60d9afdbf08fd4c91489e0718f61"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-substrate-math\\build\\flip-probability.wat",
+        "bytes": 1396,
+        "sha256": "4631e18d9cc16c2af3e3af0fa45e845df7e7fc15d102ba6f9d3552947d8ba57b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-substrate-math\\build\\flip-probability.lmanifest",
+        "bytes": 1231,
+        "sha256": "b07fb198aa89ec961a85002a3ac07e23f9b3c7c76b01699f1cf2f402bbe41fb5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-substrate-math\\build\\flip-probability.lmanifest.json",
+        "bytes": 1567,
+        "sha256": "aeceb020f1a9eeabe15e425329e48e70d67aebe0acf4cb6b21bd5f0dbd9d719c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-substrate-math\\build\\flip-probability.governance-impact.json",
+        "bytes": 589,
+        "sha256": "2b010552b4cb8a31b52c33a56217be1c399585b4c4df92bc3f95c110b73191ae"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:27.7662227+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-target-wasm/validate-wasm-artefact.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-target-wasm\\build\\validate-wasm-artefact.wasm",
+        "bytes": 593,
+        "sha256": "15e9cde604582b6110f9a7510044f6d0dee5de041e82ddef03a298ec758d1296"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-wasm\\build\\validate-wasm-artefact.wat",
+        "bytes": 5030,
+        "sha256": "965380b87d80fe1a1be8f95a012b5b99037f12b64417a355abd52b4c6c50189b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-wasm\\build\\validate-wasm-artefact.lmanifest",
+        "bytes": 1253,
+        "sha256": "cbe3769f4466d73f9ee63280ea9008198e3a120a1704055871033ca7bf1828dc"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-wasm\\build\\validate-wasm-artefact.lmanifest.json",
+        "bytes": 1588,
+        "sha256": "4dca4dfbb3e9f553cea0278f0785e7bb7d7d47d3a833236ff03dad4e0eada89f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-wasm\\build\\validate-wasm-artefact.governance-impact.json",
+        "bytes": 600,
+        "sha256": "cfc359487de474ebf6eb58bf3e9a8d1249dc4aa3b0cba910c53956a034cefb28"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:28.1558500+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-tools-benchmark/validate-benchmark-config.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-benchmark\\build\\validate-benchmark-config.wasm",
+        "bytes": 1178,
+        "sha256": "04212c21d8e8a0121a8eeafeb0a83c51ad1c165cffaf1e344eda2aea06774911"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-benchmark\\build\\validate-benchmark-config.wat",
+        "bytes": 10982,
+        "sha256": "e24b19dda237ef8885d43f6826ce2df6c4582184bd707081a7cd264b281bb998"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-benchmark\\build\\validate-benchmark-config.lmanifest",
+        "bytes": 1503,
+        "sha256": "d8468ecf62888ff6d40fd7c13085c198d058c51b4794b2dbb5ce1add0f84f31e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-benchmark\\build\\validate-benchmark-config.lmanifest.json",
+        "bytes": 1901,
+        "sha256": "c150c4730faafa31023158bef5fcbfb574928f24f3c942f572f1b9a0f8443c47"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-benchmark\\build\\validate-benchmark-config.governance-impact.json",
+        "bytes": 742,
+        "sha256": "9bcc3833952a458c153ad673ed40d2983e655d9ec1c77556f1abf29d52afef57"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:28.5787774+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-web/is-server-only-import.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-web\\build\\is-server-only-import.wasm",
+        "bytes": 553,
+        "sha256": "6b9f2c6548bbcb84e31aea642e6443ecf9f0296910b336c57fc17db21b29d288"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web\\build\\is-server-only-import.wat",
+        "bytes": 4985,
+        "sha256": "91a752fd14ef364118dab9fe2b45d32e620551ec0c7097209eb4d31d439acf12"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web\\build\\is-server-only-import.lmanifest",
+        "bytes": 1246,
+        "sha256": "4e1ba74fa1fd66bfff172b6257938210771869763b0e1073ffce2f7842f36e16"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web\\build\\is-server-only-import.lmanifest.json",
+        "bytes": 1581,
+        "sha256": "397cbb3183b309061eca74de9704ffd61cc439e7e2fcb4c261f3e4739637d0f0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web\\build\\is-server-only-import.governance-impact.json",
+        "bytes": 597,
+        "sha256": "6542fca3c32565c1e3ff5083e6b5398c10457736930b682496cdca9548dcf853"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:28.9632241+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-cli/format-cli-result.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-cli\\build\\format-cli-result.wasm",
+        "bytes": 461,
+        "sha256": "62e61123131118fca865cbf61886feb8a23759bffcb6b0bf95fc49211411a892"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-cli\\build\\format-cli-result.wat",
+        "bytes": 3711,
+        "sha256": "8744dc8ba90c9b520f123db62ab2a8515d728967fa91345b3413ff6edfa9c54e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-cli\\build\\format-cli-result.lmanifest",
+        "bytes": 1405,
+        "sha256": "43038333ba6812b7d3bd2bd519832091df6e5a10c42e56a83238c53af132b618"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-cli\\build\\format-cli-result.lmanifest.json",
+        "bytes": 1805,
+        "sha256": "cd3e37d77645e9bf8e982571e5c90216517f0ac20be04327b2e25a8690d71300"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-cli\\build\\format-cli-result.governance-impact.json",
+        "bytes": 708,
+        "sha256": "afa9be6198d929d12c41692c9e37f0f063fd6b4ac99e69b727be20682e5df025"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:29.3600369+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-sentinel-egress/read-egress-ledger.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-egress\\build\\read-egress-ledger.wasm",
+        "bytes": 645,
+        "sha256": "f24f0959b9ffc8b5d47452a6cbfe248125a5afaccbb313728a0c95573e483b7e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-egress\\build\\read-egress-ledger.wat",
+        "bytes": 5678,
+        "sha256": "04deef1e8df0ad91da9bd6c7ec4fc57db93dd0a8fb321969863f344be147cb0b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-egress\\build\\read-egress-ledger.lmanifest",
+        "bytes": 1237,
+        "sha256": "0f09e02172ac4ae78b572fa094f8068925a6c4eecdfb0a30515e609d044e1582"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-egress\\build\\read-egress-ledger.lmanifest.json",
+        "bytes": 1572,
+        "sha256": "fe47415bade9e3d8adf92b6fa56990e755a96f20b02724af99de064afe8c8c44"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-sentinel-egress\\build\\read-egress-ledger.governance-impact.json",
+        "bytes": 592,
+        "sha256": "36aac7007e959f0adabc2b98b40a4ce7827dc6437dce4d546b8e82dd55602578"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:29.7555972+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-graph-project/create-package-node.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-project\\build\\create-package-node.wasm",
+        "bytes": 318,
+        "sha256": "220c563b731aedf028b98099af6fad5914ae3c86a2a10cdae97bb534b4b90268"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-project\\build\\create-package-node.wat",
+        "bytes": 2223,
+        "sha256": "be6cf08a438b790aff6bdc81f42ff001366fe74adaa138dbc011a0bda01d7537"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-project\\build\\create-package-node.lmanifest",
+        "bytes": 1451,
+        "sha256": "1612261954ec8b2c96de41ba9fb3f21e2976c0c3bcef499b3bd080727ff5dd6d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-project\\build\\create-package-node.lmanifest.json",
+        "bytes": 1849,
+        "sha256": "531f98c8ebd2ff75fe9e719ef65337309a30c361d207c93118ff1f861eb8c098"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-project\\build\\create-package-node.governance-impact.json",
+        "bytes": 725,
+        "sha256": "5119715eac02a99a9d22a4e131e82b8720238fae855a559667d953fe451043fc"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:30.1417135+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-context/devtools-context-version.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-context\\build\\devtools-context-version.wasm",
+        "bytes": 71,
+        "sha256": "0f30c77c89594465c68de29721ac5e700a108757a3eb9a220cfa79624d3187a9"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-context\\build\\devtools-context-version.wat",
+        "bytes": 233,
+        "sha256": "5bcd764dc669f4770e2ad8a03ef069c2da0e82b49f6a756cc447702b5f2f4f4c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-context\\build\\devtools-context-version.lmanifest",
+        "bytes": 1166,
+        "sha256": "89d970c3002c0c1b43e7c2012ed3befce8eace4e6e6d36915d7ff3aceeaa9ef3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-context\\build\\devtools-context-version.lmanifest.json",
+        "bytes": 1493,
+        "sha256": "a80179f857e959ef7568152cab6c305fd97f29c8be83f294b07215a2954ca18d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-context\\build\\devtools-context-version.governance-impact.json",
+        "bytes": 604,
+        "sha256": "9dfca18b651e9b8573e6390dfbb8fa9df22ef6ca00ce24b3f4a0876e68064abb"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:30.5033913+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-flowgraph/flowgraph-version.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-flowgraph\\build\\flowgraph-version.wasm",
+        "bytes": 65,
+        "sha256": "ca2c2c6af83a919617cc2ec2ba7b09f1dfddfe58c1ef217a93869418125ff0bc"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-flowgraph\\build\\flowgraph-version.wat",
+        "bytes": 209,
+        "sha256": "18d3e13a467f407f3f591325b720e87831daac4402977d8838c428513ca3bfdf"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-flowgraph\\build\\flowgraph-version.lmanifest",
+        "bytes": 1152,
+        "sha256": "1d26e4aa5ad9884ccf4f63d8e92fc3765efba7412fe9af65e3cd1535f2f8a6c0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-flowgraph\\build\\flowgraph-version.lmanifest.json",
+        "bytes": 1480,
+        "sha256": "b300e1ba3be48efa7d317e06138c7404922e32bdb6d65a0179c206c1f683d0a8"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-flowgraph\\build\\flowgraph-version.governance-impact.json",
+        "bytes": 591,
+        "sha256": "5b37b9abea42ccef9bb516a8d0f6d3d3ba4a566c200de636760dbe056ef546cc"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:30.8634890+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-fungi-scan/planned-construct-words.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-fungi-scan\\build\\planned-construct-words.wasm",
+        "bytes": 251,
+        "sha256": "6887405394e38eaf8e9e002bc1afcb037b1c086ed175fce9ce7c2f3062a4ead4"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-fungi-scan\\build\\planned-construct-words.wat",
+        "bytes": 1811,
+        "sha256": "1118a1d2bdfa126c01d1438665cd9a4f9db19023c97cdfbc6e6d3fa8aed4f051"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-fungi-scan\\build\\planned-construct-words.lmanifest",
+        "bytes": 1257,
+        "sha256": "71717598e72eda4283d1459f96ba30925e5b44fa594c749c0426db7fba27a2d9"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-fungi-scan\\build\\planned-construct-words.lmanifest.json",
+        "bytes": 1592,
+        "sha256": "a5e657f66e86c1ae03a7c273433ba2ebc61a7ef0d38ed55f55fdcc18162320e9"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-fungi-scan\\build\\planned-construct-words.governance-impact.json",
+        "bytes": 602,
+        "sha256": "20b5f6a02f55318b77785258636360a5a571f472ea9db1ca45e043647c6977cd"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:31.2453421+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-naming/devtools-naming-version.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-naming\\build\\devtools-naming-version.wasm",
+        "bytes": 70,
+        "sha256": "40e7ccbddf85efe61b61e019eb8758eef25a357a8a2fec23233d0fc6a303313a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-naming\\build\\devtools-naming-version.wat",
+        "bytes": 229,
+        "sha256": "97d3ab9b561cc6a0ea3d3461ad36e5c313ecd59e90dbfa2a90986f30ba781916"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-naming\\build\\devtools-naming-version.lmanifest",
+        "bytes": 1257,
+        "sha256": "72481d36adffee6765cf019364b8ccb4a6a3728557854e4354bb935351f02f39"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-naming\\build\\devtools-naming-version.lmanifest.json",
+        "bytes": 1592,
+        "sha256": "39d3b945aeb99014f778f39ed038a7351a421e9283b62c088cd3b7c94d7c9057"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-naming\\build\\devtools-naming-version.governance-impact.json",
+        "bytes": 602,
+        "sha256": "e7b7dcfcb724af2cb423b9e8da252d9f95011d5bdb281e5607fde83db50e550f"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:31.6097888+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-provenance/devtools-provenance-version.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-provenance\\build\\devtools-provenance-version.wasm",
+        "bytes": 74,
+        "sha256": "557de83951c78bbf9a8632577e4a6adcc301c97d74e086a22928dd470e8ab8ff"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-provenance\\build\\devtools-provenance-version.wat",
+        "bytes": 245,
+        "sha256": "7f695e1a356b6887b800d65f5e2b8b4a3c4fea921211b8c0fdfd079062fd7fc0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-provenance\\build\\devtools-provenance-version.lmanifest",
+        "bytes": 1173,
+        "sha256": "e0de3d9bacd78aff97e46e23047279050ec1cf1d00d15063d0db86016cc85e04"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-provenance\\build\\devtools-provenance-version.lmanifest.json",
+        "bytes": 1499,
+        "sha256": "e3c76419af827614754a08694652edcf7a26121f921b5c8edfd1438204e0c0db"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-provenance\\build\\devtools-provenance-version.governance-impact.json",
+        "bytes": 610,
+        "sha256": "eea1634acfedcf09b692f6051742c2db977443911527c3d3b38b3fc82d54563e"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:31.9706698+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-pci/devtools-pci-version.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-pci\\build\\devtools-pci-version.wasm",
+        "bytes": 67,
+        "sha256": "a49500b055d5bf0935b3d473ff1e6fc32138ed8e26aa263d23e862dc8f86f7cb"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-pci\\build\\devtools-pci-version.wat",
+        "bytes": 217,
+        "sha256": "d7d0ab8bb390e6564e8234c0a5309b97ede60772eeb334d6ed8583989de3c8e2"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-pci\\build\\devtools-pci-version.lmanifest",
+        "bytes": 1245,
+        "sha256": "bb209c99cbafe0a6538b0bb41ed7bbccf3e743adf057d157aec1b3383fa99302"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-pci\\build\\devtools-pci-version.lmanifest.json",
+        "bytes": 1580,
+        "sha256": "2045c8b90ff33ac8831730da0f1bc5da15dc97b3ad03781ef253e041fab9257e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-pci\\build\\devtools-pci-version.governance-impact.json",
+        "bytes": 596,
+        "sha256": "3ec1f31f066195d4e85b42828c1df91b0fa0631ce50f62b148ea83522dc6b296"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:32.3340313+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-target-cpu/supports-cpu-features.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-target-cpu\\build\\supports-cpu-features.wasm",
+        "bytes": 451,
+        "sha256": "8497413dba3e4dd92e022db84ef9dc58ec086b075b31e534829081afef07136b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-cpu\\build\\supports-cpu-features.wat",
+        "bytes": 4466,
+        "sha256": "00fd19aed0715d816d76ae0a5e6b27ca1f543d4ddd0dc2a082a1c13cb6b8c503"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-cpu\\build\\supports-cpu-features.lmanifest",
+        "bytes": 1249,
+        "sha256": "4836f6726a70f25491e2f7aa07bb37493283705f6ef072ba3bd850028ecc0f7d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-cpu\\build\\supports-cpu-features.lmanifest.json",
+        "bytes": 1584,
+        "sha256": "c74f825f642995cdfa8fa5282c62e3057c5113bb226e5ec566ad557b46224315"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-cpu\\build\\supports-cpu-features.governance-impact.json",
+        "bytes": 598,
+        "sha256": "015ef4bd641ef9c00b4438d5bb5ac1a4260837d86943074bcacf52eb9ea93b8a"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:32.7190957+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-target-native/validate-native-target.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-target-native\\build\\validate-native-target.wasm",
+        "bytes": 841,
+        "sha256": "ac1cf5825ad71c3eb655b46b5567d2618dd66e1f40c3f44090cc54811355a26a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-native\\build\\validate-native-target.wat",
+        "bytes": 7898,
+        "sha256": "0864df2582f5eedae23f799d30952f09959369a6df64a663350020b6c2d429a3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-native\\build\\validate-native-target.lmanifest",
+        "bytes": 1482,
+        "sha256": "885575f4989a591845d6c4fedf09ce723f7af63729dd3f809256299d53918a85"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-native\\build\\validate-native-target.lmanifest.json",
+        "bytes": 1880,
+        "sha256": "030a3e676dbe62805641b8665e5850e29b58f319ebfb80b9c44e2ce07ee90944"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-native\\build\\validate-native-target.governance-impact.json",
+        "bytes": 733,
+        "sha256": "a891addce4e9d3ba0c9b1b790ced187ac113ee11fd14ccc6a72c35b9d4e44095"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:33.1322058+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-target-gpu/validate-gpu-kernel-plan.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-target-gpu\\build\\validate-gpu-kernel-plan.wasm",
+        "bytes": 1037,
+        "sha256": "48080df79b6c88fc355b7d60b18e9af165a25ac7be9069c16cb416ca3f9452fb"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-gpu\\build\\validate-gpu-kernel-plan.wat",
+        "bytes": 9459,
+        "sha256": "d6315b47fe129f2809acf21f18172a2558238676f07d6a9867145d1c7df07023"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-gpu\\build\\validate-gpu-kernel-plan.lmanifest",
+        "bytes": 1480,
+        "sha256": "ef90550b9695f10f59bed8f5725dec520039938ea556230906fc4b38b42fb296"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-gpu\\build\\validate-gpu-kernel-plan.lmanifest.json",
+        "bytes": 1878,
+        "sha256": "05632027414e210778a64c960f5fc3c0d12e4a7dd044e346fc332006eb2c167b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-gpu\\build\\validate-gpu-kernel-plan.governance-impact.json",
+        "bytes": 738,
+        "sha256": "bb3ded07d52e326c8453777064b3a5732b3143410fe2843fe6f5197070edc829"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:33.5541113+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-target-js/validate-js-output-plan.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-target-js\\build\\validate-js-output-plan.wasm",
+        "bytes": 2019,
+        "sha256": "9bd331591035a16e0d61d352004c13c4cd9d01d7fa6bbd26fe755bfddfcc60f7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-js\\build\\validate-js-output-plan.wat",
+        "bytes": 19921,
+        "sha256": "d40cfc359c39882357ef131c4e8a6098b3270feda22f5b8ceb9042120c1140fc"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-js\\build\\validate-js-output-plan.lmanifest",
+        "bytes": 1450,
+        "sha256": "68b3a721923dd87d72870e3176bc0fd0cbf9e0b6bc4ec24bb9349557084596ab"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-js\\build\\validate-js-output-plan.lmanifest.json",
+        "bytes": 1849,
+        "sha256": "1f79c93fb32598bd1bea92c603f4bc808b16680bb57fb9d964d289d3856f0428"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-js\\build\\validate-js-output-plan.governance-impact.json",
+        "bytes": 726,
+        "sha256": "a471559f720e93a8a6239666135a93f593cef18914790cbeeb227a0e8ac387c4"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:34.0077806+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-target-photonic/validate-photonic-lowering-plan.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-target-photonic\\build\\validate-photonic-lowering-plan.wasm",
+        "bytes": 1017,
+        "sha256": "a730f149022c57da9fe0d76243161c0c10a843df1007a00f14f10e57db4549d3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-photonic\\build\\validate-photonic-lowering-plan.wat",
+        "bytes": 9145,
+        "sha256": "163721d6be892dabc4dd3c53da7ed515cedaeab3c25b28120e5bc137816531d4"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-photonic\\build\\validate-photonic-lowering-plan.lmanifest",
+        "bytes": 1540,
+        "sha256": "0ced29fdfc6bcf4ebf836450805a7ad3f704d7aa92b2a7b52a049beb151eb87f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-photonic\\build\\validate-photonic-lowering-plan.lmanifest.json",
+        "bytes": 1937,
+        "sha256": "36fd359b1f745baf4883f86c1c3111a817e54422d1d85c05991a530fd1ca445a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-photonic\\build\\validate-photonic-lowering-plan.governance-impact.json",
+        "bytes": 758,
+        "sha256": "d572056b88ef9d5e6abaa4823432e96a93ccc797a1b470e2be5741da61afcca3"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:34.4630529+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-target-ai-accelerator/validate-ai-accelerator-model.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-target-ai-accelerator\\build\\validate-ai-accelerator-model.wasm",
+        "bytes": 941,
+        "sha256": "2cba401814a44b8df0c8f6c6531c518e9d4791002a39a3aef471826efd7cb6c0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-ai-accelerator\\build\\validate-ai-accelerator-model.wat",
+        "bytes": 8800,
+        "sha256": "a76c5952799c25301d4ca59e104e589dfcc84fe1ec0c9e5956415f71838a3204"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-ai-accelerator\\build\\validate-ai-accelerator-model.lmanifest",
+        "bytes": 1498,
+        "sha256": "5b2efd30f955dfdb387857b21fdc79c05b5f1b96cfe7003a6582bac1aa1a74d4"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-ai-accelerator\\build\\validate-ai-accelerator-model.lmanifest.json",
+        "bytes": 1895,
+        "sha256": "ee2ac412814d5005f0815024a29b53f24790dfa37de11fdd64d097284a8b5b3a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-target-ai-accelerator\\build\\validate-ai-accelerator-model.governance-impact.json",
+        "bytes": 745,
+        "sha256": "2b5871d60e0c4c694f0282a62e90c1df5f8408b5458a5099a3fd9472bfb6149a"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:34.8812239+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-web-components/validate-component-props.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-web-components\\build\\validate-component-props.wasm",
+        "bytes": 1062,
+        "sha256": "30628d0ada212f4fcf02f83987fa6e3f9fbe9609e9ff575f614bbb25dc67b68e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-components\\build\\validate-component-props.wat",
+        "bytes": 11189,
+        "sha256": "0e2fdd7841314c59dafdf9a374304f731f4b5d4837c2f3476e0f9db57dad32a8"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-components\\build\\validate-component-props.lmanifest",
+        "bytes": 1261,
+        "sha256": "5d36e1c756c6a383bb29291377b3104fe31ec35bee2a44fb1151c25d24dab524"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-components\\build\\validate-component-props.lmanifest.json",
+        "bytes": 1596,
+        "sha256": "46ee2f3469c264afcb871b0a500ac79134137aa1c1c7c619e9e4f1b81d93a8e6"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-components\\build\\validate-component-props.governance-impact.json",
+        "bytes": 604,
+        "sha256": "26e3f3599e71f642c96752131c76cf7c2cd50c2c71bce575546d9e1d9cc1f4e3"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:35.2929761+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-web-events/validate-event-payload-field.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-web-events\\build\\validate-event-payload-field.wasm",
+        "bytes": 608,
+        "sha256": "8c58d28a98883608d7f92a444547a47fe5bb91e723fe50204c776283b780f50a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-events\\build\\validate-event-payload-field.wat",
+        "bytes": 4910,
+        "sha256": "cfb463a97265ccb507414c5068e1ef23b108261c0ceba22c2a345a1736072134"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-events\\build\\validate-event-payload-field.lmanifest",
+        "bytes": 1519,
+        "sha256": "7e250529a3062eed597a4c1899e1a20e488a705576eb34aa74def14fb25ff259"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-events\\build\\validate-event-payload-field.lmanifest.json",
+        "bytes": 1916,
+        "sha256": "d0b019cd3fcdf8f9811fde9b17f656c6d15adb781b1fa178831c7a70a928bea3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-events\\build\\validate-event-payload-field.governance-impact.json",
+        "bytes": 749,
+        "sha256": "20f6a28879d93001bc48fee8232da75f9d8b63839c1dc4bff0f3bef74dcdd0f7"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:35.6944860+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-web-render/validate-renderable-content.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-web-render\\build\\validate-renderable-content.wasm",
+        "bytes": 568,
+        "sha256": "59324af2cae5d2e7ec2eec8677896c2ae296c1e666d06afe4e39befc61060b9b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-render\\build\\validate-renderable-content.wat",
+        "bytes": 4755,
+        "sha256": "81484785e1ee546767156ec4eb53dd58c72447aab782fb452a45fb250f127f71"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-render\\build\\validate-renderable-content.lmanifest",
+        "bytes": 1274,
+        "sha256": "640e08bc39750cded1a342eb0bf28d7ff3757a4dfa4e7410e4a8b0018c33f1a0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-render\\build\\validate-renderable-content.lmanifest.json",
+        "bytes": 1608,
+        "sha256": "4fec62ab8024da5ccf23d2c32594d3bf86c624655f46b6561021f12cc4dd6b8c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-render\\build\\validate-renderable-content.governance-impact.json",
+        "bytes": 610,
+        "sha256": "ab034c7b9f7a442cce7d1380c8b88ae7551e5b69622478636f4f59ebff76ed89"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:36.0902199+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-web-router/validate-link-target.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-web-router\\build\\validate-link-target.wasm",
+        "bytes": 2270,
+        "sha256": "79b7f1af9bd64282881214968b69dafe33af1cfe28db89e743a7bc10bba8ea86"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-router\\build\\validate-link-target.wat",
+        "bytes": 25194,
+        "sha256": "30ca05fb4e7ad752484151fc55ecb613e71d7fa04ab99f29a0e67f14c17699ff"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-router\\build\\validate-link-target.lmanifest",
+        "bytes": 1959,
+        "sha256": "755429bcb8e52794be46d51969787ad5bd92f015518d1f471944787576825a2c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-router\\build\\validate-link-target.lmanifest.json",
+        "bytes": 2550,
+        "sha256": "b316e5c180bbebcbed3f2a01f070346c5d283ebad51fa943b195cd855682795b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-router\\build\\validate-link-target.governance-impact.json",
+        "bytes": 1077,
+        "sha256": "e7e9400b69cc474150644c9756eeb27671a35c5f7ad51b9ec81fa5b301716161"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:36.5409967+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-web-state/validate-api-to-state-conversion.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-web-state\\build\\validate-api-to-state-conversion.wasm",
+        "bytes": 430,
+        "sha256": "55b484d8b88dfa18c07aed6e65eabe254336ff2fb628a34358a5eab9678dadae"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-state\\build\\validate-api-to-state-conversion.wat",
+        "bytes": 3342,
+        "sha256": "03fdb93146aa3eaeed67dec484be2fafc767db70136a680edd3593c4422c6007"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-state\\build\\validate-api-to-state-conversion.lmanifest",
+        "bytes": 1541,
+        "sha256": "c3ee973303fd0e89ccb296e08fdf5dab4e2c5ced441a69acf1cda65f9c50c27b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-state\\build\\validate-api-to-state-conversion.lmanifest.json",
+        "bytes": 1938,
+        "sha256": "1f39bdd54b72c996e2bfc0903fdbc6df51162feacd975851f96edb01313b739d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-web-state\\build\\validate-api-to-state-conversion.governance-impact.json",
+        "bytes": 759,
+        "sha256": "d2d2dcce3fd0b140bafa545259a66b52696a7820f7552010202d5630f57c0720"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:36.9370559+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-impact/build-impact-plan.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-impact\\build\\build-impact-plan.wasm",
+        "bytes": 172,
+        "sha256": "d05f582e1736fce930c4dfe34a792e120f8d05df64cb2ff5483a0b98dae5df62"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-impact\\build\\build-impact-plan.wat",
+        "bytes": 1127,
+        "sha256": "dd722225d3925c605fd48729bc563f2a31a4336d02d142f517660287ab2f6c13"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-impact\\build\\build-impact-plan.lmanifest",
+        "bytes": 1155,
+        "sha256": "b3db2ec6adecd2e4f2f368647fbf3d9bfe60b8f35d2eff5b0e4a58197a911964"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-impact\\build\\build-impact-plan.lmanifest.json",
+        "bytes": 1483,
+        "sha256": "b6d2b10a5263ab69ecfced6d4b2b7986f8fbf01c571dd473169dd9eeb9b8ad62"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-impact\\build\\build-impact-plan.governance-impact.json",
+        "bytes": 594,
+        "sha256": "fd90990f652ae6f4762af6f51f035ba2122b1b40e3b970d1cdd791aa6674ac58"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:37.3107216+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-docs/sanitize-schema-name.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-docs\\build\\sanitize-schema-name.wasm",
+        "bytes": 818,
+        "sha256": "67f509d3725ddd437f13fa1c1b41de2ce6e5fcdd185f5543c85d871a63fca80d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-docs\\build\\sanitize-schema-name.wat",
+        "bytes": 8267,
+        "sha256": "2a6d6db743f3bd76378a164eb3cb48e475fb253099ac357808c3e180e40854d1"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-docs\\build\\sanitize-schema-name.lmanifest",
+        "bytes": 1607,
+        "sha256": "35911e23273ede197cdf74d307693b7bff838532a320c9879337907e631e1bf1"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-docs\\build\\sanitize-schema-name.lmanifest.json",
+        "bytes": 2070,
+        "sha256": "239d1fdfd21fca130297b0c4a2d6c59c22029cd83876a1f6e1071d817b286048"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-docs\\build\\sanitize-schema-name.governance-impact.json",
+        "bytes": 841,
+        "sha256": "55cbe03f6b8702e14a91bd22ad339be0e70038851deb8d9665ef5b4bcf2ab6df"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:37.7235611+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-intelligence/bm25-k1.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-intelligence\\build\\bm25-k1.wasm",
+        "bytes": 62,
+        "sha256": "030746e76e112a8dac1a3b326bb2bc92b114a61d4bfe614601534bb3bc8b1115"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-intelligence\\build\\bm25-k1.wat",
+        "bytes": 171,
+        "sha256": "e03f01fd2be447610bd59b91674eab8a3f8e8e0ca2c6e4af65b8014496d3f60c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-intelligence\\build\\bm25-k1.lmanifest",
+        "bytes": 1195,
+        "sha256": "09877bddff0ba5b485b8db67b9722eeaece1e9ab4820c342eb0171a1bb973c3b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-intelligence\\build\\bm25-k1.lmanifest.json",
+        "bytes": 1531,
+        "sha256": "230f4825c3721077916e37190a43ea300e1e3587eb48b25e585d2c196e4b5d4a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-intelligence\\build\\bm25-k1.governance-impact.json",
+        "bytes": 571,
+        "sha256": "c677dbf27cf34b3348b4a02a794959effd00293c405c450a1b81eca818ad56fb"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:38.0936426+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ext-proof-snarkjs/circuit-id.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-proof-snarkjs\\build\\circuit-id.wasm",
+        "bytes": 58,
+        "sha256": "8a4744ca5add8bab5705e5f1d88cda317a7b210b92d660a579fd0270f3e8efea"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-proof-snarkjs\\build\\circuit-id.wat",
+        "bytes": 181,
+        "sha256": "84a651840d13b6f74baf6f135ff8f5cbad6dbe53cd005b3f0ff617f721ec2c06"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-proof-snarkjs\\build\\circuit-id.lmanifest",
+        "bytes": 1138,
+        "sha256": "40cae5521811ef7626575be39861cc216e8e77420b093924ebfa4ab06730923d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-proof-snarkjs\\build\\circuit-id.lmanifest.json",
+        "bytes": 1466,
+        "sha256": "08bbfeb452d1a2dfe8909d92f413b6d401f21d90279a5807b7455c1276a9933b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-proof-snarkjs\\build\\circuit-id.governance-impact.json",
+        "bytes": 577,
+        "sha256": "9705d17fdfe64cb54f2bdb48c1480b9380d493430f3f0a43b53efa736209262a"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:38.4635791+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ext-photonic-emulator/w-rep.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-photonic-emulator\\build\\w-rep.wasm",
+        "bytes": 53,
+        "sha256": "44e702a6d77f6a22b2da19d82adeab084ab8928e4a557eb99ea540a212cbee04"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-photonic-emulator\\build\\w-rep.wat",
+        "bytes": 162,
+        "sha256": "1787fcda1f77dc02ebae76e9f0419972e58e7b20112a4e8cb285f45c6dbfd631"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-photonic-emulator\\build\\w-rep.lmanifest",
+        "bytes": 1128,
+        "sha256": "ccd0b224c8aa935d7193526c182c71ef1b531c82bba1057c3bdc3dca68a3aa0d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-photonic-emulator\\build\\w-rep.lmanifest.json",
+        "bytes": 1456,
+        "sha256": "70a03106b325f305a1d70fa2a609a822ebca7e1afd3c95727cccc467b8d4af83"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-photonic-emulator\\build\\w-rep.governance-impact.json",
+        "bytes": 567,
+        "sha256": "777e9dbae1e49eadaf1e78e152831c0765dddae74842c0b9e31f5bfecdf3f233"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:38.8267124+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ext-spore/header-size.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-spore\\build\\header-size.wasm",
+        "bytes": 59,
+        "sha256": "5267a81c1aa65559ae87dfba8dc3c8ac25b8a49eb25d081af500b97198f2cfd4"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-spore\\build\\header-size.wat",
+        "bytes": 186,
+        "sha256": "ac0ea64353daf08d42ec920c6d71f50fc26c861f9b158d87cb56f9f7d37a05c8"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-spore\\build\\header-size.lmanifest",
+        "bytes": 1211,
+        "sha256": "4d0203cc2ea91b9bd313cfca3539e90916121abbf8d0381ea963a650a8a68838"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-spore\\build\\header-size.lmanifest.json",
+        "bytes": 1547,
+        "sha256": "fe7b81f486524cf602bcbb85a82b2719ef1497daa1c4136b072168614c0a9e99"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-spore\\build\\header-size.governance-impact.json",
+        "bytes": 579,
+        "sha256": "a55fc3b2ad4b707e092d5f2fe1a6fa4896fe2207cabb7917aeb0f7e6f7d5bc80"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:39.1867359+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ext-tritsocket/packed-len.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-tritsocket\\build\\packed-len.wasm",
+        "bytes": 105,
+        "sha256": "460294a829e20f9db45e5ea29c531f436a3d3cec29ec013e7c57dcccee04368f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-tritsocket\\build\\packed-len.wat",
+        "bytes": 725,
+        "sha256": "0a2d2b7fe19bf5028781646fd568423613ff6e254dfa68724d42dc156cc60cfa"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-tritsocket\\build\\packed-len.lmanifest",
+        "bytes": 1207,
+        "sha256": "e02ef655066530ffd2b71e478896b1f8bee7a717bea9be316578e9c995823dd3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-tritsocket\\build\\packed-len.lmanifest.json",
+        "bytes": 1543,
+        "sha256": "5067dab7a53e00455d277786c494862ab906cbdd72296933f311d83ce7379a79"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-tritsocket\\build\\packed-len.governance-impact.json",
+        "bytes": 577,
+        "sha256": "350fd55d89f76dcbdf51bd6924ff69f4237aeaeeeb24824662bd3d0379155c9d"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:39.5538278+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ext-secrets-spore/modality-structured.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-spore\\build\\modality-structured.wasm",
+        "bytes": 67,
+        "sha256": "e5126a602af379d8bafed35878dd2495a474c909128495ea310e454b27af0bad"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-spore\\build\\modality-structured.wat",
+        "bytes": 217,
+        "sha256": "caffe4429b43f9b31b89ed3a5c0b5b57450eeb01f2b97edfebd09b813e322960"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-spore\\build\\modality-structured.lmanifest",
+        "bytes": 1157,
+        "sha256": "f89327fa2eac9e10c880c131820aea9f1f74efad39684a6f161248d234acb783"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-spore\\build\\modality-structured.lmanifest.json",
+        "bytes": 1484,
+        "sha256": "68083eab659be3c5ef5de3a9e631945954d04da609f5925d08e0d3824789b9e5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-spore\\build\\modality-structured.governance-impact.json",
+        "bytes": 595,
+        "sha256": "a9785d63d07c440b1154bc318ef0af1d79cd34d4af73f97062902ab904e6efdc"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:39.9179035+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ext-secrets-vault/secrets-gateway-wit.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-vault\\build\\secrets-gateway-wit.wasm",
+        "bytes": 66,
+        "sha256": "1dd2ad3af7cb5bc9290eda27b1664a0c9703b2f1554180b82640ae0c1a9cd3a5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-vault\\build\\secrets-gateway-wit.wat",
+        "bytes": 213,
+        "sha256": "20d8a1677d20a53eeea9e20c349fe65bd569d86d135e5fc649871045d01d0438"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-vault\\build\\secrets-gateway-wit.lmanifest",
+        "bytes": 1241,
+        "sha256": "53094715187753ce8ee576f6b64f9f394cfd38fd94a7e6e86331e0b59d1c2acf"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-vault\\build\\secrets-gateway-wit.lmanifest.json",
+        "bytes": 1576,
+        "sha256": "4f443a237916e9a4957297b12b6240bbd60ebe41b7424f67a3bb7304f6479054"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-secrets-vault\\build\\secrets-gateway-wit.governance-impact.json",
+        "bytes": 594,
+        "sha256": "2b8ef19493a87150fc1db8d35fcc6fe7efe3ef27896f04429b15e21cf14e14f9"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:40.2833338+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-ext-bridge-cpp/select-ternary-bridge.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-bridge-cpp\\build\\select-ternary-bridge.wasm",
+        "bytes": 77,
+        "sha256": "b8b0cd8e33d9c9ebb0e35c9d0c3ef28ebc026e7705486a03bdda48b3bc9abccf"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-bridge-cpp\\build\\select-ternary-bridge.wat",
+        "bytes": 257,
+        "sha256": "0cbf49daed199d5afb258a09641833802f178efc0155201d1928f1b82051f00e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-bridge-cpp\\build\\select-ternary-bridge.lmanifest",
+        "bytes": 1277,
+        "sha256": "59fce6dfab361af5a9fdd78bac42768f989f8a92977f513547012354a95e39e7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-bridge-cpp\\build\\select-ternary-bridge.lmanifest.json",
+        "bytes": 1611,
+        "sha256": "721d768013cf4400a770ae7fe9cb952c9d4b18aa1fae98b38e0bfc80cc8b9011"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-ext-bridge-cpp\\build\\select-ternary-bridge.governance-impact.json",
+        "bytes": 607,
+        "sha256": "ebbba548e7a3c2637294338f3bf1c76da00120fda9c14dec9a03caaeb979c876"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:40.6467104+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-hardware-tier/capability-preimage.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-hardware-tier\\build\\capability-preimage.wasm",
+        "bytes": 215,
+        "sha256": "299c4897aefb35fa0d27d3666a693a1438dbe1642838c56430e733ac64ba83a7"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-hardware-tier\\build\\capability-preimage.wat",
+        "bytes": 1400,
+        "sha256": "e33c3f68f588d6002269e7216c3dd4ea843931a83be9622cac3fcdee5e533254"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-hardware-tier\\build\\capability-preimage.lmanifest",
+        "bytes": 1244,
+        "sha256": "30daaedeff874ef70dc52bccc88423089dd2a9d7b6ffa20453119dd05d49df31"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-hardware-tier\\build\\capability-preimage.lmanifest.json",
+        "bytes": 1579,
+        "sha256": "73e85a4a084fd94501c27e3c43b80700f2e4d4c8644c460a764cb371565e869b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-hardware-tier\\build\\capability-preimage.governance-impact.json",
+        "bytes": 595,
+        "sha256": "96c8c91107160ec7d6bd5bc87b4782d1c88633b1ff3a14ebd56e449961f6aedb"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:41.0176913+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-governance-telemetry/is-safe-label.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-governance-telemetry\\build\\is-safe-label.wasm",
+        "bytes": 461,
+        "sha256": "f005ac6971fbbe7c80c23a5d368c8dfe4c8ef6ffa454adc2156b9713c3958847"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-governance-telemetry\\build\\is-safe-label.wat",
+        "bytes": 3883,
+        "sha256": "5be9c5a2b6527b97995a8b5b833b58f7114b060cb7dfa4d76fef82d53c2b39a3"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-governance-telemetry\\build\\is-safe-label.lmanifest",
+        "bytes": 1429,
+        "sha256": "4043c6daa63ea55fc84ae5f05765d358266ca737cec3fc80f273e2588c503e6b"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-governance-telemetry\\build\\is-safe-label.lmanifest.json",
+        "bytes": 1829,
+        "sha256": "e8184f955069955a324657da65c825ddb652c7905c75a9f422bbf40cd7b45403"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-governance-telemetry\\build\\is-safe-label.governance-impact.json",
+        "bytes": 709,
+        "sha256": "3aaf2943a52b5bea2b6bdf0108fb074c116fdab68016253359621a9d4fb214ae"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:41.4237263+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-inference-bridge-contract/oracle-agrees.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-inference-bridge-contract\\build\\oracle-agrees.wasm",
+        "bytes": 74,
+        "sha256": "7ce249dc1b28f50f298df36fd267790c3c05593ab4ece985132f121ca103f9d1"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-inference-bridge-contract\\build\\oracle-agrees.wat",
+        "bytes": 331,
+        "sha256": "6d0ea907beeee72dc5b8a21391e694733d65c3277c84174a83685186bd2df1e2"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-inference-bridge-contract\\build\\oracle-agrees.lmanifest",
+        "bytes": 1219,
+        "sha256": "b13dc7c03ff30742d3f8c326eb027d151d48c686bdbb71ed122006aa9e58a4d0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-inference-bridge-contract\\build\\oracle-agrees.lmanifest.json",
+        "bytes": 1555,
+        "sha256": "80c4ed2b5ebc7d332b4e6056abd8a5e9b367d279cd7a06821bed0ed0110327a4"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-inference-bridge-contract\\build\\oracle-agrees.governance-impact.json",
+        "bytes": 583,
+        "sha256": "9202caa0555664587ec7db0523e62ae897c19dc870483985ff0266679a726d4f"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:41.7960590+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-tri-regex/version.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-tri-regex\\build\\version.wasm",
+        "bytes": 64,
+        "sha256": "405ccaa58cc1c1c0e9655455372cc1150cb10e61774cf8e2c3e08d8803139c47"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tri-regex\\build\\version.wat",
+        "bytes": 205,
+        "sha256": "e6df7732911db3d98d0f550c0f9a672c364cc05de665b4cad0bf60aeb0aac82f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tri-regex\\build\\version.lmanifest",
+        "bytes": 1222,
+        "sha256": "69d94fe93adada12fe3dcdd290f498abc3de2831113ee5ffba26b1dc14d3a15d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tri-regex\\build\\version.lmanifest.json",
+        "bytes": 1558,
+        "sha256": "367cb4e10a331994302602fbeb414a0e4353da8790b59b17892ecba67126161c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tri-regex\\build\\version.governance-impact.json",
+        "bytes": 580,
+        "sha256": "0d5d485fcc200ac99cd7aff5ab82e7ee5c512baa8bfcd565fe97fd5ac3cd6999"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:42.1568933+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-observability/default-max-routes.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-observability\\build\\default-max-routes.wasm",
+        "bytes": 66,
+        "sha256": "c807f22e0f4e035a0c172e4051964b6273f9cb1b0ff41baf9491a04c5fece645"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-observability\\build\\default-max-routes.wat",
+        "bytes": 212,
+        "sha256": "b4d999c298af9efd33301a9d49cae04e8a35b1b8406aa88f6771f241bca49440"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-observability\\build\\default-max-routes.lmanifest",
+        "bytes": 1237,
+        "sha256": "e8d0b4bb5e9568b6299ea6f052e25fb2e7382e5dd439fbed4928cd4ac2d15436"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-observability\\build\\default-max-routes.lmanifest.json",
+        "bytes": 1572,
+        "sha256": "3aff9c7277e0b4fb452af7428679f82efeee76cba46fb75a88c4453e54965b2a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-observability\\build\\default-max-routes.governance-impact.json",
+        "bytes": 592,
+        "sha256": "fcaea93c7e98a9210aa7acd5f415ab95c6c96b9ea8c15a22f4786762140af02d"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:42.5194661+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-test/default-timeout-ms.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-test\\build\\default-timeout-ms.wasm",
+        "bytes": 67,
+        "sha256": "53d7ae075d5ada71d3391bbed6b48cabb7709cdfc50c8381dd3987344d8bd23f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-test\\build\\default-timeout-ms.wat",
+        "bytes": 214,
+        "sha256": "d56692758d76568e06d948671a52d79c4bedfd548b6dabbe7717312fa9d6c89f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-test\\build\\default-timeout-ms.lmanifest",
+        "bytes": 1237,
+        "sha256": "f32053ccf178b98bbf08c8c042dde298730f37b44ed18933b483697ce08eb06d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-test\\build\\default-timeout-ms.lmanifest.json",
+        "bytes": 1572,
+        "sha256": "5b8fb72a1a80360a9d70f6050e7e217dfb17c274422c3f511de1b05040aeb71c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-test\\build\\default-timeout-ms.governance-impact.json",
+        "bytes": 592,
+        "sha256": "e45c38774082515398fcf1e00812b2309a5a136a94456eee0dffdb4230d0635d"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:42.8841188+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-core-compiler/artifact-reference-schema.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-core-compiler\\build\\artifact-reference-schema.wasm",
+        "bytes": 72,
+        "sha256": "ff757aa9f8ea4116b4a65ae87dcd0da5fdcdf46d05404dd7ce6177801158be2d"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-compiler\\build\\artifact-reference-schema.wat",
+        "bytes": 237,
+        "sha256": "fc46d12fc1b6ac2d187bd06d35e8ea681cc0f97b9e867aa50b00d7fd5ce15f81"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-compiler\\build\\artifact-reference-schema.lmanifest",
+        "bytes": 1265,
+        "sha256": "8d57d5495a61f06a92cf958d590c9d7bafbb7cad8852616d6b44a7ce2c8a42bd"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-compiler\\build\\artifact-reference-schema.lmanifest.json",
+        "bytes": 1600,
+        "sha256": "e79e53e2dabf240a2fa0f5f405505c1d4b5eccbaf2d148957e6906f92f7a6ebd"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-core-compiler\\build\\artifact-reference-schema.governance-impact.json",
+        "bytes": 606,
+        "sha256": "28e5e137ef67f1dcb8d9256a822896b815d76c1c01e77bfc53d8e6915f614b39"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:43.2490421+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-benchmarks/extreme-slower.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-benchmarks\\build\\extreme-slower.wasm",
+        "bytes": 64,
+        "sha256": "bbc2b9f9c1e6cc62dd7edf9280cea36431f6aabe37ceb9e3d6dd7df5583c2161"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-benchmarks\\build\\extreme-slower.wat",
+        "bytes": 201,
+        "sha256": "c914e751cd1112d892cc2065bbeb3d34346765f0121ed940dc48e45e8ff6ef16"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-benchmarks\\build\\extreme-slower.lmanifest",
+        "bytes": 1223,
+        "sha256": "82eb15a5ee5bbf7ee3f140905e83a541320b169cedeba44d4e7f0c1ca7128534"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-benchmarks\\build\\extreme-slower.lmanifest.json",
+        "bytes": 1559,
+        "sha256": "a0aab482af5a25d81574f019c61ebb14fff4e3ea1753415cf8809c90a557c31c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-benchmarks\\build\\extreme-slower.governance-impact.json",
+        "bytes": 585,
+        "sha256": "e1a8634c0d8dc776d99824031bd10920dd6731ccd2fc3613f3c846bfa13e3f03"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:43.6144668+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-graph-algorithms/binary-dispatch-size.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-algorithms\\build\\binary-dispatch-size.wasm",
+        "bytes": 67,
+        "sha256": "41cc10a151d97c8f63349456739ddee2f7815c11ce75a0cca47e836bc8adc6d6"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-algorithms\\build\\binary-dispatch-size.wat",
+        "bytes": 218,
+        "sha256": "9564bbb64d830bb69b103866679fb8ffc482e6ed7f033b5aa8401b3b8cde4803"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-algorithms\\build\\binary-dispatch-size.lmanifest",
+        "bytes": 1158,
+        "sha256": "25142aa8ef0a49eaef53d47e19675effaf3f1540e97a722146f4605d7f0eb4a0"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-algorithms\\build\\binary-dispatch-size.lmanifest.json",
+        "bytes": 1485,
+        "sha256": "0bfd2ec62e3a7c7a991975c5f58dbfc2eb0e5b763472bf55230d2f2920e74752"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-graph-algorithms\\build\\binary-dispatch-size.governance-impact.json",
+        "bytes": 596,
+        "sha256": "08beb4a79e6b64c324f94198c6fb4c045cf1b35245e79727604712f764d5d9cc"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:43.9778914+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-kb-graph/stale-days.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-kb-graph\\build\\stale-days.wasm",
+        "bytes": 58,
+        "sha256": "988bfd2890f0da55dc81455c94f7c664ff17f3a67c0e7f45b05f5b0eede95387"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-kb-graph\\build\\stale-days.wat",
+        "bytes": 181,
+        "sha256": "16ce3fbdf29a62ce96610f6b1f7915756ca8dd983871520cfead324804583b5c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-kb-graph\\build\\stale-days.lmanifest",
+        "bytes": 1138,
+        "sha256": "0c05c24c9c7c7b94a97bbbbc74b27c003ffa43f62c45068081eb7a68a0fc20f2"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-kb-graph\\build\\stale-days.lmanifest.json",
+        "bytes": 1466,
+        "sha256": "8918024b44a3b3df560bf786c3d0737468f405614a2879a23cb101a789bc5154"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-kb-graph\\build\\stale-days.governance-impact.json",
+        "bytes": 577,
+        "sha256": "9bca00efc7e136080b7e52918739c4c200608d58367a6fb69507871598267834"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:44.3383707+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-package-graph/graph-dir.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-package-graph\\build\\graph-dir.wasm",
+        "bytes": 57,
+        "sha256": "07b58ac3c8519842afc1ce091cbcaf30b020a31defcfb9eeeeab3eed5bc80113"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-package-graph\\build\\graph-dir.wat",
+        "bytes": 177,
+        "sha256": "6af304689b5a8498e72f1d326c92108d3c79a02a87fb8e24c8dd243ca8d64203"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-package-graph\\build\\graph-dir.lmanifest",
+        "bytes": 1203,
+        "sha256": "5390c4c109bf931f9ea776efd8a8b8e618c544a050e724bd410e1c65bd9c0878"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-package-graph\\build\\graph-dir.lmanifest.json",
+        "bytes": 1539,
+        "sha256": "04259f11e928702dc5067078d821dea7e7210a465e8aceef60248bfc27a249c6"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-package-graph\\build\\graph-dir.governance-impact.json",
+        "bytes": 575,
+        "sha256": "ddb64ae76b7e1377eb7d992209d9d5382a63f30669ee2269b2c650f5446c4ead"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:44.7004517+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-framework-api-server/default-request-timeout-ms.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-api-server\\build\\default-request-timeout-ms.wasm",
+        "bytes": 74,
+        "sha256": "72e34f3e3afaff86f6884400184f7a379d45b56186721b5ffbce7c0909763b9a"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-api-server\\build\\default-request-timeout-ms.wat",
+        "bytes": 241,
+        "sha256": "edbf81acf37828830442a43c76d86ef4fbac69fc8ac0e66616ab625ff17c26d5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-api-server\\build\\default-request-timeout-ms.lmanifest",
+        "bytes": 1266,
+        "sha256": "4b3c06fefedb7068a98ba2c22b65ab646f4a5b369b7217dca3ed5464497b96e9"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-api-server\\build\\default-request-timeout-ms.lmanifest.json",
+        "bytes": 1601,
+        "sha256": "4ea04e5baff5a4976de170f370a3313203675a1790086d6e216a611854544e34"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-api-server\\build\\default-request-timeout-ms.governance-impact.json",
+        "bytes": 607,
+        "sha256": "70a0d4362441a96e823ccc70ccb3aa9615bebb19b998eec14b0fee1440ec4a51"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:45.0628714+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-hypha/signature.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-hypha\\build\\signature.wasm",
+        "bytes": 571,
+        "sha256": "994af3a0dc52f1c68526b871e26cf95ea0b230b38b6024c7434cf1ce902e0632"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-hypha\\build\\signature.wat",
+        "bytes": 5201,
+        "sha256": "9860a5ccea5c1dfabd3e5675972c7385e9ba5521371a4c7255f8c3fab413b599"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-hypha\\build\\signature.lmanifest",
+        "bytes": 1188,
+        "sha256": "4403744d63844979b8bcc0c8bbfeef9e87042ec9f44ecbeddd7f633428d5d3dc"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-hypha\\build\\signature.lmanifest.json",
+        "bytes": 1524,
+        "sha256": "567f129ade1ab2e86fca9d0920d9801884da04090374050e89afa9b489b0fe4e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-hypha\\build\\signature.governance-impact.json",
+        "bytes": 570,
+        "sha256": "04764a9b63688ff0b1a0e3c1302264b93bdbb21e43c5da7a10235a6591987de6"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:45.4478406+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-security/version.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-security\\build\\version.wasm",
+        "bytes": 72,
+        "sha256": "2515d0c7b1f861ede1ec38d2c2dc99e2b5d80e87034e57b01e2e5063cd2f5468"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-security\\build\\version.wat",
+        "bytes": 237,
+        "sha256": "394df62f091f1326d5146d1427368c4d9d1b19958e350366e56a5d6e6efa6af5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-security\\build\\version.lmanifest",
+        "bytes": 1246,
+        "sha256": "40fa2fbe78ac0ac4e602ac15433ea4656bc6d26980dbc5b35e6eee3d0aedff91"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-security\\build\\version.lmanifest.json",
+        "bytes": 1582,
+        "sha256": "8a2c1c2918712fcc1c2e9256752714bfee461b802e533b9d8201a8885e4aea73"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-security\\build\\version.governance-impact.json",
+        "bytes": 588,
+        "sha256": "8f54e7d8505bedcbc42577df6ca1a342a65f750e55ddee6dbcbf882fc884c04f"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:45.8275209+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-tower-citizen/is-trit.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-tower-citizen\\build\\is-trit.wasm",
+        "bytes": 133,
+        "sha256": "f0142f1d199ec21cb5c77cf4bbcfce70a5c53fd34385f2216d0d54e9e1f0b293"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tower-citizen\\build\\is-trit.wat",
+        "bytes": 805,
+        "sha256": "9b010beb52059bda405dd3b7b787555cd7b43220a1c24f2db23523058009593c"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tower-citizen\\build\\is-trit.lmanifest",
+        "bytes": 1195,
+        "sha256": "4a545fb4de1a45980b5031f7e90000cbd822483babd56afe7438ea6e8143ea56"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tower-citizen\\build\\is-trit.lmanifest.json",
+        "bytes": 1531,
+        "sha256": "440e3aecff9d7a7ebc6cbf79fe6e1c413d737f093d03684b13b47cdab5b784cc"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tower-citizen\\build\\is-trit.governance-impact.json",
+        "bytes": 571,
+        "sha256": "346111d8389c22bfa92bafdc8282edd7cf85b60427baa666dd20b5feed94df64"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:46.2082963+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-devtools-project-graph/default-max-iterations.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-project-graph\\build\\default-max-iterations.wasm",
+        "bytes": 70,
+        "sha256": "4581861fc0a226182f15cb2456c229fb536b3a7ab58f1648b9a21fcae6287999"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-project-graph\\build\\default-max-iterations.wat",
+        "bytes": 228,
+        "sha256": "bb338dfe9407caadc1fdd14ab0bf07ac6b65f3c1c5dc0109692b14afa04a4f46"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-project-graph\\build\\default-max-iterations.lmanifest",
+        "bytes": 1162,
+        "sha256": "8f9a790a46bcdd0d6e46ee7897c9d5a1275d75ac2848dc12b27258c83c7147aa"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-project-graph\\build\\default-max-iterations.lmanifest.json",
+        "bytes": 1489,
+        "sha256": "9d4acc9648d667b579070135db0649f28a8c8cba5d9f89e4eb989dc1b69327c9"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-devtools-project-graph\\build\\default-max-iterations.governance-impact.json",
+        "bytes": 600,
+        "sha256": "4b7342b402b8c7d83cf424fbc7b1cb0fdc1efc58972f41e3af92f6aafad72789"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:46.5757571+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-tools-myco/version.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-myco\\build\\version.wasm",
+        "bytes": 60,
+        "sha256": "fd83b397209bc830b42b572ea1b1711647c3a5636b1450f8036c5d3982b69fee"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-myco\\build\\version.wat",
+        "bytes": 189,
+        "sha256": "db48eb00f11582a079ba0930562a2e81417de02c7405144af05dffc84e379852"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-myco\\build\\version.lmanifest",
+        "bytes": 1210,
+        "sha256": "9760c484f40c28097f1fa268e875d33eff07b10e112b089f38a3e2b12b62f62f"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-myco\\build\\version.lmanifest.json",
+        "bytes": 1546,
+        "sha256": "20bfd32379fb0772bde7fdb9fcb55011f02c6f8a1fe190d7fda4d30992cb1564"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-tools-myco\\build\\version.governance-impact.json",
+        "bytes": 576,
+        "sha256": "90ea558340decdc2fcc30bbea27e1b50999acf85541a051b6c0ba5af6e0f64db"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:46.9677595+00:00"
+  },
+  {
+    "source": "packages/fungi/products/galerina-framework-app-kernel/max-rate-windows.fungi",
+    "status": "PASS",
+    "exitCode": 0,
+    "outputs": [
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-app-kernel\\build\\max-rate-windows.wasm",
+        "bytes": 65,
+        "sha256": "27d49961eac507ac1a537d90aeb683a65581937790c5f5a654ba120959b84b2e"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-app-kernel\\build\\max-rate-windows.wat",
+        "bytes": 205,
+        "sha256": "8a4e5c5833955e6f0cc9f36d4e4863b57a0f290498b632d8e68bae9e1b47aed5"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-app-kernel\\build\\max-rate-windows.lmanifest",
+        "bytes": 1228,
+        "sha256": "b13aad3e0361293a778658f1de6d26e85b9fcf1f5910c0d372f0371c8c738b95"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-app-kernel\\build\\max-rate-windows.lmanifest.json",
+        "bytes": 1564,
+        "sha256": "2353ba31df6094ccc094642e02f923535556595e0779eab48e152bcf19070d07"
+      },
+      {
+        "path": "packages\\fungi\\products\\galerina-framework-app-kernel\\build\\max-rate-windows.governance-impact.json",
+        "bytes": 588,
+        "sha256": "ba19e81e6d7401825b03e1036eed70ba0ea77d3061e6f8deb4ac6e213e3b413f"
+      }
+    ],
+    "diagnostic": null,
+    "completedAt": "2026-09-13T17:43:47.3305670+00:00"
+  }
+]

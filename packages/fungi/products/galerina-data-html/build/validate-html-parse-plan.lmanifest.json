@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:6f038275a6d0928541fc4625660756c64d2c3bc4f40e5ca4d1044769d723f585",
+  "sourceFile": "validate-html-parse-plan.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:d290e43f29aee7171dc32a0055dff354a6ea4fd39af8a4d0fd076d8e9c09b17e",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:26.272Z"
+  },
+  "behavioralFingerprint": "sha256:f912e3dcc0ec82235b5aede14554c28fedb53cb72e5fc16689cf42753acfd1cb",
+  "derivedConstraints": [
+    "isPositiveSafeInteger: Flow isPositiveSafeInteger has a contract declaration [via contract]",
+    "validateHtmlParsePlan: Flow isPositiveSafeInteger has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isPositiveSafeInteger",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateHtmlParsePlan",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:26.273Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "0ec68cdb0b3d72d9",
+    "signature": "L4QihWs5KCHQh9zkCs0ZbGGM1DnsWk4PUyV1O7TJ6hYMaCdnaenw612VaYOlbpZB2lRdBg91v6c+OgSPJoNcDg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:26.283Z"
+  }
+}

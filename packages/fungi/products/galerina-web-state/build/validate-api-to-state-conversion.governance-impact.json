@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-api-to-state-conversion.fungi",
+  "sourceHash": "sha256:cdba44cac637b85536410ae3157bd674540631a600b055dd842a7ed5d0d76896",
+  "generatedAt": "2026-09-13T17:46:53.819Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "validateApiToStateConversionAtPath",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateApiToStateConversion",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

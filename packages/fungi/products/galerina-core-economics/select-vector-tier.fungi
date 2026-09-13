@@ -1,0 +1,10 @@
+@version 1
+
+/// Project the already-selected vector tier without changing its value.
+/// The TypeScript shadow reads hw.vectorTier; the hardware record boundary
+/// remains outside this scalar pure leaf.
+pure flow selectVectorTier(vectorTier: String) -> String
+contract { intent { "Return the caller-selected vector tier unchanged." } }
+{
+  return vectorTier
+}

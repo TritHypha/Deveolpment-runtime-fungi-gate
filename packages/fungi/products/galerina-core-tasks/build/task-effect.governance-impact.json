@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "task-effect.fungi",
+  "sourceHash": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+  "generatedAt": "2026-09-13T17:46:03.510Z",
+  "flowCount": 3,
+  "flows": [
+    {
+      "name": "isTaskEffectCore",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "isTaskEffectExtended",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "isTaskEffect",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 3,
+  "derivedConstraintCount": 3
+}

@@ -1,0 +1,15 @@
+@version 1
+
+/// Bounded direct-package translation of
+/// packages-ts/galerina-devtools-pci/src/index.ts#DEVTOOLS_PCI_VERSION.
+///
+/// This pure flow returns the package's declared tool version. PCI audit
+/// execution, report generation, compliance ledgers and external effects
+/// remain outside this constant leaf; the value grants no compliance or
+/// production authority.
+
+pure flow devtoolsPciVersion() -> String
+contract { intent { "Return the exact declared version of the Galerina PCI developer tool." } }
+{
+  return "0.1.0"
+}

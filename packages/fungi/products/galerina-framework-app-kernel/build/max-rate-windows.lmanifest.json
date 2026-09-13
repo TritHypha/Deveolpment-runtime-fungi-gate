@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:6fa3d9e40111ef49df5ce2539c7d00594da630c45aafc6aa2298141bde6eb266",
+  "sourceFile": "max-rate-windows.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:c4bca488792012acd8b1aa5954ba321c1f8a8eb1a09102239e2e067067018404",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:17.059Z"
+  },
+  "behavioralFingerprint": "sha256:4bfba8b2c4ca9b200f26fa0413e8fa57a6b4e83f7a1dc44e2c067f2cbf29c1df",
+  "derivedConstraints": [
+    "maxRateWindows: Flow maxRateWindows has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "maxRateWindows",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:17.059Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "1ed54c5d7ae5a69f",
+    "signature": "sl1JwHBJWA9w/thuRr3k3/A1A1XRIMn0ns4epNTU1u+zzpOoXAm2g+0oU/rMXBzz1jTd0pxJ19biOx2CSFjUAA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:17.067Z"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-027-RUNTIME-WASM",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-runtime-wasm/src/record-abi.ts#WAT_HEAP_BASE",
+  "sourceSha256": "e9890291002a03f4e15b15757b52277c26d1e13efa781295ac77e453465534d0",
+  "target": "packages/fungi/products/galerina-core-runtime-wasm/wat-heap-base.fungi",
+  "targetBytes": 224,
+  "targetSha256": "7041af038ae777845a6082595caa22326d217ddf01d26a9c56d5205567c2d68f",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "12/12", "interpreter": "1/1", "signedWasm": "12/12", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "The non-authorizing ABI constant 1024 is preserved; record allocation, layout enforcement, runtime staging and compiler integration remain host/runtime-owned.",
+  "productionAuthorizing": false
+}

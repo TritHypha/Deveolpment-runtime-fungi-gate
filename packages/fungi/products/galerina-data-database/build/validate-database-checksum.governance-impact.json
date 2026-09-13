@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-database-checksum.fungi",
+  "sourceHash": "sha256:3cdc9205a82802b45cc6ef20351c7f4c99ac0ca2dc8d5fd48f14eb8105ba3c33",
+  "generatedAt": "2026-09-13T17:46:09.791Z",
+  "flowCount": 3,
+  "flows": [
+    {
+      "name": "isHexDigit",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateDatabaseChecksumAtPath",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateDatabaseChecksum",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 3,
+  "derivedConstraintCount": 3
+}

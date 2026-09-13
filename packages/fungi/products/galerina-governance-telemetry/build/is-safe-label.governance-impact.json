@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "is-safe-label.fungi",
+  "sourceHash": "sha256:0a4f2e21e0ed2000c4c041b168ffa9293bb48b7b3212925233fcb1075f5b9f23",
+  "generatedAt": "2026-09-13T17:47:11.123Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "isSafeLabelCharacter",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "isSafeLabel",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

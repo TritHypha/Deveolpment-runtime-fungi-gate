@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-003-DIRECT-PACKAGE-TREE",
+  "status": "DIRECT_TREE_WAVE_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "scope": {
+    "packages": [
+      "galerina-core-config",
+      "galerina-core-runtime"
+    ],
+    "sourceFiles": [
+      "packages-ts/galerina-core-config/src/index.ts",
+      "packages-ts/galerina-core-runtime/src/structured-await.ts"
+    ],
+    "symbols": [
+      "isEnvironmentMode",
+      "isTerminalScope"
+    ],
+    "targets": [
+      "packages/fungi/products/galerina-core-config/environment-mode.fungi",
+      "packages/fungi/products/galerina-core-runtime/terminal-scope.fungi"
+    ]
+  },
+  "sourceShadows": {
+    "retained": true,
+    "sourceDigests": {
+      "packages-ts/galerina-core-config/src/index.ts": "80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+      "packages-ts/galerina-core-runtime/src/structured-await.ts": "a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9"
+    }
+  },
+  "targetsVerified": {
+    "packages/fungi/products/galerina-core-config/environment-mode.fungi": {
+      "bytes": 385,
+      "sha256": "52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+      "provenance": "byte-identical to the owner-approved rd0873-core-config pilot asset"
+    },
+    "packages/fungi/products/galerina-core-runtime/terminal-scope.fungi": {
+      "bytes": 379,
+      "sha256": "3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+      "provenance": "byte-identical to the owner-approved rd0873-core-runtime pilot asset"
+    }
+  },
+  "validation": {
+    "strictClassifierChecks": "2/2",
+    "focusedCases": "13/13",
+    "failures": 0,
+    "skips": 0,
+    "ci": "not invoked",
+    "build": "not invoked; this wave establishes canonical source placement"
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "notes": [
+    "The direct package tree is now the target for subsequent conversion waves.",
+    "The legacy packages/fungi/products/galerina pilot tree is retained for historical receipts and compatibility tests.",
+    "This receipt does not claim that either containing TypeScript file has been retired or that production authority has changed.",
+    "Git is storage only for this run; no CI workflow or hosted build was used."
+  ]
+}

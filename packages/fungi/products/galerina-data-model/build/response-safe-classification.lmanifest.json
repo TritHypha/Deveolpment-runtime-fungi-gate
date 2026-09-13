@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:c5e449eb10a15ea75a3e90c21e2d8504b8a8cd9c5d4cc7e481e2e1c2d57cb4f6",
+  "sourceFile": "response-safe-classification.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:0c5a232aac6d46029e40f80e745e0ecd50645ce58da64f91f1a8bc1fc122d6a3",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:03.118Z"
+  },
+  "behavioralFingerprint": "sha256:d0f39fe185c5f8917b9bc1eb5f322933839fe3e5d99dada29d4062e1924d5bd7",
+  "derivedConstraints": [
+    "isResponseSafeClassification: Flow isResponseSafeClassification has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isResponseSafeClassification",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:03.119Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "c792e85e5be6f2c2",
+    "signature": "78QDtjpqu4i4l48oFintVppWFbn4IwH0NSomVCou7vzkkEwClSTKeGgkqmoG0d9uvs6Y121Ehi0BGcMObtoTDg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:03.126Z"
+  }
+}

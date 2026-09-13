@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "circuit-id.fungi",
+  "sourceHash": "sha256:5e92345047b626762f8fa950d94094ee19f73222ac1943c5ebbb721b7cb1a4b6",
+  "generatedAt": "2026-09-13T17:46:55.332Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "circuitId",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 0
+}

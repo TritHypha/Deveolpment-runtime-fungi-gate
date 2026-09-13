@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-018-DATA-ARCHIVE",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-data-archive/src/index.ts#validateChecksumRef",
+  "sourceSha256": "a22f9cd20fb6ac45be6bd4b8277691d61330ca725aef6b9b120037ffa7de7c53",
+  "target": "packages/fungi/products/galerina-data-archive/validate-checksum-ref.fungi",
+  "targetBytes": 2853,
+  "targetSha256": "7b8a498faefaaa022cd762a0655a24f767e1ffe0b304ab9425edc0bbac8a975c",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "4/4", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Known checksum algorithms and digest lengths fail closed; cryptographic hashing, archive I/O and restore effects remain host-owned.",
+  "productionAuthorizing": false
+}

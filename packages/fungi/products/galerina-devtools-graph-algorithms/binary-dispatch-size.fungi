@@ -1,0 +1,6 @@
+@version 1
+/// Non-authorizing sandbox candidate; TypeScript remains the oracle.
+/// TypeScript oracle: packages-galerina/galerina-devtools-graph-algorithms/src/semantic/flag-queries.ts#BINARY_DISPATCH_SIZE
+pure flow binaryDispatchSize() -> Int {
+  return 48
+}

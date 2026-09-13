@@ -1,0 +1,13 @@
+@version 1
+
+/// Bounded pure decision leaf for IntegrityMonitor.verifyBlock/enforceBlock.
+/// The host performs SHA-256 or HMAC-SHA256 and supplies the exact comparison;
+/// this flow owns only the fail-closed release decision.
+pure flow integrityVerdict(digestMatches: Bool) -> String
+contract { intent { "Refuse a block when its recomputed digest differs from the expected manifest digest; otherwise return ok." } }
+{
+  if digestMatches == false {
+    return "LSIO-INTEGRITY-001"
+  }
+  return "ok"
+}

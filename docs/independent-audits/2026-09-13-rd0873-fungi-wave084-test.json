@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-084-TEST",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-test/src/spawn.ts#DEFAULT_TIMEOUT_MS",
+  "sourceSha256": "45799071d537c1dfd4b20bb843030cfc1bee96bd889bc137367b705f28194710",
+  "target": "packages/fungi/products/galerina-test/default-timeout-ms.fungi",
+  "targetBytes": 544,
+  "targetSha256": "091152c877720d4a2654f39ffd68f3b8f33373c2b4b0520daa771dd606682600",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1 interpreter and signed-Wasm",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "211/211",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The DEFAULT_TIMEOUT_MS constant is exactly 600000. Process spawning, timeout termination, exit-status handling, output capture and test execution remain host/manual responsibilities.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 236.5,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "is-trit.fungi",
+  "sourceHash": "sha256:f33ced820f3b6414cc95fcbda200f431ba7251cf8fbc1be238d849d1291aec6f",
+  "generatedAt": "2026-09-13T17:47:15.960Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "isTrit",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

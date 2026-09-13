@@ -1,0 +1,44 @@
+@version 1
+
+/// Bounded translation of the final formatting behavior of formatCliResult from
+/// packages-ts/galerina-core-cli/src/output.ts:4-13.
+///
+/// The TypeScript function's raw-result joining and redactCliOutputChecked
+/// detector remain the compatibility shadow. This leaf accepts the host-admitted
+/// redaction result and preserves the tripwire banner assembly only; regex
+/// scanning, credential custody, and actual CLI output remain host/manual edges.
+
+record CliRedactionResult {
+  text: String
+  tripwire: Bool
+  markers: Array<String>
+}
+
+pure flow joinMarkers(markers: Array<String>) -> String
+contract { intent { "Join bare-detector marker names in their source order." } }
+{
+  mut joined: String = ""
+  mut index: Int = 0
+  while index < markers.count() {
+    let markerOpt: Option<String> = markers.get(index)
+    match markerOpt {
+      Some(marker) => {
+        if index > 0 { joined = joined + ", " }
+        joined = joined + marker
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  return joined
+}
+
+pure flow formatCliResult(redacted_: CliRedactionResult) -> String
+contract { intent { "Format redacted CLI output and surface bare-credential tripwires." } }
+{
+  if redacted_.tripwire == true {
+    return "FUNGI-CLI-REDACT-001: redacted " + redacted_.markers.count().toString() + " bare credential token(s) [" + joinMarkers(redacted_.markers) + "] — investigate upstream leak\n" + redacted_.text
+  }
+  return redacted_.text
+}

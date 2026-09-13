@@ -1,0 +1,14 @@
+@version 1
+
+/// Bounded pure decision leaf for SynchronizationGate.enforceDrift.
+/// The host supplies the prior-sync state and the already-calculated absolute
+/// drift; stateful clock reads and the physical-time seam remain host-owned.
+/// `enforceDrift` denies before sync and faults only when |drift| is above the
+/// envelope, so equality passes.
+pure flow driftGateVerdict(synced: Bool, driftAbs: Int, maxDriftTicks: Int) -> Int
+contract { intent { "Deny an unsynchronized or over-envelope logical clock; allow the bounded drift case." } }
+{
+  if synced == false { return 0 - 1 }
+  if driftAbs > maxDriftTicks { return 0 - 1 }
+  return 1
+}

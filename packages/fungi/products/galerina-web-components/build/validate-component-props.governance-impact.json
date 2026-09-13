@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-component-props.fungi",
+  "sourceHash": "sha256:669368e7825b033b19515a3f5ff71c36406fbf7172d468e641514e93fe11e728",
+  "generatedAt": "2026-09-13T17:46:52.155Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "validateComponentProps",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

@@ -1,0 +1,139 @@
+@version 1
+
+/// Bounded direct-package translation of validateSearchQuery from
+/// packages-ts/galerina-data-search/src/index.ts.
+///
+/// The TypeScript query parser, provider/index lookup, transport and host
+/// search effects remain shadowed. This pure leaf validates only query shape,
+/// bounded pagination and filter operator admission; it grants no search or
+/// egress authority. Float64 preserves source Number checks. The current Fungi
+/// runtime/WAT traps nonfinite Float64 values before a diagnostic can be
+/// returned, so NaN and Infinity remain a host/manual boundary.
+
+record SearchFilter {
+  field: String
+  operator: String
+}
+
+record SearchQueryContract {
+  index: String
+  text: Option<String>
+  filters: Array<SearchFilter>
+  limit: Float64
+  offset: Option<Float64>
+}
+
+record SearchDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow isPositiveSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly positive finite integer values representable as JavaScript safe integers." } }
+{
+  if Float64.isFinite(value) == false { return false }
+  if value <= 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow isNonNegativeSafeInteger(value: Float64) -> Bool
+contract { intent { "Accept exactly non-negative finite integer values representable as JavaScript safe integers." } }
+{
+  if Float64.isFinite(value) == false { return false }
+  if value < 0.0 { return false }
+  if value >= 9007199254740992.0 { return false }
+  let rendered: String = value.toString()
+  if rendered.contains(".") { return false }
+  if rendered.contains("e") or rendered.contains("E") { return false }
+  return true
+}
+
+pure flow validateSearchQuery(searchQuery: SearchQueryContract) -> Array<SearchDiagnostic>
+contract { intent { "Validate index identity, bounded pagination and each filter in source diagnostic order." } }
+{
+  mut diagnostics: Array<SearchDiagnostic> = Array.empty()
+
+  if searchQuery.index.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_SEARCH_INDEX_NAME_REQUIRED"
+      severity: "error"
+      message: "Search query requires an index name."
+      path: "index"
+    })
+  }
+
+  if isPositiveSafeInteger(searchQuery.limit) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_SEARCH_QUERY_LIMIT_REQUIRED"
+      severity: "error"
+      message: "Search query requires a positive integer limit; unbounded result sets are unsafe."
+      path: "limit"
+    })
+  }
+
+  match searchQuery.offset {
+    Some(offset) => {
+      if isNonNegativeSafeInteger(offset) == false {
+        diagnostics = diagnostics.append({
+          code: "Galerina_DATA_SEARCH_QUERY_OFFSET_INVALID"
+          severity: "error"
+          message: "Search query offset, when set, must be a non-negative integer."
+          path: "offset"
+        })
+      }
+    }
+    None => {}
+    _ => {}
+  }
+
+  mut filterIndex: Int = 0
+  while filterIndex < searchQuery.filters.count() {
+    let filterOpt: Option<SearchFilter> = searchQuery.filters.get(filterIndex)
+    match filterOpt {
+      Some(filter) => {
+        if filter.field.trim().length() == 0 {
+          diagnostics = diagnostics.append({
+            code: "Galerina_DATA_SEARCH_FILTER_FIELD_REQUIRED"
+            severity: "error"
+            message: "Search filter requires a field name."
+            path: "filters." + filterIndex.toString() + ".field"
+          })
+        }
+
+        mut knownOperator: Bool = false
+        match filter.operator {
+          "eq" => { knownOperator = true }
+          "neq" => { knownOperator = true }
+          "lt" => { knownOperator = true }
+          "lte" => { knownOperator = true }
+          "gt" => { knownOperator = true }
+          "gte" => { knownOperator = true }
+          "in" => { knownOperator = true }
+          "prefix" => { knownOperator = true }
+          _ => {}
+        }
+        if knownOperator == false {
+          diagnostics = diagnostics.append({
+            code: "Galerina_DATA_SEARCH_FILTER_OPERATOR_UNKNOWN"
+            severity: "error"
+            message: "Search filter operator " + Char.fromCode(34).toString() + filter.operator + Char.fromCode(34).toString() + " is not a known operator."
+            path: "filters." + filterIndex.toString() + ".operator"
+          })
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    filterIndex = filterIndex + 1
+  }
+
+  return diagnostics
+}
+
+

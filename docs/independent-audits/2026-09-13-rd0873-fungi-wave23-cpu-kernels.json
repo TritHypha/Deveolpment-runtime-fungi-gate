@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-023-CPU-KERNELS",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-cpu-kernels/src/index.ts#requiresLowBitKernel",
+  "sourceSha256": "2a4d5069f3e5a9143a30ab0a96e391ea68e5fd2c6486af0c386c173ad13ccc7d",
+  "target": "packages/fungi/products/galerina-cpu-kernels/requires-low-bit-kernel.fungi",
+  "targetBytes": 451,
+  "targetSha256": "dba10804d96756dfd50c80549133db182d99cff738e211b01c194e17eadf267c",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "12/12", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Exact low-bit label routing is preserved; full plan records, native kernel loading and feature enforcement remain host-owned.",
+  "productionAuthorizing": false
+}

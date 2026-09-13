@@ -2,9 +2,9 @@
 
 **A governance-first application language for high-assurance software.**
 
-Galerina is designed for application logic where authority, effects, data handling and failure behaviour must be explicit before execution. Developers write `.fungi`; the compiler checks types, effects, value state and governance, then emits a governed intermediate representation (GIR) and auditable evidence.
+Galerina is designed for application logic where authority, effects, data handling and failure behaviour must be explicit before execution. Developers write `.fungi`; the compiler checks types, effects, value state and governance, then emits a governed intermediate representation (GIR) and auditable evidence. The workspace now contains a complete, dispositioned Fungi product tree under `packages/fungi/products`.
 
-The project is in beta. The compiler and governance model are substantial and tested. The current CLI still uses WAT/WASM as its compatibility and bootstrap execution path. Independent SLIDE can execute bounded admitted Fungi families through physical `.slide`, independent re-admission and VOK, but that evidence does **not** establish a general production backend, platform durability or release authority.
+The project is in beta. The compiler and governance model are substantial and tested. The Fungi product tree has 95 direct buildable leaves across 100 dispositioned package roots, while the TypeScript compiler/bootstrap and host/native boundaries remain retained compatibility layers. The current CLI uses WAT/WASM as its compatibility and bootstrap execution path. Independent SLIDE can execute bounded admitted Fungi families through physical `.slide`, independent re-admission and VOK, but that evidence does **not** establish a general production backend, platform durability or release authority.
 
 > New here? Start with [SETUP.md](SETUP.md), then use the strict [Executable Fungi Golden Pack](docs/examples/golden/README.md) as the smallest current-language lookup surface.
 
@@ -15,9 +15,11 @@ The project is in beta. The compiler and governance model are substantial and te
 | Language | `.fungi` with typed flows, contracts, explicit effects, K3 verdicts, value-state tracking, Hallmarks and exhaustive decisions |
 | Compiler | Lexer → parser → resolution → type/effect/value-state checks → governance verification → canonical GIR |
 | Compiler authority | All seven canonical `.fungi` compiler stages are authoritative specifications; TypeScript remains the executing differential/bootstrap layer |
+| Fungi product tree | 100/100 package roots dispositioned; 95 direct `.fungi` leaves built successfully, 2 host-boundary roots retained, 4 roots have no eligible TS/JS source |
 | Current CLI target | WAT/WASM compatibility artifacts and governed execution |
 | Forward execution target | Bounded checked Fungi → GIR → physical `.slide` → independent re-admission → affine VOK |
 | Production authority | Not yet released; external authentication, platform evidence, durability, broader language families and retirement gates remain open |
+| Self-hosting status | Fungi product sources are now buildable in their target tree; end-to-end self-hosting of the compiler and production runtime is not yet claimed |
 | Security posture | Deny by default, fail closed, verify rather than trust; no evidence Boolean is accepted without its underlying proof |
 
 ## What Galerina is for
@@ -119,7 +121,7 @@ The Golden Pack distinguishes checker proof from executable parity. A checker-cl
 ### Governed compilation and execution
 
 ```text
-.fungi source
+.fungi source (packages/fungi/products)
   ↓ scan / lex / parse
   ↓ resolve names and types
   ↓ check value state, effects and governance
@@ -142,7 +144,7 @@ Current evidence is intentionally narrow. It does not yet prove:
 - hostile-platform durability across the supported OS matrix;
 - terminal TypeScript/MJS and package-dependency retirement.
 
-The active implementation and refusal gates are maintained in the [beta-v1 to SLIDE roadmap](docs/ROADMAP.md).
+The active implementation and refusal gates are maintained in the [beta-v1 to SLIDE roadmap](docs/ROADMAP.md). The conversion manifest and build receipt record the exact Fungi product inputs and outputs; TypeScript shadows remain available for differential checks.
 
 ### WASM and the retired DSS sidecar
 
@@ -204,7 +206,16 @@ Build through the current compatibility lane:
 galerina build docs/examples/golden/001-bool-if.fungi
 ```
 
-The live `build` command emits WAT/WASM and manifest artifacts. That command proves the current compatibility path; it should not be described as the final SLIDE production release path.
+Build a converted product leaf from the Fungi tree:
+
+```powershell
+galerina build packages/fungi/products/<package-name>/<leaf>.fungi
+```
+
+The live `build` command emits WAT/WASM and manifest artifacts beside the input
+product. The converted tree is buildable, but the command still uses the
+TypeScript compiler/bootstrap and should not be described as the final SLIDE
+production release path.
 
 Useful checks:
 
@@ -219,20 +230,24 @@ node scripts/component-health.mjs --table
 
 The living project route is maintained in the [canonical roadmap](docs/ROADMAP.md). Its [generated visual](build/roadmap/roadmap.svg) is rebuilt from governed graph and assurance receipts; it is evidence, not execution authority.
 
-**full suite 100/100 packages · 9,612 tests · 0 failures.**
+**Conversion and benchmark checkpoint (2026-09-13): 100/100 package roots dispositioned · 95/95 direct Fungi builds passed · 30 benchmark groups measured.**
 
 | Verification lane | Status | Current evidence |
 |---|---|---|
-| **Tests** | green | 100/100 · 9,612 · 0 fail |
+| **Direct Fungi builds** | green | 95/95 leaves · 0 failures |
+| **Full benchmark publisher** | green | 30 groups · 18 comparable · noise/truth/guard pass |
+| **Production SLIDE lane** | held | 0/18 measured; reference-only evidence remains non-authorizing |
 
 ### Honest current boundary
 
 - The compiler and all canonical self-hosted stage specifications are established.
+- The Fungi product tree is now populated and buildable for every eligible source leaf. Six roots are deliberately retained as host-boundary or source-free dispositions.
 - Independent SLIDE/VOK executes bounded, admitted source families and mutation-refusal tests.
-- Most workspace implementation still includes TypeScript/MJS and host-language dependencies.
-- The conversion ledger is reference evidence only until a consumer switches and its old path is retired.
+- The TypeScript compiler/bootstrap, build tools, tests, CI and host/native boundaries remain intentionally retained; they are not silently represented as Fungi product code.
+- The conversion ledger is exact-input evidence for the current tree; it does not by itself retire the TypeScript shadow or release authority.
 - Production authentication, cross-platform durability, release evidence and the full platform matrix remain owner/external-evidence gates.
 - Repository-wide closure is not inferred from focused package or chart checks.
+- “Self-hosting” here means the Fungi product tree can be built from Fungi sources. Full compiler self-hosting and production-authorized self-hosted execution remain open gates.
 
 For exact open tasks, use the [roadmap](docs/ROADMAP.md), [root TODO](docs/TODO.md) and live status command rather than copying their changing detail into this file.
 
@@ -246,6 +261,10 @@ Benchmark publication follows three rules:
 
 Current views:
 
+- [Latest benchmark chart](packages-ts/galerina-devtools-benchmarks/results/benchmark-chart-latest.html) — generated from the 2026-09-13 full run.
+- [Standalone benchmark chart](packages-ts/galerina-devtools-benchmarks/results/benchmark-chart-standalone.html) — the same measured data without the local wrapper.
+- [Benchmark sheet](packages-ts/galerina-devtools-benchmarks/results/benchmark-sheet-latest.csv) — one row per measured runtime lane, with the source metric and unit recorded.
+- [Current-versus-archive chart](packages-ts/galerina-devtools-benchmarks/results/benchmark-compare-latest.html) — compares the current run with the retained `2026-08-02_galerina-wasm-before-slide` archive.
 - [Production SLIDE-zero chart](packages-ts/galerina-devtools-benchmarks/results/benchmark-slide-zero-latest.html) — deliberately reports “not measured” because no admitted production SLIDE lane exists.
 - [Production SLIDE-zero HTML table](packages-ts/galerina-devtools-benchmarks/results/benchmark-slide-zero-table-latest.html) — the same fail-closed production status in table form.
 - [Verified SLIDE reference and historic WASM page](packages-ts/galerina-devtools-benchmarks/results/benchmark-slide-vs-wasm-history-latest.html) — the upper chart and table put the non-authorizing Galerina/SLIDE reference at zero and show faster peers as positive and slower peers as negative. The lower chart retains the archived Galerina/WASM results with old WASM at zero for each workload.
@@ -253,11 +272,13 @@ Current views:
 On the exact one-million-element reference workload, Rust AVX2 wins and the
 Galerina/SLIDE reference is fourth of six, ahead of Go and Python. This is
 bounded reference evidence only: it does not release authority or fill the
-unmeasured production SLIDE lane. The current full run contains 30 benchmark
+unmeasured production SLIDE lane. The 2026-09-13 full run contains 30 benchmark
 groups and 18 comparable groups, but production SLIDE coverage is **0/18**;
 one separately labelled SLIDE reference group is measured. The benchmark truth audit excludes diagnostic
 interpreters from production rankings and refuses ratios for mismatched work or
-units.
+units. The history receipt records the prior local run and the archive chart
+records the frozen archive comparison; neither substitutes guessed values for
+measured results.
 
 ## Graphs and developer tools
 

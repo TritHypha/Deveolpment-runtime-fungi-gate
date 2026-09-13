@@ -1,0 +1,11 @@
+@version 1
+
+/// Identify the exact low-bit input and operation labels used by CPU routing.
+/// Unknown labels reach the explicit false exit and gain no low-bit status.
+pure flow requiresLowBitKernel(inputType: String, operation: String) -> Bool {
+  if inputType == "i2_s" { return true }
+  if inputType == "ternary" { return true }
+  if operation == "ternary_matmul" { return true }
+  if operation == "low_bit_decode" { return true }
+  return false
+}

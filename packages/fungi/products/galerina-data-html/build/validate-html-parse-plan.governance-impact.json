@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-html-parse-plan.fungi",
+  "sourceHash": "sha256:6f038275a6d0928541fc4625660756c64d2c3bc4f40e5ca4d1044769d723f585",
+  "generatedAt": "2026-09-13T17:46:26.273Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateHtmlParsePlan",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

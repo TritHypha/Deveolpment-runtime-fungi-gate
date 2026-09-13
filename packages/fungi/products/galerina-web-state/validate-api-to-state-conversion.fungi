@@ -1,0 +1,55 @@
+@version 1
+
+/// Bounded translation of validateApiToStateConversion from
+/// packages-ts/galerina-web-state/src/index.ts.
+///
+/// The host supplies inert contract-reference strings. API transport, state
+/// storage, browser effects, and response mapping execution remain outside
+/// this pure validation leaf.
+
+record ApiToStateConversion {
+  stateContract: String
+  responseMappingRef: String
+}
+
+record WebStateDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateApiToStateConversionAtPath(
+  conversion_: ApiToStateConversion,
+  path_: String,
+) -> Array<WebStateDiagnostic>
+contract { intent { "Validate named page-state and data-response mapping references in source diagnostic order." } }
+{
+  mut diagnostics: Array<WebStateDiagnostic> = Array.empty()
+
+  if conversion_.stateContract.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_WEB_STATE_CONVERSION_TARGET_REQUIRED"
+      severity: "error"
+      message: "API-to-state conversion must name its target page state contract."
+      path: path_ + ".stateContract"
+    })
+  }
+
+  if conversion_.responseMappingRef.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_WEB_STATE_RESPONSE_MAPPING_REF_REQUIRED"
+      severity: "error"
+      message: "API-to-state conversion must name its galerina-data-response mapping; raw model data never enters browser state."
+      path: path_ + ".responseMappingRef"
+    })
+  }
+
+  return diagnostics
+}
+
+pure flow validateApiToStateConversion(conversion_: ApiToStateConversion) -> Array<WebStateDiagnostic>
+contract { intent { "Validate an API-to-state conversion using the source default diagnostic path." } }
+{
+  return validateApiToStateConversionAtPath(conversion_, "conversion")
+}

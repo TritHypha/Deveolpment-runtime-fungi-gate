@@ -1,0 +1,63 @@
+@version 1
+
+/// Bounded translation of validateDbBoundaryRequirements from
+/// packages-ts/galerina-data-db/src/index.ts.
+/// The three literal-true requirements are rechecked as typed Bool values;
+/// diagnostics remain ordered and the TypeScript default path is preserved.
+
+record DbBoundaryRequirements {
+  parameterisedOnly: Bool
+  rawSqlDenied: Bool
+  responseMappingRequired: Bool
+}
+
+record DbDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateDbBoundaryRequirementsAtPath(
+  requirements: DbBoundaryRequirements,
+  path_: String,
+) -> Array<DbDiagnostic>
+contract { intent { "Recheck all database boundary non-negotiables in source order and return typed errors." } }
+{
+  mut diagnostics: Array<DbDiagnostic> = Array.empty()
+
+  if requirements.parameterisedOnly == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_DB_PARAMETERISED_ONLY_REQUIRED",
+      severity: "error",
+      message: "The database boundary requires parameterised-only access; this is not configurable.",
+      path: path_ + ".parameterisedOnly"
+    })
+  }
+
+  if requirements.rawSqlDenied == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_DB_RAW_SQL_DENIAL_REQUIRED",
+      severity: "error",
+      message: "The database boundary denies raw SQL by default; this is not configurable.",
+      path: path_ + ".rawSqlDenied"
+    })
+  }
+
+  if requirements.responseMappingRequired == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_DB_RESPONSE_MAPPING_REQUIRED",
+      severity: "error",
+      message: "The database boundary requires model-to-response mapping; this is not configurable.",
+      path: path_ + ".responseMappingRequired"
+    })
+  }
+
+  return diagnostics
+}
+
+pure flow validateDbBoundaryRequirements(requirements: DbBoundaryRequirements) -> Array<DbDiagnostic>
+contract { intent { "Validate database boundary requirements using the source default diagnostic path." } }
+{
+  return validateDbBoundaryRequirementsAtPath(requirements, "requirements")
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-matrix-type.fungi",
+  "sourceHash": "sha256:f67b5fce9450cbbd13a57a1415e117211f34e4547bb42780eb717b0bb350ec05",
+  "generatedAt": "2026-09-13T17:46:02.748Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateMatrixType",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

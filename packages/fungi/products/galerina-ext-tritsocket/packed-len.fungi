@@ -1,0 +1,20 @@
+@version 1
+
+/// Bounded direct-package translation of packedLen from
+/// packages-ts/galerina-ext-tritsocket/src/prefilter.ts.
+///
+/// The TypeScript shadow accepts a JavaScript Number and applies
+/// Math.floor((lenTrits + 3) / 4). This leaf uses Int for the intended
+/// nonnegative integer trit-count domain, where integer division is exact
+/// parity. Fractional, nonfinite, negative, and out-of-i32 source Numbers
+/// remain host/manual input-marshalling boundaries.
+///
+/// This computes a byte count only. Trit encoding, byte-array identity,
+/// socket transport, and the deny-only admission gate remain host boundaries;
+/// Maybe never becomes an Allow through this leaf.
+
+pure flow packedLen(lenTrits: Int) -> Int
+contract { intent { "Return the number of packed bytes required for a nonnegative integer trit count." } }
+{
+  return (lenTrits + 3) / 4
+}

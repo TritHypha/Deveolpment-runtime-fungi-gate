@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "default-request-timeout-ms.fungi",
+  "sourceHash": "sha256:6bf575e0399b5b8db3e2c5258e4336c1b4b51d1d82c6d799262ef502413d277c",
+  "generatedAt": "2026-09-13T17:47:14.836Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "defaultRequestTimeoutMs",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

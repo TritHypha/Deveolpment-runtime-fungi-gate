@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:4cc92dcdc16fb384df7d690ac20446a3f0adca8885ccc682fcc4962d0094d8e4",
+  "sourceFile": "version.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:fa8b14110980fbb2436bb9f7154ea9dc46bd5a8c4f3149f9d8d16dcc142f0a6a",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:11.873Z"
+  },
+  "behavioralFingerprint": "sha256:752d418d05f157740af0a0c32d63953fb726bdbc53d2df66f0bb11d2b281ec43",
+  "derivedConstraints": [
+    "triRegexVersion: Flow triRegexVersion has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "triRegexVersion",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:11.874Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "cbadfc5c19c2d4a0",
+    "signature": "B8AEMvCvK6HMT/I2MDXiu01d38BlCGJddW1mx0f1UiXFNcn0iZhgPXYblDOGxhE82+nxvOlRotfyaIDNofGxAw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:11.881Z"
+  }
+}

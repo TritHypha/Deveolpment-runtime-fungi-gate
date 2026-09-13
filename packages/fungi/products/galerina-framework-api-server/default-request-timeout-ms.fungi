@@ -1,0 +1,15 @@
+@version 1
+
+/// Bounded direct-package translation of DEFAULT_REQUEST_TIMEOUT_MS from
+/// packages-ts/galerina-framework-api-server/src/index.ts.
+///
+/// This pure leaf returns the exact 30-second request timeout in milliseconds.
+/// HTTP/TLS server construction, socket lifecycle, request buffering, and
+/// timeout enforcement remain host boundaries; the value grants no transport
+/// or production authority.
+
+pure flow defaultRequestTimeoutMs() -> Int
+contract { intent { "Return the exact default API request timeout in milliseconds." } }
+{
+  return 30000
+}

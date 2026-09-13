@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:bb5874f29d0c75e45900087e820a74c1d0b6ffa1b7fdccb202043d2b85a4b93f",
+  "sourceFile": "validate-gpu-kernel-plan.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:f44b0f10ced9353ed718d307db59275c7571e8a71c87db1d8ac497af4b92bae3",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:50.450Z"
+  },
+  "behavioralFingerprint": "sha256:5939d6426b76377666f947117289bec7988b11d3195a4ad18d1773668ff0b995",
+  "derivedConstraints": [
+    "validateGpuKernelPlan: Flow validateGpuKernelPlan has a contract declaration [via contract]",
+    "validateGpuKernelPlanDefault: Flow validateGpuKernelPlan has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateGpuKernelPlan",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateGpuKernelPlanDefault",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:50.451Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "58759ff33d9a5706",
+    "signature": "R98k6tfMzzq8PmHGG7TA7STvmBdP+KZPI6I8svoT71YnomdO1vbSQdHHe87yx3F+G2yERs3WoRmtrnJhHVfpBw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:50.462Z"
+  }
+}

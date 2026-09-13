@@ -1,0 +1,21 @@
+@version 1
+
+/// Bounded translation of the private isSensitiveHeaderName helper from
+/// packages-ts/galerina-core-security/src/index.ts.
+///
+/// The TypeScript helper remains the compatibility shadow. This leaf only
+/// classifies the four exact sensitive header names; it does not inspect,
+/// reveal, or authorize secret values.
+
+pure flow isSensitiveHeaderName(name: String) -> Bool
+contract { intent { "Recognize the exact case-insensitive sensitive-header name set." } }
+{
+  let lowered: String = name.toLower()
+  match lowered {
+    "authorization" => return true
+    "cookie" => return true
+    "set-cookie" => return true
+    "x-api-key" => return true
+    _ => return false
+  }
+}

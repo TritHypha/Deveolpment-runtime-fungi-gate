@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-gpu-kernel-plan.fungi",
+  "sourceHash": "sha256:bb5874f29d0c75e45900087e820a74c1d0b6ffa1b7fdccb202043d2b85a4b93f",
+  "generatedAt": "2026-09-13T17:46:50.451Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "validateGpuKernelPlan",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateGpuKernelPlanDefault",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

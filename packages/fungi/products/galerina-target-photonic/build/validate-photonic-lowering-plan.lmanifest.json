@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:344f96333d6ac693d4b31f1c5090ef685de7c8e77f18fe94594528e452f62d23",
+  "sourceFile": "validate-photonic-lowering-plan.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:3602a1b91c25b365be4875bd6115fd9a846cd537b169fa0929c7ba562d5e63b1",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:51.323Z"
+  },
+  "behavioralFingerprint": "sha256:6f873bf80d780c3dce9d7778553cd9220bf572f487bead3f2c369fbdf866eb0f",
+  "derivedConstraints": [
+    "validatePhotonicLoweringPlan: Flow validatePhotonicLoweringPlanAtPath has a contract declaration [via contract]",
+    "validatePhotonicLoweringPlanAtPath: Flow validatePhotonicLoweringPlanAtPath has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validatePhotonicLoweringPlanAtPath",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validatePhotonicLoweringPlan",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:51.323Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "94d8f2a7b6803aa4",
+    "signature": "0EUz2PDtrsQ50axk0EEeaWak2vUp6fX/aHQKAjE58hTDf/cDzw2QEzqaviQ8dXb24LPvvsSTbCiAdivplPb3Dw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:51.334Z"
+  }
+}

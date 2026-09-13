@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "modality-structured.fungi",
+  "sourceHash": "sha256:522c885874d854fd8dc5135f7fab780352b1a82b7de522b19a723ff79a2ef3db",
+  "generatedAt": "2026-09-13T17:46:56.795Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "modalityStructured",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 0
+}

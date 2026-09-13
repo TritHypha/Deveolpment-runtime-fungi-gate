@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-004-CORE-COMPUTE",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-compute/src/index.ts#validateComputePlan",
+  "sourceSha256": "91f7e4379d3af00a6f2b399492a870a72c1f5294d065231ec99c0f328994c7c6",
+  "target": "packages/fungi/products/galerina-core-compute/validate-compute-plan.fungi",
+  "targetBytes": 2548,
+  "targetSha256": "8aad3c9afb5300b5a6b24d0acb874c222b9ec9bd7bed061e52adfdf409c6b467",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "5/5", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Structured-record ingress, hostile getter/proxy semantics and hardware authority remain outside this pure leaf.",
+  "productionAuthorizing": false
+}

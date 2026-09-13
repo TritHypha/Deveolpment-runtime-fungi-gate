@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:3cf2825a9f4570e80b5f212f66e30e5d4593f4fc31539f9972361042698da6ab",
+  "sourceFile": "graph-dir.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:abe53c9fcd84fabeabffd528f1942f815ed02dfd28068bcdf015bd5f9ea85b0e",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:14.465Z"
+  },
+  "behavioralFingerprint": "sha256:66b9582aa2cd344058b6b57ea174036a032567bee53d92a4bf5330232015637c",
+  "derivedConstraints": [
+    "graphDir: Flow graphDir has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "graphDir",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:14.466Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "29e3271ad311139e",
+    "signature": "ZSRLz08GWroZNV2byRpXOySGwtq3BZuH8BgIzr/eyk9x3LBs7lS3Ng1xTUls1A7I4n+U9396ubTQfScj6ZEQDw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:14.473Z"
+  }
+}

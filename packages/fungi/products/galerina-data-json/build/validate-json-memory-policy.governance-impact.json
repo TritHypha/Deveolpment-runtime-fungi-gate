@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-json-memory-policy.fungi",
+  "sourceHash": "sha256:b15d18506335c410b2f39589b38ea22a1dea3c1257b79f00815172f80b67889f",
+  "generatedAt": "2026-09-13T17:46:07.832Z",
+  "flowCount": 3,
+  "flows": [
+    {
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateJsonMemoryPolicy",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateJsonMemoryPolicyDefault",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 3,
+  "derivedConstraintCount": 3
+}

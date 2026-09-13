@@ -1,0 +1,68 @@
+@version 1
+
+/// Bounded translation of validateOpticalSignal from
+/// packages-ts/galerina-core-photonic/src/index.ts:83-124.
+///
+/// The TypeScript validator remains the compatibility shadow. The path is
+/// explicit here; a host adapter must supply the source default "signal" when
+/// the TypeScript optional argument is omitted.
+
+record Wavelength {
+  nanometers: Float64
+}
+
+record Phase {
+  degrees: Float64
+}
+
+record Amplitude {
+  value: Float64
+}
+
+record OpticalSignal {
+  wavelength: Wavelength
+  phase: Phase
+  amplitude: Amplitude
+}
+
+record PhotonicDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateOpticalSignal(signal: OpticalSignal, path_: String) -> Array<PhotonicDiagnostic>
+contract { intent { "Validate wavelength, phase, and amplitude while preserving diagnostic order." } }
+{
+  mut diagnostics: Array<PhotonicDiagnostic> = Array.empty()
+
+  if Float64.isFinite(signal.wavelength.nanometers) == false or signal.wavelength.nanometers <= 0.0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_PHOTONIC_WAVELENGTH_INVALID",
+      severity: "error",
+      message: "Wavelength must be a positive finite nanometer value.",
+      path: path_ + ".wavelength.nanometers"
+    })
+  }
+
+  if Float64.isFinite(signal.phase.degrees) == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_PHOTONIC_PHASE_INVALID",
+      severity: "error",
+      message: "Phase must be a finite degree value.",
+      path: path_ + ".phase.degrees"
+    })
+  }
+
+  if Float64.isFinite(signal.amplitude.value) == false or signal.amplitude.value < 0.0 or signal.amplitude.value > 1.0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_PHOTONIC_AMPLITUDE_INVALID",
+      severity: "error",
+      message: "Amplitude must be a finite value from 0 to 1.",
+      path: path_ + ".amplitude.value"
+    })
+  }
+
+  return diagnostics
+}

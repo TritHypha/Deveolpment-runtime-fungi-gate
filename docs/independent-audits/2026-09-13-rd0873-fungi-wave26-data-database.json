@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-026-DATA-DATABASE",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-data-database/src/index.ts#validateDatabaseChecksum",
+  "sourceSha256": "0dd11926543bcc45d708bbbe11d70f00b2bed1dbe05032362ef72fd9668cebc8",
+  "target": "packages/fungi/products/galerina-data-database/validate-database-checksum.fungi",
+  "targetBytes": 2906,
+  "targetSha256": "8dd947cc64ad7b84750df1131453d2bac71b4bf5475ed5a2ca196cfd2905b79d",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "3/3", "packageSuite": "22/22", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Known algorithms, digest lengths and hexadecimal shape fail closed; hashing, database I/O and restore effects remain host-owned.",
+  "productionAuthorizing": false
+}

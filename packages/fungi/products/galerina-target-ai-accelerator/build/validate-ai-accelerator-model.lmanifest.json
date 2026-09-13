@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:14aaafb99b6963e4fb7fb7b8af11cf00bac49e2f8b2336bd07eed135bb26595c",
+  "sourceFile": "validate-ai-accelerator-model.fungi",
+  "flowCount": 2,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:bf8056c39e0562d6d52b7fe1db17d38945d6e13b7bf1966941ccd32b18ba1cf3",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:51.741Z"
+  },
+  "behavioralFingerprint": "sha256:01097e9b90e7434e77718cf67f9dbbb90988e25c337f6df47c6637df236b800c",
+  "derivedConstraints": [
+    "isPositiveStaticDimension: Flow isPositiveStaticDimension has a contract declaration [via contract]",
+    "validateAiAcceleratorModel: Flow isPositiveStaticDimension has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "isPositiveStaticDimension",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    },
+    {
+      "flowName": "validateAiAcceleratorModel",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:51.741Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "9376f19d9e7f0fdf",
+    "signature": "WPkyZY4RuIzBPRzzC9F2boGkCSyK23rh1tgJA3U+GmDciudGeDI64h/TAXIVWUDq1+uADdBF7IiqZHoIp2FjDA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:51.752Z"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:77ce6e67f8432dfd5e0f3089bbf700c8ac081e40a35c2d56dd41596ce676ea41",
+  "sourceFile": "validate-renderable-content.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:72d2a392d6b00052034274b091ae8354d68149324fb854d165ba85651569747d",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:52.964Z"
+  },
+  "behavioralFingerprint": "sha256:8b0b8e05b8b7a89a4d1b000723c455753bf0d33719f7e445318cb41616287d96",
+  "derivedConstraints": [
+    "validateRenderableContent: Flow validateRenderableContent has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateRenderableContent",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:52.965Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "f2526b747af0eb16",
+    "signature": "QIhY0fT7kdJcLTymAqJdmjn0lKDjYWixZXL2luNeNUPRt4Fuq2IQaRjig93ahyHqGRP3FEi20Ex72WPiN026Aw==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:52.972Z"
+  }
+}

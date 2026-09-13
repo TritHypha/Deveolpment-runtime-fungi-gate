@@ -1,0 +1,72 @@
+@version 1
+
+/// Bounded translation of defineAiSafetyPolicy from
+/// packages-ts/galerina-ai/src/index.ts:151-168.
+///
+/// The TypeScript constructor remains the compatibility shadow. Optional
+/// properties are represented explicitly as Option values at this typed
+/// boundary; this flow only applies the source defaults.
+
+record AiSafetyPolicyPatch {
+  outputTrust: Option<String>
+  allowSecurityDecisions: Option<Bool>
+  requireHumanReviewForHighImpact: Option<Bool>
+  redactSecretsFromPrompts: Option<Bool>
+  logPrompts: Option<Bool>
+}
+
+record AiSafetyPolicy {
+  outputTrust: String
+  allowSecurityDecisions: Bool
+  requireHumanReviewForHighImpact: Bool
+  redactSecretsFromPrompts: Bool
+  logPrompts: Bool
+}
+
+pure flow defineAiSafetyPolicy(policy_: AiSafetyPolicyPatch) -> AiSafetyPolicy
+contract { intent { "Apply the canonical safe defaults to an optional AI safety policy patch." } }
+{
+  mut outputTrust: String = "untrusted"
+  mut allowSecurityDecisions: Bool = false
+  mut requireHumanReviewForHighImpact: Bool = true
+  mut redactSecretsFromPrompts: Bool = true
+  mut logPrompts: Bool = false
+
+  match policy_.outputTrust {
+    Some(value) => { outputTrust = value }
+    None => {}
+    _ => {}
+  }
+
+  match policy_.allowSecurityDecisions {
+    Some(value) => { allowSecurityDecisions = value }
+    None => {}
+    _ => {}
+  }
+
+  match policy_.requireHumanReviewForHighImpact {
+    Some(value) => { requireHumanReviewForHighImpact = value }
+    None => {}
+    _ => {}
+  }
+
+  match policy_.redactSecretsFromPrompts {
+    Some(value) => { redactSecretsFromPrompts = value }
+    None => {}
+    _ => {}
+  }
+
+  match policy_.logPrompts {
+    Some(value) => { logPrompts = value }
+    None => {}
+    _ => {}
+  }
+
+  return AiSafetyPolicy {
+    outputTrust: outputTrust
+    allowSecurityDecisions: allowSecurityDecisions
+    requireHumanReviewForHighImpact: requireHumanReviewForHighImpact
+    redactSecretsFromPrompts: redactSecretsFromPrompts
+    logPrompts: logPrompts
+  }
+}

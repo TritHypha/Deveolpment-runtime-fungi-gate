@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-response-mapping.fungi",
+  "sourceHash": "sha256:fd8e603c7b55f1c6ffa32c8d7386195040ca16a79e2215187b02d4b53f57ada1",
+  "generatedAt": "2026-09-13T17:46:27.880Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "validateResponseMapping",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateResponseMappingDefault",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

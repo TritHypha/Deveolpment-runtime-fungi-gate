@@ -1,0 +1,118 @@
+{
+  "schema": "galerina.rd0873.fungi-pilot-conversion.v1",
+  "recordedAt": "2026-09-13",
+  "status": "PASS_BOUNDED_PILOT",
+  "ownerAuthorization": {
+    "granted": true,
+    "scope": "bounded symbol-scoped Fungi authoring and verification",
+    "basis": "owner instruction in the current task",
+    "productionAuthority": false,
+    "consumerSwitch": false,
+    "typescriptRetirement": false
+  },
+  "subject": {
+    "repository": "Galerina",
+    "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+    "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+    "profile": "scalar-1",
+    "scopeType": "SYMBOLS",
+    "wholeFileReplacement": false
+  },
+  "limits": {
+    "oneSymbolPerStep": true,
+    "oneSourceFilePerStep": true,
+    "maxSymbols": 4,
+    "maxSourceFiles": 4,
+    "perStepInputBytes": 65536,
+    "perStepOutputEvidenceBytes": 65536,
+    "aggregateInputBytes": 100000,
+    "aggregateOutputEvidenceBytes": 262144,
+    "timeoutMs": 600000,
+    "concurrency": 1,
+    "retries": 0,
+    "chapterAggregate": "after-four-items"
+  },
+  "conversion": {
+    "action": "revalidated existing product-tree candidates against the current source and compiler",
+    "outputsCreated": 0,
+    "outputsVerified": 4,
+    "sourceBytesChanged": false,
+    "typescriptShadowsRetained": true,
+    "note": "The four product-tree twins were authored in an earlier bounded wave. This run did not rewrite identical bytes; it is the first current-head pilot execution after the owner's authoring instruction."
+  },
+  "entries": [
+    {
+      "source": "packages-ts/galerina-core-config/src/index.ts",
+      "symbol": "isEnvironmentMode",
+      "sourceBytes": 43875,
+      "sourceSha256": "sha256:80b4b0b8b1a8a31cff824d71ef85dba17ffcc69ef2aca1e90ba3f0a1c339864b",
+      "target": "packages/fungi/products/galerina/rd0873-core-config/environment-mode.fungi",
+      "targetBytes": 385,
+      "targetSha256": "sha256:52025e4c248afd31cb8659d2eed85e78ef03d1e8e49eb02f15bbb8c90e03a1ba",
+      "strictCheck": "PASS"
+    },
+    {
+      "source": "packages-ts/galerina-core-runtime/src/structured-await.ts",
+      "symbol": "isTerminalScope",
+      "sourceBytes": 21802,
+      "sourceSha256": "sha256:a2b082356579371567b404ae9c034ca20eda57fafe2b294981a43b57d2ce0ac9",
+      "target": "packages/fungi/products/galerina/rd0873-core-runtime/terminal-scope.fungi",
+      "targetBytes": 379,
+      "targetSha256": "sha256:3798a6ec392e80f0567767807bc6f341f034d7381a576496e5bb9d367e052d8e",
+      "strictCheck": "PASS"
+    },
+    {
+      "source": "packages-ts/galerina-core-tasks/src/load-tasks.ts",
+      "symbol": "isTaskEffect",
+      "sourceBytes": 5642,
+      "sourceSha256": "sha256:f40a970d695937c0546aaafaa6a4ce36c03fdc405ca5465fbaec3442c2e0856d",
+      "target": "packages/fungi/products/galerina/rd0873-core-tasks/task-effect.fungi",
+      "targetBytes": 1032,
+      "targetSha256": "sha256:517fb7c9c029ec88f3efe5b98bfa26062961300cbc628f79949f01f764ca7b8b",
+      "strictCheck": "PASS"
+    },
+    {
+      "source": "packages-ts/galerina-data-model/src/index.ts",
+      "symbol": "isResponseSafeClassification",
+      "sourceBytes": 10375,
+      "sourceSha256": "sha256:cfdd5bee797fbc15bb556cb12a87c715d20f9f5965ab2d734c5f3d13d008832e",
+      "target": "packages/fungi/products/galerina/rd0873-data-model/response-safe-classification.fungi",
+      "targetBytes": 327,
+      "targetSha256": "sha256:b5cfec5a48c9e4bd0f36a7104fa85191aab184c089312d3dc761bd95d361aca8",
+      "strictCheck": "PASS"
+    }
+  ],
+  "focusedChecks": [
+    {
+      "command": "node galerina.mjs check <each target> --strict-types --strict-governance",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test <four package conversion tests>",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "successes": [
+    "All four symbol-scoped product-tree targets are strict-check clean.",
+    "All eight retained TypeScript/Fungi differential assertions pass, including hostile surplus strings.",
+    "The source-to-target bindings and exact current Galerina head/tree are recorded.",
+    "The TypeScript shadows remain active and no consumer or production authority changed."
+  ],
+  "issues": [
+    "The older four-item authority manifest is bound to a prior head and remains historical; it was not reused.",
+    "The repository has no general TypeScript-to-Fungi emitter for these functions, so the first wave relies on manually authored existing twins.",
+    "Current-head snapshot/GIR/SLIDE/VOK and independent review receipts are not present in this pilot run.",
+    "This bounded run does not prove profiles 32, 64 or 256, production authority, or TypeScript retirement."
+  ],
+  "improvements": [
+    "Keep product outputs under packages/fungi/products/galerina and retain package TypeScript shadows.",
+    "Use one symbol, one source file, scalar-1, concurrency 1 and zero retries per step.",
+    "Record source and target digests beside focused differential results before advancing a wave.",
+    "Perform one chapter aggregate after the four items rather than a corpus scan after each file."
+  ],
+  "next": "Create a fresh exact-head manifest for the next bounded scope, then obtain independent semantic/physical review before any consumer switch or retirement decision."
+}

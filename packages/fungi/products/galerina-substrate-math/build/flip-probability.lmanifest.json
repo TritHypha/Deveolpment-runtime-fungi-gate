@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:7074d9d82eb3505a205b77878a37e4880faa9088464aeb943ea7a02e04c76497",
+  "sourceFile": "flip-probability.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:744809abcb2b8ffa07188567dd9fc15b526045c930e024b291d9fd753e62a9ad",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:31.639Z"
+  },
+  "behavioralFingerprint": "sha256:0358a3cac83d032ec5b9f78fd5e9e9ba9d0b032125c920449d31d1ef643b35ab",
+  "derivedConstraints": [
+    "flipProbability: Flow flipProbability has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "flipProbability",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:31.639Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "5a79fad20d1723b8",
+    "signature": "RFXkIgC5fReMOthaeVzuo/iYdQrXSFkws5LdEHA4IXnw/SpzRj1HlFgOomA68Dyv5Yc7Nr2Mn/EHMVjnarU7BQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:31.649Z"
+  }
+}

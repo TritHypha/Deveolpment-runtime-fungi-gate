@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-079-HARDWARE-TIER",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-hardware-tier/src/hardware-directive.ts#capabilityPreimage",
+  "sourceSha256": "1c780aefbc50b47bde2384ced4b8d254fc0ec9ab9a6ec0f4fa74a82ac47f1f12",
+  "target": "packages/fungi/products/galerina-hardware-tier/capability-preimage.fungi",
+  "targetBytes": 617,
+  "targetSha256": "ad430a633e2d6acdc8231e2b46dd53a9c0c99b104bc0ca3b8b28680acdc5bc82",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "3/3",
+    "parity": "3/3",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "14/14",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Deterministic hardware.capability preimage formatting preserves binary, hybrid and photonic tier values. Hardware probing, attestation, class caching and authority remain host boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 245.4,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

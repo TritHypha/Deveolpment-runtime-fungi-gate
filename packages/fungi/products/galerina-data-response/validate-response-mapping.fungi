@@ -1,0 +1,189 @@
+@version 1
+
+/// Bounded direct-package translation of validateResponseMapping from
+/// packages-ts/galerina-data-response/src/index.ts.
+///
+/// The TypeScript response mapper, source object admission and transport or
+/// egress effects remain shadowed. This pure flow validates an allowlist and
+/// field classifications only; it does not project or send response data.
+
+record SourceModelField {
+  name: String
+  classification: String
+}
+
+record ResponseFieldMapping {
+  from: String
+  to: String
+}
+
+record ModelToResponseMapping {
+  model: String
+  response: String
+  allowlist: Array<ResponseFieldMapping>
+}
+
+record ResponseDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateResponseMapping(
+  mapping: ModelToResponseMapping,
+  modelFields: Array<SourceModelField>,
+  path_: String,
+) -> Array<ResponseDiagnostic>
+contract { intent { "Validate response names, allowlist entries, duplicate targets and classified source exposure in source order." } }
+{
+  mut diagnostics: Array<ResponseDiagnostic> = Array.empty()
+
+  if mapping.model.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_RESPONSE_MODEL_NAME_REQUIRED"
+      severity: "error"
+      message: "Response mapping requires a source model name."
+      path: path_ + ".model"
+    })
+  }
+
+  if mapping.response.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_RESPONSE_NAME_REQUIRED"
+      severity: "error"
+      message: "Response mapping requires a response model name."
+      path: path_ + ".response"
+    })
+  }
+
+  if mapping.allowlist.count() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_DATA_RESPONSE_ALLOWLIST_EMPTY"
+      severity: "warning"
+      message: "Response mapping allowlist is empty; the mapping is valid but returns nothing."
+      path: path_ + ".allowlist"
+    })
+  }
+
+  mut seenTargets: Array<String> = Array.empty()
+  mut entryIndex: Int = 0
+  while entryIndex < mapping.allowlist.count() {
+    let entryOpt: Option<ResponseFieldMapping> = mapping.allowlist.get(entryIndex)
+    match entryOpt {
+      Some(entry) => {
+        if entry.from.trim().length() == 0 or entry.to.trim().length() == 0 {
+          diagnostics = diagnostics.append({
+            code: "Galerina_DATA_RESPONSE_MAPPING_FIELD_REQUIRED"
+            severity: "error"
+            message: "Response mapping entries require non-empty from and to field names."
+            path: path_ + ".allowlist." + entryIndex.toString()
+          })
+        }
+        if entry.from.trim().length() > 0 and entry.to.trim().length() > 0 {
+          mut duplicateTarget: Bool = false
+          mut seenIndex: Int = 0
+          while seenIndex < seenTargets.count() {
+            let seenOpt: Option<String> = seenTargets.get(seenIndex)
+            match seenOpt {
+              Some(seenTarget) => {
+                if seenTarget == entry.to { duplicateTarget = true }
+              }
+              None => {}
+              _ => {}
+            }
+            seenIndex = seenIndex + 1
+          }
+          if duplicateTarget == true {
+            diagnostics = diagnostics.append({
+              code: "Galerina_DATA_RESPONSE_MAPPING_DUPLICATE"
+              severity: "error"
+              message: "Response field " + entry.to + " is mapped more than once; the projection would be ambiguous."
+              path: path_ + ".allowlist." + entryIndex.toString() + ".to"
+            })
+          }
+          seenTargets = seenTargets.append(entry.to)
+
+          mut found: Bool = false
+          mut classification: String = ""
+          mut fieldIndex: Int = 0
+          while fieldIndex < modelFields.count() {
+            let fieldOpt: Option<SourceModelField> = modelFields.get(fieldIndex)
+            match fieldOpt {
+              Some(field) => {
+                if field.name == entry.from {
+                  found = true
+                  classification = field.classification
+                }
+              }
+              None => {}
+              _ => {}
+            }
+            fieldIndex = fieldIndex + 1
+          }
+
+          if found == false {
+            diagnostics = diagnostics.append({
+              code: "Galerina_DATA_RESPONSE_SOURCE_FIELD_UNKNOWN"
+              severity: "error"
+              message: "Response mapping references undeclared model field " + entry.from + "."
+              path: path_ + ".allowlist." + entryIndex.toString() + ".from"
+            })
+          }
+          if found == true {
+            mut known: Bool = false
+            match classification {
+              "public" => { known = true }
+              "internal" => { known = true }
+              "pii" => { known = true }
+              "secret" => { known = true }
+              "credential" => { known = true }
+              _ => {}
+            }
+            if known == false {
+              diagnostics = diagnostics.append({
+                code: "Galerina_DATA_RESPONSE_FIELD_UNCLASSIFIED"
+                severity: "error"
+                message: "Model field " + Char.fromCode(34).toString() + entry.from + Char.fromCode(34).toString() + " carries an unknown classification " + Char.fromCode(34).toString() + classification + Char.fromCode(34).toString() + "."
+                path: path_ + ".allowlist." + entryIndex.toString() + ".from"
+              })
+            }
+            if classification == "secret" or classification == "credential" {
+              diagnostics = diagnostics.append({
+                code: "Galerina_DATA_RESPONSE_SENSITIVE_FIELD_EXPOSED"
+                severity: "error"
+                message: "Model field " + Char.fromCode(34).toString() + entry.from + Char.fromCode(34).toString() + " is classified " + classification + " and may never be mapped into a response."
+                path: path_ + ".allowlist." + entryIndex.toString() + ".from"
+              })
+            }
+            if classification == "pii" {
+              diagnostics = diagnostics.append({
+                code: "Galerina_DATA_RESPONSE_PII_FIELD_EXPOSED"
+                severity: "warning"
+                message: "Model field " + Char.fromCode(34).toString() + entry.from + Char.fromCode(34).toString() + " is classified pii; confirm this response is scoped to the data subject."
+                path: path_ + ".allowlist." + entryIndex.toString() + ".from"
+              })
+            }
+          }
+        }
+      }
+      None => {}
+      _ => {}
+    }
+    entryIndex = entryIndex + 1
+  }
+
+  return diagnostics
+}
+
+pure flow validateResponseMappingDefault(
+  mapping: ModelToResponseMapping,
+  modelFields: Array<SourceModelField>,
+) -> Array<ResponseDiagnostic>
+contract { intent { "Validate a response mapping using the source default mapping path." } }
+{
+  return validateResponseMapping(mapping, modelFields, "mapping")
+}
+
+
+

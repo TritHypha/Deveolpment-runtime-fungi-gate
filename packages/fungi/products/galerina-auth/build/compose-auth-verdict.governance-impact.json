@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "compose-auth-verdict.fungi",
+  "sourceHash": "sha256:516c514c0f9a148d98a569df8ee585f3be0b47f0ddef71aba8de8a43d6f1f7a2",
+  "generatedAt": "2026-09-13T17:46:27.047Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "composeAuthVerdict",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

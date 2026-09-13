@@ -1,0 +1,21 @@
+@version 1
+
+/// Bounded direct-package translation of oracleAgrees from
+/// packages-ts/galerina-inference-bridge-contract/src/oracle.ts.
+///
+/// The source compares candidate.value and reference.value after JavaScript
+/// signed-Int32 (`| 0`) coercion. This scalar leaf accepts the already-admitted
+/// signed i32 accumulator projection, where equality is exact. JavaScript
+/// record ingress and Number coercion for fractional, nonfinite, or out-of-i32
+/// values remain host/manual boundaries.
+///
+/// This is only the determinism comparison. Bridge execution, native/provider
+/// effects, cryptographic evidence, and production authority remain in the
+/// retained TypeScript shadow; a true result is not an authorization grant.
+
+pure flow oracleAgrees(candidateValue: Int, referenceValue: Int) -> Bool
+contract { intent { "Compare two admitted signed i32 scaled accumulators for bit-exact equality." } }
+{
+  if candidateValue == referenceValue { return true }
+  return false
+}

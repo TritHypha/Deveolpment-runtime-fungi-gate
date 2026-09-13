@@ -1,0 +1,12 @@
+@version 1
+
+/// Bounded pure leaf for DEFAULT_MAX_ROUTES in metrics.ts.
+/// TypeScript shadow: packages-ts/galerina-observability/src/metrics.ts#DEFAULT_MAX_ROUTES
+/// Metrics collection, storage/export, route cardinality enforcement, and
+/// authorization remain host/manual responsibilities.
+
+pure flow defaultMaxRoutes() -> Int
+contract { intent { "Return the exact default cap on distinct method and route metric series." } }
+{
+  return 1000
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-065-WEB-EVENTS",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-web-events/src/index.ts#validateEventPayloadField",
+  "sourceSha256": "86f8a9bf3a9b02541b5610bdece78708b3c60d51bc09baf10459f39ab1a9fce5",
+  "target": "packages/fungi/products/galerina-web-events/validate-event-payload-field.fungi",
+  "targetBytes": 1897,
+  "targetSha256": "bb9020fabb856cbb0ddccaf510880a04ab70889a784ca0d925f9cab00bb7977a",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "25/25",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Blank-name and unknown-kind validation preserve ordered diagnostics, exact paths and messages. Browser event objects, DOM dispatch/effects, host marshalling and production authority remain outside scope.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 242.0,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

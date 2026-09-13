@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-093-TOWER-CITIZEN",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-tower-citizen/src/ai-governance.ts#isTrit",
+  "sourceSha256": "e1cea2efd8230787e9c237712082b7b6755adf9e67820ef97b545fa0eb40c834",
+  "target": "packages/fungi/products/galerina-tower-citizen/is-trit.fungi",
+  "targetBytes": 887,
+  "targetSha256": "f33ced820f3b6414cc95fcbda200f431ba7251cf8fbc1be238d849d1291aec6f",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12 interpreter and admitted Wasm",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "516/516",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The isTrit predicate admits exactly -1, 0 and 1 with finite numeric semantics. Cryptography, providers, key custody, attestation, host authorization and production authority remain host-bound.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 240.5,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

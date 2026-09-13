@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-070-DOCS",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-docs/src/openapi.ts#sanitizeSchemaName",
+  "sourceSha256": "7f08b0f580c334214dafb8014991af8b484a64d18578436138216c8c8d52ba4a",
+  "target": "packages/fungi/products/galerina-docs/sanitize-schema-name.fungi",
+  "targetBytes": 2442,
+  "targetSha256": "b4df56248b55e912424a3066fcfdef6416153e0a4193d0c432be154b9b7fb1e",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "8/8",
+    "parity": "8/8",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "27/27",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Disallowed-character runs, underscore trimming, allowed OpenAPI key characters and Schema fallback preserve source behavior. OpenAPI generation, document validation and output effects remain host responsibilities.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 247.3,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

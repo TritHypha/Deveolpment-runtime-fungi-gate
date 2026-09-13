@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-46-TARGET-WASM",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-target-wasm/src/index.ts#validateWasmArtefact",
+  "sourceSha256": "d6e1e90649e2378003565c2f710b483c9168b6b1324176462ff0a5424cc8095a",
+  "target": "packages/fungi/products/galerina-target-wasm/validate-wasm-artefact.fungi",
+  "targetBytes": 1909,
+  "targetSha256": "a1949c813837efdffd4496b22f47fdac9723f3bcdd78efd5a899ef4f5438e7b6",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "6/6",
+    "parity": "6/6",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Path-required, runtime allowlist and no-export warning parity preserve source order and severity. Wasm bytes, filesystem contents, imports/features, runtime execution and physical ABI remain host/manual.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 269.4,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-48-WEB",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-web/src/index.ts#isServerOnlyImport",
+  "sourceSha256": "9c5089166cf88a8d7aac588d13f3fa26ed74137c7ee2854f10a243665a913bd",
+  "target": "packages/fungi/products/galerina-web/is-server-only-import.fungi",
+  "targetBytes": 1637,
+  "targetSha256": "71df769cc988110487757e61fc8eed452654cb327a0e2954f10a243665a913bd",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "11/11",
+    "parity": "11/11",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Trimming, node: scheme denial and the complete bare server-module deny list match interpreter and signed-Wasm behavior. Module resolution, bundling, browser loading/execution and capability enforcement remain host/toolchain boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 269.4,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

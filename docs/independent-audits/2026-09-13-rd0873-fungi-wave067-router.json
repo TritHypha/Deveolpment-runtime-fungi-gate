@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-067-WEB-ROUTER",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-web-router/src/index.ts#validateLinkTarget",
+  "sourceSha256": "b648a80969bcdb795852e3396c19183a7600617f70c76128bd143aabfb991584",
+  "target": "packages/fungi/products/galerina-web-router/validate-link-target.fungi",
+  "targetBytes": 7846,
+  "targetSha256": "ed493938da3b764ce21ca7f0b194e0eea7db217a2f275d6aee1073ae9bd290ce",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "29/29",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Control-character compaction, relative/HTTPS/mailto allowlisting, localhost-only HTTP, protocol-relative rejection, forbidden schemes, unknown-scheme denial, IPv6 localhost handling and diagnostic order preserve source behavior. Browser navigation, URL resolution and physical ABI admission remain host responsibilities.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 255.4,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

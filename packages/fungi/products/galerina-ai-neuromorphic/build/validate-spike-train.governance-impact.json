@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-spike-train.fungi",
+  "sourceHash": "sha256:e1ab822da8342f066fc4ce0a306e2d5ba93655289440f7350e7304d3109b6f89",
+  "generatedAt": "2026-09-13T17:46:25.849Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "validateSpikeTrain",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

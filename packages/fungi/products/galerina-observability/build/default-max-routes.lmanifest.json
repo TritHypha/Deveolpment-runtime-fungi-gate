@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:4097a346e408e5ab97818fc9a1adcf579034b5ae50861b439551ee901c0e0396",
+  "sourceFile": "default-max-routes.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:fcd6bf3eda75681137508017e3e91a6f54afc586a0d236f8f34e86fa43a97f08",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:12.242Z"
+  },
+  "behavioralFingerprint": "sha256:21c3aeea23d286d67690877662acadb50c765d2f75a415db85973017bb853c83",
+  "derivedConstraints": [
+    "defaultMaxRoutes: Flow defaultMaxRoutes has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "defaultMaxRoutes",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:12.242Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "6d85281080027aff",
+    "signature": "i5gfdU6S+qeydl3411bumHRwcC2VD8RVrhaMWwjapHtVfs72q2Z5Y1ihKYJ6X9zVxELseaDRUvOS7/26G8o9CA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:12.250Z"
+  }
+}

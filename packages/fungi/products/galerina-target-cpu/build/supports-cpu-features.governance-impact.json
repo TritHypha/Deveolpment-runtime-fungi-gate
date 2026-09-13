@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "supports-cpu-features.fungi",
+  "sourceHash": "sha256:99c2bda79122bc3846dbc9b4968b751f4ad27da4e07df3dd7430b8c27efc1981",
+  "generatedAt": "2026-09-13T17:46:49.622Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "supportsCpuFeatures",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

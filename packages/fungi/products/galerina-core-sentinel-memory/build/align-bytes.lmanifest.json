@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:4d908c025a9ee6ac9286a2197c497fc3b39233a5522952e654705d0fe35619f5",
+  "sourceFile": "align-bytes.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:eb91d6d0898571da5add7c080dc02c1f1b7448a57b620af93a384501c93d7c67",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:05.380Z"
+  },
+  "behavioralFingerprint": "sha256:3373819852e8ec43cf7509644baa1bbdb17b605e27e54b9f5e62aa613fb4a341",
+  "derivedConstraints": [
+    "alignBytes: Flow alignBytes has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "alignBytes",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:05.380Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "5fcd1c1aae829531",
+    "signature": "BiesEwyCIyyxtDLZLVfAATsyV6ujX/6h6ta6cYL3uHSAkv8huhAghCUdhhe7bGqIU+jG3aVu5N/q4AwMg8H1Bg==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:05.388Z"
+  }
+}

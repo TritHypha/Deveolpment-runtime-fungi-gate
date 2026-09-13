@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-013-CORE-NETWORK",
+  "status": "BOUNDED_PASS",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-core-network/src/admission-feedback.ts#telemetryToSideSignal",
+  "sourceSha256": "54557e957b11863b56c29906dba927df2219b9c579c7aeda5c55f66ebeef81f4",
+  "target": "packages/fungi/products/galerina-core-network/admission-feedback.fungi",
+  "targetBytes": 2058,
+  "targetSha256": "6afb8a0101322fe4a1e8cb5007f2bf5105e2476f839c3ede92699526ae11149d",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "1/1", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "Telemetry decoding, threshold and range validation, physical admission and production switching remain host-owned.",
+  "productionAuthorizing": false
+}

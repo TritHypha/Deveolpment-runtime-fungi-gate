@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-53-DEVTOOLS-FLOWGRAPH",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-devtools-flowgraph/src/index.ts#FLOWGRAPH_VERSION",
+  "sourceSha256": "c072590cc853a0d22c16c04825a2f1ac2233ae26fab4061eb530fc13bdd8cb57",
+  "target": "packages/fungi/products/galerina-devtools-flowgraph/flowgraph-version.fungi",
+  "targetBytes": 295,
+  "targetSha256": "a9c9a09d511a165cd712b2a03f481e3afd81acac5a1914c82ddfdfe766e6bcdf",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The exact flowgraph version value 0.1.0 matches the source constant. Package/version authority and consumer wiring remain host boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 262.6,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

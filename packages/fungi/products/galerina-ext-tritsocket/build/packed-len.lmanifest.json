@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:ac5e06290215d2748bb53004e67027aefb93fd2a01641659be75b52a4323d322",
+  "sourceFile": "packed-len.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:844f3842135d21e07c600c5323fc25c7bbd4f93d475ea01d34ca23db5d1a1f91",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:56.433Z"
+  },
+  "behavioralFingerprint": "sha256:d906035e3e1082fcf4b2e3a3ccd088b1e64afe7c12c76230c94a933b93675e74",
+  "derivedConstraints": [
+    "packedLen: Flow packedLen has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "packedLen",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:56.433Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "31a71dcd0f3eceda",
+    "signature": "TPLvekAy9Yk10fWubH4wdg/pl1TtJUD5NnUacP2kGmmD5g7doAzNG8fb9lE83X/ZWdx24R4+wsHP1MkttGfaDA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:56.440Z"
+  }
+}

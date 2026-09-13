@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-backpressure-policy.fungi",
+  "sourceHash": "sha256:6b5221b21e46039f1f0fcdd413db7e707afa72a4701b2b072cd265756391dd5c",
+  "generatedAt": "2026-09-13T17:46:25.029Z",
+  "flowCount": 3,
+  "flows": [
+    {
+      "name": "isPositiveSafeInteger",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateBackpressurePolicyAtPath",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateBackpressurePolicy",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 3,
+  "derivedConstraintCount": 3
+}

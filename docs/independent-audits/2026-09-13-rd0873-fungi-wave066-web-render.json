@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-066-WEB-RENDER",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-web-render/src/index.ts#validateRenderableContent",
+  "sourceSha256": "f4a2bd21f14166319f2d6dbec39a206d7f0c3ccfda21e6b870a0a9f8e6457b6f",
+  "target": "packages/fungi/products/galerina-web-render/validate-renderable-content.fungi",
+  "targetBytes": 2247,
+  "targetSha256": "77ce6e67f8432dfd5e0f3089bbf700c8ac081e40a35c2d56dd41596ce676ea41",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "9/9",
+    "parity": "UNVERIFIED",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "22/22",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Text/safe_html acceptance, unknown-kind denial and sanitize-policy requirement are strict-checked and package-tested. DOM rendering, browser effects, host marshalling and production authority remain host/manual boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 243.1,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

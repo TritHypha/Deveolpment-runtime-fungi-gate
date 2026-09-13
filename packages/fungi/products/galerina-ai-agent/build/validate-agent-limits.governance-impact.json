@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-agent-limits.fungi",
+  "sourceHash": "sha256:7fe32e21b783bd34074d18b526ffbab7b5d94aaa0d105d2e2c19e6627cfb1b77",
+  "generatedAt": "2026-09-13T17:46:06.172Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "validateAgentLimitsAtPath",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateAgentLimits",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:53f436fb849cac3a5271c60fc14f1824340f2108df7e9d3f86f4ddce32d0fa4e",
+  "sourceFile": "validate-optical-signal.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:b50d31749a0ee4b8d964f2195bbb14ec9514143f31f1f8e9b71d291f5316d441",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:08.223Z"
+  },
+  "behavioralFingerprint": "sha256:4a0a67bf283a856fdc905bf4a1e73b2161801ea9295e15d55e0c425557bdcca1",
+  "derivedConstraints": [
+    "validateOpticalSignal: Flow validateOpticalSignal has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateOpticalSignal",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:08.223Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "eccb9d13584dbd07",
+    "signature": "sQfFjXw05IRE7kq1Pv3yi5R49F//IdYUmqOF5vXOG4U+PE0o72B6CyF2Mx+ieRgL4U//W6NzZ2pwF/kbqRgTAQ==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:08.231Z"
+  }
+}

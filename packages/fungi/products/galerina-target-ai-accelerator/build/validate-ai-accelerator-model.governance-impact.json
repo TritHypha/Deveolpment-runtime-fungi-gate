@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-ai-accelerator-model.fungi",
+  "sourceHash": "sha256:14aaafb99b6963e4fb7fb7b8af11cf00bac49e2f8b2336bd07eed135bb26595c",
+  "generatedAt": "2026-09-13T17:46:51.741Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "isPositiveStaticDimension",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateAiAcceleratorModel",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

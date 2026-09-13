@@ -14,28 +14,28 @@
         "warmupMs": 1000,
         "batchSize": 50000,
         "seed": 123456789,
-        "elapsedMs": 5000.137,
-        "operations": 677350000,
-        "operationsPerSecond": 135466277.39,
-        "operationsPerCpuMs": 135470,
-        "checksum": 2317554538,
+        "elapsedMs": 5000.343,
+        "operations": 681650000,
+        "operationsPerSecond": 136320656.58,
+        "operationsPerCpuMs": 136330,
+        "checksum": 1484083427,
         "cpu": {
           "userMs": 5000,
           "systemMs": 0,
           "totalMs": 5000
         },
         "memory": {
-          "rssBytes": 53215232,
+          "rssBytes": 53895168,
           "heapTotalBytes": 6529024,
-          "heapUsedBytes": 4995328,
+          "heapUsedBytes": 5000528,
           "externalBytes": 1614121,
           "arrayBuffersBytes": 137483,
-          "maxRssBytes": 53542912,
+          "maxRssBytes": 53927936,
           "heapUsedBefore": 4047856,
-          "heapUsedDelta": 947472
+          "heapUsedDelta": 952672
         },
         "process": {
-          "pid": 22704,
+          "pid": 21888,
           "node": "v24.18.0",
           "python": null,
           "platform": "win32",
@@ -45,7 +45,7 @@
           "v2: 2x LCG, 2x xorshift mix, float sqrt, 4-way branch per operation",
           "Harder than v1 — exercises float, int, and branch prediction together"
         ],
-        "normThroughput": 135466277.39,
+        "normThroughput": 136320656.58,
         "throughputUnit": "mix-ops/s"
       },
       "python": {
@@ -59,15 +59,15 @@
         "warmupMs": 1000,
         "batchSize": 50000,
         "seed": 123456789,
-        "elapsedMs": 5027.951,
-        "operations": 5300000,
-        "operationsPerSecond": 1054107.31,
-        "operationsPerCpuMs": 1066.67,
-        "checksum": 3103645743,
+        "elapsedMs": 5042.336,
+        "operations": 5450000,
+        "operationsPerSecond": 1080848.22,
+        "operationsPerCpuMs": 1079.88,
+        "checksum": 2202218124,
         "cpu": {
           "userMs": null,
           "systemMs": null,
-          "totalMs": 4968.75
+          "totalMs": 5046.875
         },
         "memory": {
           "rssBytes": null,
@@ -81,7 +81,7 @@
           "tracemallocPeak": 3708
         },
         "process": {
-          "pid": 15384,
+          "pid": 2068,
           "node": null,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0",
@@ -91,7 +91,7 @@
           "v2: 2x LCG, 2x xorshift mix, float sqrt, 4-way branch per operation",
           "Harder than v1 — exercises float, int, and branch prediction together"
         ],
-        "normThroughput": 1054107.31,
+        "normThroughput": 1080848.22,
         "throughputUnit": "mix-ops/s"
       },
       "cpp": null,
@@ -101,11 +101,11 @@
         "version": 2,
         "algorithm": "lcg2x-xorshift2x-sqrt-4branch",
         "targetMs": 5000,
-        "elapsedMs": 5000.242,
-        "operations": 662800000,
-        "operationsPerSecond": 132553584.41,
-        "checksum": 3067400050,
-        "normThroughput": 132553584.41,
+        "elapsedMs": 5000.033,
+        "operations": 665600000,
+        "operationsPerSecond": 133119116.09,
+        "checksum": 4225803059,
+        "normThroughput": 133119116.09,
         "throughputUnit": "mix-ops/s"
       },
       "rustAvx2": {
@@ -114,11 +114,11 @@
         "version": 2,
         "algorithm": "lcg2x-xorshift2x-sqrt-4branch",
         "targetMs": 5000,
-        "elapsedMs": 5000.066,
-        "operations": 652050000,
-        "operationsPerSecond": 130408268.18,
-        "checksum": 303630304,
-        "normThroughput": 130408268.18,
+        "elapsedMs": 5000.275,
+        "operations": 654650000,
+        "operationsPerSecond": 130922796.63,
+        "checksum": 4085018863,
+        "normThroughput": 130922796.63,
         "throughputUnit": "mix-ops/s"
       },
       "wasm": {
@@ -127,11 +127,11 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 413,
-        "compileMs": 38.125,
-        "elapsedMs": 1283.476,
+        "compileMs": 40.014,
+        "elapsedMs": 1277.462,
         "calls": 2000,
-        "callsPerSecond": 1558.27,
-        "iterationsPerSecond": 77913422.45,
+        "callsPerSecond": 1565.6,
+        "iterationsPerSecond": 78280196.61,
         "result": {
           "__tag": "int",
           "value": -11971
@@ -141,15 +141,15 @@
           "totalMs": 1282
         },
         "memory": {
-          "rssBytes": 84361216,
-          "heapUsedBytes": 19598520,
+          "rssBytes": 85520384,
+          "heapUsedBytes": 19741968,
           "heapUsedDelta": 22184
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (413 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 38.1ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 40.0ms. Execution: pure WASM, no JS tree-walker."
         ],
-        "normThroughput": 77913500,
+        "normThroughput": 78280000,
         "throughputUnit": "mix-ops/s"
       },
       "slideReference": {
@@ -159,23 +159,23 @@
         "result": -11971,
         "workCount": 50000,
         "throughputUnit": "mix-ops/s",
-        "elapsedMs": 269.7502999999997,
-        "normThroughput": 185356.6057201792,
+        "elapsedMs": 263.29449999999997,
+        "normThroughput": 189901.42217175066,
         "operations": 50000,
-        "operationsPerSecond": 185356.6057201792,
+        "operationsPerSecond": 189901.42217175066,
         "iterations": 50000,
-        "iterationsPerSecond": 185356.6057201792,
-        "compileMs": 16.284299999999348,
-        "prepareMs": 4.057799999998679,
+        "iterationsPerSecond": 189901.42217175066,
+        "compileMs": 16.58009999999922,
+        "prepareMs": 4.0174000000006345,
         "warmupRuns": 2,
         "samples": [
-          271.4555999999975,
-          265.41889999999694,
-          269.7502999999997,
-          268.4546999999984,
-          280.17199999999866,
-          278.01290000000154,
-          265.852600000002
+          274.2697999999982,
+          263.3605000000025,
+          259.66330000000016,
+          259.5466000000015,
+          283.88790000000154,
+          263.29449999999997,
+          262.78470000000016
         ],
         "statistic": "median",
         "sourceDigest": "sha256:3efa6161a4575196d96bf8ca96b5d9ad7cf696488e97caca8b09c7102822343c",
@@ -192,9 +192,9 @@
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.51,
-        "execMs": 30.75,
-        "totalMs": 31.27,
+        "parseMs": 0.5,
+        "execMs": 30.52,
+        "totalMs": 31.02,
         "result": {
           "__tag": "int",
           "value": -11971
@@ -202,30 +202,30 @@
         "error": false,
         "runsPerSecond": 33,
         "cpu": {
-          "userMs": 15,
+          "userMs": 62,
           "systemMs": 0,
-          "totalMs": 15
+          "totalMs": 62
         },
         "memory": {
-          "heapUsedBefore": 21914640,
-          "heapUsedAfter": 26491944,
-          "heapUsedDelta": 4577304,
-          "rssBefore": 94461952,
-          "rssAfter": 94195712,
-          "rssDelta": -266240,
+          "heapUsedBefore": 22056008,
+          "heapUsedAfter": 26658568,
+          "heapUsedDelta": 4602560,
+          "rssBefore": 93716480,
+          "rssAfter": 93876224,
+          "rssDelta": 159744,
           "externalBefore": 21173775,
           "externalAfter": 2671014,
           "externalDelta": -18502761
         },
-        "normThroughput": 1626016,
+        "normThroughput": 1638270,
         "throughputUnit": "mix-ops/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.52,
-        "execMs": 28.26,
-        "totalMs": 28.78,
+        "parseMs": 0.55,
+        "execMs": 28.89,
+        "totalMs": 29.45,
         "result": {
           "__tag": "int",
           "value": -11971
@@ -233,35 +233,35 @@
         "error": false,
         "runsPerSecond": 35,
         "cpu": {
-          "userMs": 46,
+          "userMs": 16,
           "systemMs": 0,
-          "totalMs": 46
+          "totalMs": 16
         },
         "memory": {
-          "heapUsedBefore": 22234336,
-          "heapUsedAfter": 26775336,
-          "heapUsedDelta": 4541000,
-          "rssBefore": 94375936,
-          "rssAfter": 94089216,
-          "rssDelta": -286720,
+          "heapUsedBefore": 22379224,
+          "heapUsedAfter": 26923120,
+          "heapUsedDelta": 4543896,
+          "rssBefore": 94228480,
+          "rssAfter": 94240768,
+          "rssDelta": 12288,
           "externalBefore": 2671014,
           "externalAfter": 2671014,
           "externalDelta": 0
         },
-        "normThroughput": 1769285,
+        "normThroughput": 1730703,
         "throughputUnit": "mix-ops/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.347,
-        "warmMs": 0.36,
-        "coldMs": 22.427,
+        "setupMs": 1.283,
+        "warmMs": 0.362,
+        "coldMs": 22.358,
         "warmCalls": 3,
         "coldCalls": 1,
-        "warmCallsPerSecond": 8340.28,
-        "coldCallsPerSecond": 44.59,
-        "iterationsPerSecond": 44.59,
+        "warmCallsPerSecond": 8282.72,
+        "coldCallsPerSecond": 44.73,
+        "iterationsPerSecond": 44.73,
         "result": {
           "__tag": "int",
           "value": -11971
@@ -269,13 +269,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 31
+          "coldTotalMs": 16
         },
         "memory": {
-          "heapUsedBefore": 23161792,
-          "heapUsedAfter": 23706992,
-          "heapUsedDelta": 545200,
-          "rssBytes": 94208000
+          "heapUsedBefore": 23324808,
+          "heapUsedAfter": 23524336,
+          "heapUsedDelta": 199528,
+          "rssBytes": 94322688
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -283,7 +283,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 2229500,
+        "normThroughput": 2236500,
         "throughputUnit": "mix-ops/s"
       }
     },
@@ -310,25 +310,25 @@
         "additions": 20000002,
         "checksum": 1048227940,
         "loopCycles": 10000001,
-        "elapsedMs": 20.702,
-        "additionsPerSecond": 966108996.41,
+        "elapsedMs": 20.144,
+        "additionsPerSecond": 992871284.18,
         "cpu": {
-          "userMs": 16,
+          "userMs": 31,
           "systemMs": 0,
-          "totalMs": 16
+          "totalMs": 31
         },
         "memory": {
-          "rssBytes": 54132736,
-          "heapTotalBytes": 7315456,
-          "heapUsedBytes": 4361320,
+          "rssBytes": 54329344,
+          "heapTotalBytes": 7577600,
+          "heapUsedBytes": 4338680,
           "externalBytes": 1674623,
           "arrayBuffersBytes": 137483,
-          "maxRssBytes": 54366208,
+          "maxRssBytes": 54591488,
           "heapUsedBefore": 4126104,
-          "heapUsedDelta": 235216
+          "heapUsedDelta": 212576
         },
         "process": {
-          "pid": 19200,
+          "pid": 6580,
           "node": "v24.18.0",
           "platform": "win32",
           "arch": "x64"
@@ -347,10 +347,10 @@
         "additions": 20000002,
         "checksum": 1048227940,
         "loopCycles": 10000001,
-        "elapsedMs": 3748.848,
-        "additionsPerSecond": 5334973.2,
+        "elapsedMs": 3745.915,
+        "additionsPerSecond": 5339149.98,
         "cpu": {
-          "processMs": 3734.375
+          "processMs": 3750
         },
         "memory": {
           "tracemallocEnabled": false,
@@ -362,7 +362,7 @@
           "tracemallocPeak": 3576
         },
         "process": {
-          "pid": 21900,
+          "pid": 2908,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0",
           "arch": "AMD64"
@@ -378,8 +378,8 @@
         "threshold": 200000000000000,
         "additions": 20000002,
         "checksum": 1048227940,
-        "elapsedMs": 12.781,
-        "additionsPerSecond": 1564835183.75
+        "elapsedMs": 12.791,
+        "additionsPerSecond": 1563587338.07
       },
       "rustAvx2": {
         "runtime": "rust",
@@ -387,8 +387,8 @@
         "threshold": 200000000000000,
         "additions": 20000002,
         "checksum": 1048227940,
-        "elapsedMs": 12.742,
-        "additionsPerSecond": 1569550873.06
+        "elapsedMs": 12.783,
+        "additionsPerSecond": 1564590351.17
       },
       "wasm": {
         "runtime": "wasm",
@@ -396,102 +396,102 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 269,
-        "compileMs": 13.412,
-        "elapsedMs": 1034.214,
+        "compileMs": 14.074,
+        "elapsedMs": 1017.886,
         "calls": 8000,
-        "callsPerSecond": 7735.34,
-        "iterationsPerSecond": 489244784.32,
+        "callsPerSecond": 7859.43,
+        "iterationsPerSecond": 497093228.64000005,
         "result": {
           "__tag": "int",
           "value": 63248
         },
         "error": false,
         "cpu": {
-          "totalMs": 1031
+          "totalMs": 1032
         },
         "memory": {
-          "rssBytes": 97304576,
-          "heapUsedBytes": 22785704,
-          "heapUsedDelta": 6296
+          "rssBytes": 96727040,
+          "heapUsedBytes": 22927384,
+          "heapUsedDelta": 6096
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (269 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 13.4ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 14.1ms. Execution: pure WASM, no JS tree-walker."
         ]
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.43,
-        "execMs": 11.82,
-        "totalMs": 12.25,
+        "parseMs": 0.39,
+        "execMs": 12.19,
+        "totalMs": 12.59,
         "result": {
           "__tag": "int",
           "value": 63248
         },
         "error": false,
-        "runsPerSecond": 85,
+        "runsPerSecond": 82,
         "cpu": {
-          "userMs": 0,
+          "userMs": 15,
           "systemMs": 0,
-          "totalMs": 0
+          "totalMs": 15
         },
         "memory": {
-          "heapUsedBefore": 22483440,
-          "heapUsedAfter": 23356144,
-          "heapUsedDelta": 872704,
-          "rssBefore": 94498816,
-          "rssAfter": 94408704,
-          "rssDelta": -90112,
+          "heapUsedBefore": 22629080,
+          "heapUsedAfter": 23504968,
+          "heapUsedDelta": 875888,
+          "rssBefore": 94224384,
+          "rssAfter": 94425088,
+          "rssDelta": 200704,
           "externalBefore": 20964287,
           "externalAfter": 2670694,
           "externalDelta": -18293593
         },
-        "galerinaOpsPerSecond": 5350931,
+        "galerinaOpsPerSecond": 5188515,
         "galerinaOpsPerRun": 63248
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.36,
-        "execMs": 11.8,
-        "totalMs": 12.15,
+        "parseMs": 0.37,
+        "execMs": 12.2,
+        "totalMs": 12.56,
         "result": {
           "__tag": "int",
           "value": 63248
         },
         "error": false,
-        "runsPerSecond": 85,
+        "runsPerSecond": 82,
         "cpu": {
-          "userMs": 0,
+          "userMs": 32,
           "systemMs": 0,
-          "totalMs": 0
+          "totalMs": 32
         },
         "memory": {
-          "heapUsedBefore": 22552912,
-          "heapUsedAfter": 23423512,
-          "heapUsedDelta": 870600,
-          "rssBefore": 94613504,
-          "rssAfter": 94482432,
-          "rssDelta": -131072,
+          "heapUsedBefore": 22697088,
+          "heapUsedAfter": 23569560,
+          "heapUsedDelta": 872472,
+          "rssBefore": 94593024,
+          "rssAfter": 94478336,
+          "rssDelta": -114688,
           "externalBefore": 2669670,
           "externalAfter": 2670694,
           "externalDelta": 1024
         },
-        "galerinaOpsPerSecond": 5360000,
+        "galerinaOpsPerSecond": 5184262,
         "galerinaOpsPerRun": 63248
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.099,
-        "warmMs": 0.152,
-        "coldMs": 7.338,
+        "setupMs": 0.993,
+        "warmMs": 0.14,
+        "coldMs": 6.804,
         "warmCalls": 3,
         "coldCalls": 1,
-        "warmCallsPerSecond": 19762.85,
-        "coldCallsPerSecond": 136.28,
-        "iterationsPerSecond": 136.28,
+        "warmCallsPerSecond": 21443.89,
+        "coldCallsPerSecond": 146.97,
+        "iterationsPerSecond": 146.97,
         "result": {
           "__tag": "int",
           "value": 63248
@@ -499,13 +499,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 0
+          "coldTotalMs": 15
         },
         "memory": {
-          "heapUsedBefore": 24498920,
-          "heapUsedAfter": 24607352,
+          "heapUsedBefore": 24644928,
+          "heapUsedAfter": 24753360,
           "heapUsedDelta": 108432,
-          "rssBytes": 94642176
+          "rssBytes": 94617600
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -535,25 +535,25 @@
         },
         "totalBulls": 60897,
         "totalCows": 68205,
-        "elapsedMs": 14.514,
-        "attemptsPerSecond": 2898660.57,
+        "elapsedMs": 14.492,
+        "attemptsPerSecond": 2902920.86,
         "cpu": {
-          "userMs": 16,
+          "userMs": 0,
           "systemMs": 0,
-          "totalMs": 16
+          "totalMs": 0
         },
         "memory": {
-          "rssBytes": 58744832,
+          "rssBytes": 58998784,
           "heapTotalBytes": 10461184,
-          "heapUsedBytes": 5861376,
+          "heapUsedBytes": 5802496,
           "externalBytes": 2114418,
           "arrayBuffersBytes": 143627,
-          "maxRssBytes": 58748928,
+          "maxRssBytes": 59002880,
           "heapUsedBefore": 4716504,
-          "heapUsedDelta": 1144872
+          "heapUsedDelta": 1085992
         },
         "process": {
-          "pid": 13872,
+          "pid": 23620,
           "node": "v24.18.0",
           "platform": "win32",
           "arch": "x64"
@@ -578,10 +578,10 @@
         },
         "totalBulls": 60897,
         "totalCows": 68205,
-        "elapsedMs": 364.297,
-        "attemptsPerSecond": 115482.76,
+        "elapsedMs": 361.925,
+        "attemptsPerSecond": 116239.49,
         "cpu": {
-          "processMs": 375
+          "processMs": 359.375
         },
         "memory": {
           "tracemallocCurrentBytes": 47,
@@ -610,8 +610,8 @@
         "attempts": 42070,
         "totalBulls": 60897,
         "totalCows": 68205,
-        "elapsedMs": 0.542,
-        "attemptsPerSecond": 77648578.81
+        "elapsedMs": 0.544,
+        "attemptsPerSecond": 77334558.82
       },
       "rustAvx2": {
         "runtime": "rust",
@@ -620,8 +620,8 @@
         "attempts": 42070,
         "totalBulls": 60897,
         "totalCows": 68205,
-        "elapsedMs": 0.565,
-        "attemptsPerSecond": 74433828.73
+        "elapsedMs": 0.562,
+        "attemptsPerSecond": 74817712.96
       },
       "wasm": {
         "runtime": "wasm",
@@ -629,11 +629,11 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 413,
-        "compileMs": 16.677,
-        "elapsedMs": 1169.348,
+        "compileMs": 17.106,
+        "elapsedMs": 1141.646,
         "calls": 1000,
-        "callsPerSecond": 855.18,
-        "iterationsPerSecond": 35976567.419999994,
+        "callsPerSecond": 875.93,
+        "iterationsPerSecond": 36849499.169999994,
         "result": {
           "__tag": "int",
           "value": 42069
@@ -643,21 +643,21 @@
           "totalMs": 1141
         },
         "memory": {
-          "rssBytes": 97140736,
-          "heapUsedBytes": 23109656,
+          "rssBytes": 97062912,
+          "heapUsedBytes": 23260272,
           "heapUsedDelta": 1176
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (413 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 16.7ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 17.1ms. Execution: pure WASM, no JS tree-walker."
         ]
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.46,
-        "execMs": 834.49,
-        "totalMs": 834.94,
+        "parseMs": 0.48,
+        "execMs": 831.93,
+        "totalMs": 832.41,
         "result": {
           "__tag": "int",
           "value": 42069
@@ -665,30 +665,30 @@
         "error": false,
         "runsPerSecond": 1,
         "cpu": {
-          "userMs": 875,
+          "userMs": 860,
           "systemMs": 0,
-          "totalMs": 875
+          "totalMs": 860
         },
         "memory": {
-          "heapUsedBefore": 22824912,
-          "heapUsedAfter": 24412736,
-          "heapUsedDelta": 1587824,
-          "rssBefore": 95653888,
-          "rssAfter": 95350784,
-          "rssDelta": -303104,
-          "externalBefore": 20964575,
+          "heapUsedBefore": 22971160,
+          "heapUsedAfter": 23485232,
+          "heapUsedDelta": 514072,
+          "rssBefore": 95571968,
+          "rssAfter": 95277056,
+          "rssDelta": -294912,
+          "externalBefore": 20964698,
           "externalAfter": 2669282,
-          "externalDelta": -18295293
+          "externalDelta": -18295416
         },
-        "galerinaOpsPerSecond": 50413,
+        "galerinaOpsPerSecond": 50568,
         "galerinaOpsPerRun": 42069
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.29,
-        "execMs": 819.12,
-        "totalMs": 819.41,
+        "parseMs": 0.28,
+        "execMs": 832.41,
+        "totalMs": 832.69,
         "result": {
           "__tag": "int",
           "value": 42069
@@ -696,35 +696,35 @@
         "error": false,
         "runsPerSecond": 1,
         "cpu": {
-          "userMs": 828,
+          "userMs": 859,
           "systemMs": 0,
-          "totalMs": 828
+          "totalMs": 859
         },
         "memory": {
-          "heapUsedBefore": 23158672,
-          "heapUsedAfter": 24459296,
-          "heapUsedDelta": 1300624,
-          "rssBefore": 95555584,
-          "rssAfter": 95719424,
-          "rssDelta": 163840,
+          "heapUsedBefore": 23305240,
+          "heapUsedAfter": 24501536,
+          "heapUsedDelta": 1196296,
+          "rssBefore": 95612928,
+          "rssAfter": 95645696,
+          "rssDelta": 32768,
           "externalBefore": 2669282,
           "externalAfter": 2669282,
           "externalDelta": 0
         },
-        "galerinaOpsPerSecond": 51359,
+        "galerinaOpsPerSecond": 50539,
         "galerinaOpsPerRun": 42069
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.355,
-        "warmMs": 0.205,
-        "coldMs": 800.389,
+        "setupMs": 1.325,
+        "warmMs": 0.18,
+        "coldMs": 842.617,
         "warmCalls": 3,
         "coldCalls": 1,
-        "warmCallsPerSecond": 14598.54,
-        "coldCallsPerSecond": 1.25,
-        "iterationsPerSecond": 1.25,
+        "warmCallsPerSecond": 16638.94,
+        "coldCallsPerSecond": 1.19,
+        "iterationsPerSecond": 1.19,
         "result": {
           "__tag": "int",
           "value": 42069
@@ -732,13 +732,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 797
+          "coldTotalMs": 844
         },
         "memory": {
-          "heapUsedBefore": 25371816,
-          "heapUsedAfter": 25513992,
-          "heapUsedDelta": 142176,
-          "rssBytes": 95326208
+          "heapUsedBefore": 25413152,
+          "heapUsedAfter": 25555344,
+          "heapUsedDelta": 142192,
+          "rssBytes": 95248384
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -758,25 +758,25 @@
         "benchmark": "record-allocation-v1",
         "iterations": 200000,
         "sum": 40000000000,
-        "elapsedMs": 3.267,
-        "iterationsPerSecond": 61220116.93,
+        "elapsedMs": 3.362,
+        "iterationsPerSecond": 59484861.1,
         "cpu": {
           "totalMs": 0
         },
         "memory": {
-          "rssBytes": 55087104,
-          "heapUsedBytes": 4353016,
+          "rssBytes": 55361536,
+          "heapUsedBytes": 4436968,
           "maxRssBytes": null,
-          "heapUsedBefore": 4117312,
-          "heapUsedDelta": 235704
+          "heapUsedBefore": 4117568,
+          "heapUsedDelta": 319400
         },
         "process": {
-          "pid": 24508,
+          "pid": 5960,
           "node": "v24.18.0",
           "platform": "win32",
           "arch": "x64"
         },
-        "normThroughput": 61220116.93,
+        "normThroughput": 59484861.1,
         "throughputUnit": "records/s"
       },
       "python": {
@@ -784,10 +784,10 @@
         "benchmark": "record-allocation-v1",
         "iterations": 200000,
         "sum": 40000000000,
-        "elapsedMs": 44.254,
-        "iterationsPerSecond": 4519396.12,
+        "elapsedMs": 37.367,
+        "iterationsPerSecond": 5352387.83,
         "cpu": {
-          "processMs": 46.875
+          "processMs": 31.25
         },
         "memory": {
           "heapUsedBytes": 492,
@@ -796,12 +796,12 @@
           "tracemallocPeak": 528
         },
         "process": {
-          "pid": 13724,
+          "pid": 9772,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0",
           "arch": "AMD64"
         },
-        "normThroughput": 4519396.12,
+        "normThroughput": 5352387.83,
         "throughputUnit": "records/s"
       },
       "rust": {
@@ -809,9 +809,9 @@
         "benchmark": "record-allocation-v1",
         "iterations": 10000000,
         "sum": 100000000000000,
-        "elapsedMs": 8.494,
-        "iterationsPerSecond": 1177260044.97,
-        "normThroughput": 1177260044.97,
+        "elapsedMs": 8.436,
+        "iterationsPerSecond": 1185395922.24,
+        "normThroughput": 1185395922.24,
         "throughputUnit": "records/s"
       },
       "rustAvx2": {
@@ -819,9 +819,9 @@
         "benchmark": "record-allocation-v1",
         "iterations": 10000000,
         "sum": 100000000000000,
-        "elapsedMs": 8.497,
-        "iterationsPerSecond": 1176844409.4,
-        "normThroughput": 1176844409.4,
+        "elapsedMs": 8.424,
+        "iterationsPerSecond": 1187140889.88,
+        "normThroughput": 1187140889.88,
         "throughputUnit": "records/s"
       },
       "wasm": {
@@ -830,11 +830,11 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 219,
-        "compileMs": 13.519,
-        "elapsedMs": 1003.854,
-        "calls": 55000,
-        "callsPerSecond": 54788.83,
-        "iterationsPerSecond": 547888328.8,
+        "compileMs": 13.435,
+        "elapsedMs": 1000.295,
+        "calls": 56000,
+        "callsPerSecond": 55983.48,
+        "iterationsPerSecond": 559834848.72,
         "result": {
           "__tag": "int",
           "value": 100000000
@@ -844,90 +844,90 @@
           "totalMs": 1000
         },
         "memory": {
-          "rssBytes": 97853440,
-          "heapUsedBytes": 23672800,
+          "rssBytes": 97882112,
+          "heapUsedBytes": 23817616,
           "heapUsedDelta": 49264
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (219 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 13.5ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 13.4ms. Execution: pure WASM, no JS tree-walker."
         ],
-        "normThroughput": 547888300,
+        "normThroughput": 559834800,
         "throughputUnit": "records/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.21,
-        "execMs": 4.85,
-        "totalMs": 5.06,
+        "execMs": 4.3,
+        "totalMs": 4.51,
         "result": {
           "__tag": "int",
           "value": 100000000
         },
         "error": false,
-        "runsPerSecond": 206,
-        "cpu": {
-          "userMs": 31,
-          "systemMs": 0,
-          "totalMs": 31
-        },
-        "memory": {
-          "heapUsedBefore": 23346704,
-          "heapUsedAfter": 23429032,
-          "heapUsedDelta": 82328,
-          "rssBefore": 95555584,
-          "rssAfter": 96485376,
-          "rssDelta": 929792,
-          "externalBefore": 20964310,
-          "externalAfter": 2670538,
-          "externalDelta": -18293772
-        },
-        "normThroughput": 2061856,
-        "throughputUnit": "records/s"
-      },
-      "galerinaManifest": {
-        "runtime": "galerina-manifest",
-        "mode": "manifest",
-        "parseMs": 0.34,
-        "execMs": 1.6,
-        "totalMs": 1.94,
-        "result": {
-          "__tag": "int",
-          "value": 100000000
-        },
-        "error": false,
-        "runsPerSecond": 624,
+        "runsPerSecond": 232,
         "cpu": {
           "userMs": 0,
           "systemMs": 0,
           "totalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 23320512,
-          "heapUsedAfter": 23396792,
-          "heapUsedDelta": 76280,
-          "rssBefore": 96149504,
-          "rssAfter": 96526336,
-          "rssDelta": 376832,
+          "heapUsedBefore": 23496296,
+          "heapUsedAfter": 23586120,
+          "heapUsedDelta": 89824,
+          "rssBefore": 95596544,
+          "rssAfter": 96501760,
+          "rssDelta": 905216,
+          "externalBefore": 20964187,
+          "externalAfter": 2670538,
+          "externalDelta": -18293649
+        },
+        "normThroughput": 2325581,
+        "throughputUnit": "records/s"
+      },
+      "galerinaManifest": {
+        "runtime": "galerina-manifest",
+        "mode": "manifest",
+        "parseMs": 0.21,
+        "execMs": 3.75,
+        "totalMs": 3.95,
+        "result": {
+          "__tag": "int",
+          "value": 100000000
+        },
+        "error": false,
+        "runsPerSecond": 267,
+        "cpu": {
+          "userMs": 15,
+          "systemMs": 0,
+          "totalMs": 15
+        },
+        "memory": {
+          "heapUsedBefore": 23470392,
+          "heapUsedAfter": 23570752,
+          "heapUsedDelta": 100360,
+          "rssBefore": 97165312,
+          "rssAfter": 95895552,
+          "rssDelta": -1269760,
           "externalBefore": 2670538,
           "externalAfter": 2670538,
           "externalDelta": 0
         },
-        "normThroughput": 6250000,
+        "normThroughput": 2666667,
         "throughputUnit": "records/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 0.59,
-        "warmMs": 0.652,
-        "coldMs": 24.391,
+        "setupMs": 0.586,
+        "warmMs": 0.632,
+        "coldMs": 24.044,
         "warmCalls": 20,
         "coldCalls": 20,
-        "warmCallsPerSecond": 30656.04,
-        "coldCallsPerSecond": 819.96,
-        "iterationsPerSecond": 819.96,
+        "warmCallsPerSecond": 31645.57,
+        "coldCallsPerSecond": 831.82,
+        "iterationsPerSecond": 831.82,
         "result": {
           "__tag": "int",
           "value": 100000000
@@ -935,13 +935,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 47
+          "coldTotalMs": 16
         },
         "memory": {
-          "heapUsedBefore": 23772840,
-          "heapUsedAfter": 24273832,
+          "heapUsedBefore": 23922736,
+          "heapUsedAfter": 24423728,
           "heapUsedDelta": 500992,
-          "rssBytes": 95473664
+          "rssBytes": 96030720
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -949,7 +949,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 8199600,
+        "normThroughput": 8318200,
         "throughputUnit": "records/s"
       }
     },
@@ -972,20 +972,20 @@
         "n": 30,
         "result": 832040,
         "iterations": 100,
-        "elapsedMs": 784.546,
-        "iterationsPerSecond": 127.46,
+        "elapsedMs": 791.133,
+        "iterationsPerSecond": 126.4,
         "cpu": {
-          "totalMs": 781
+          "totalMs": 797
         },
         "memory": {
-          "rssBytes": 53252096,
+          "rssBytes": 53440512,
           "heapUsedBytes": 4126640,
           "maxRssBytes": null,
           "heapUsedBefore": 4121384,
           "heapUsedDelta": 5256
         },
         "process": {
-          "pid": 14192,
+          "pid": 22568,
           "node": "v24.18.0",
           "platform": "win32",
           "arch": "x64"
@@ -997,10 +997,10 @@
         "n": 30,
         "result": 832040,
         "iterations": 20,
-        "elapsedMs": 2334.155,
-        "callsPerSecond": 8.57,
+        "elapsedMs": 2307.537,
+        "callsPerSecond": 8.67,
         "cpu": {
-          "processMs": 2328.125
+          "processMs": 2312.5
         },
         "memory": {
           "heapUsedBytes": 464,
@@ -1009,7 +1009,7 @@
           "tracemallocPeak": 464
         },
         "process": {
-          "pid": 14132,
+          "pid": 24204,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0",
           "arch": "AMD64"
@@ -1021,8 +1021,8 @@
         "n": 30,
         "result": 832040,
         "iterations": 200,
-        "elapsedMs": 400.118,
-        "iterationsPerSecond": 499.85
+        "elapsedMs": 402.06,
+        "iterationsPerSecond": 497.44
       },
       "rustAvx2": {
         "runtime": "rust",
@@ -1030,19 +1030,19 @@
         "n": 30,
         "result": 832040,
         "iterations": 200,
-        "elapsedMs": 396.894,
-        "iterationsPerSecond": 503.91
+        "elapsedMs": 394.25,
+        "iterationsPerSecond": 507.29
       },
       "go": {
         "benchmark": "fibonacci-recursive-v1",
         "cpu": {
-          "totalMs": 327.573
+          "totalMs": 324.72
         },
-        "elapsedMs": 327.573,
+        "elapsedMs": 324.72,
         "iterations": 100,
-        "iterationsPerSecond": 305.28,
+        "iterationsPerSecond": 307.96,
         "memory": {
-          "heapUsedBytes": 313064,
+          "heapUsedBytes": 312200,
           "maxRssBytes": null,
           "rssBytes": null
         },
@@ -1050,7 +1050,7 @@
         "process": {
           "arch": "amd64",
           "go": "go1.26.5",
-          "pid": 22632,
+          "pid": 23676,
           "platform": "windows"
         },
         "result": 832040,
@@ -1062,102 +1062,102 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 171,
-        "compileMs": 13.814,
-        "elapsedMs": 1046.13,
+        "compileMs": 13.012,
+        "elapsedMs": 1038.989,
         "calls": 18000,
-        "callsPerSecond": 17206.27,
-        "iterationsPerSecond": 17206.27,
+        "callsPerSecond": 17324.53,
+        "iterationsPerSecond": 17324.53,
         "result": {
           "__tag": "int",
           "value": 6765
         },
         "error": false,
         "cpu": {
-          "totalMs": 1047
+          "totalMs": 1046
         },
         "memory": {
-          "rssBytes": 98492416,
-          "heapUsedBytes": 23727760,
+          "rssBytes": 98521088,
+          "heapUsedBytes": 23876992,
           "heapUsedDelta": 2944
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (171 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 13.8ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 13.0ms. Execution: pure WASM, no JS tree-walker."
         ]
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.16,
-        "execMs": 73.37,
-        "totalMs": 73.53,
+        "parseMs": 0.17,
+        "execMs": 77.26,
+        "totalMs": 77.42,
         "result": {
           "__tag": "int",
           "value": 6765
         },
         "error": false,
-        "runsPerSecond": 14,
+        "runsPerSecond": 13,
         "cpu": {
-          "userMs": 63,
-          "systemMs": 0,
-          "totalMs": 63
+          "userMs": 94,
+          "systemMs": 16,
+          "totalMs": 110
         },
         "memory": {
-          "heapUsedBefore": 23460888,
-          "heapUsedAfter": 24385392,
-          "heapUsedDelta": 924504,
+          "heapUsedBefore": 23611200,
+          "heapUsedAfter": 24461088,
+          "heapUsedDelta": 849888,
           "rssBefore": 95969280,
-          "rssAfter": 96124928,
-          "rssDelta": 155648,
+          "rssAfter": 96088064,
+          "rssDelta": 118784,
           "externalBefore": 20964214,
           "externalAfter": 2669282,
           "externalDelta": -18294932
         },
-        "galerinaOpsPerSecond": 14,
+        "galerinaOpsPerSecond": 13,
         "galerinaOpsPerRun": 1
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.19,
-        "execMs": 52.05,
-        "totalMs": 52.24,
+        "parseMs": 0.2,
+        "execMs": 55.89,
+        "totalMs": 56.09,
         "result": {
           "__tag": "int",
           "value": 6765
         },
         "error": false,
-        "runsPerSecond": 19,
+        "runsPerSecond": 18,
         "cpu": {
-          "userMs": 62,
-          "systemMs": 0,
-          "totalMs": 62
+          "userMs": 110,
+          "systemMs": 15,
+          "totalMs": 125
         },
         "memory": {
-          "heapUsedBefore": 23560680,
-          "heapUsedAfter": 25541600,
-          "heapUsedDelta": 1980920,
-          "rssBefore": 96473088,
-          "rssAfter": 96407552,
-          "rssDelta": -65536,
+          "heapUsedBefore": 23710752,
+          "heapUsedAfter": 24619312,
+          "heapUsedDelta": 908560,
+          "rssBefore": 96501760,
+          "rssAfter": 96702464,
+          "rssDelta": 200704,
           "externalBefore": 2669282,
           "externalAfter": 2669282,
           "externalDelta": 0
         },
-        "galerinaOpsPerSecond": 19,
+        "galerinaOpsPerSecond": 18,
         "galerinaOpsPerRun": 1
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 0.818,
-        "warmMs": 0.155,
-        "coldMs": 39.175,
+        "setupMs": 0.727,
+        "warmMs": 0.147,
+        "coldMs": 42.056,
         "warmCalls": 5,
         "coldCalls": 1,
-        "warmCallsPerSecond": 32216.49,
-        "coldCallsPerSecond": 25.53,
-        "iterationsPerSecond": 25.53,
+        "warmCallsPerSecond": 33990.48,
+        "coldCallsPerSecond": 23.78,
+        "iterationsPerSecond": 23.78,
         "result": {
           "__tag": "int",
           "value": 6765
@@ -1165,13 +1165,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 46
+          "coldTotalMs": 32
         },
         "memory": {
-          "heapUsedBefore": 23859856,
-          "heapUsedAfter": 23950296,
+          "heapUsedBefore": 25031352,
+          "heapUsedAfter": 25121792,
           "heapUsedDelta": 90440,
-          "rssBytes": 96407552
+          "rssBytes": 96702464
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -1193,26 +1193,26 @@
         "result": 42452,
         "iterations": 200,
         "movesPerCall": 65535,
-        "elapsedMs": 101.324,
-        "movesPerSecond": 129357564.56,
-        "iterationsPerSecond": 1973.87,
+        "elapsedMs": 101.568,
+        "movesPerSecond": 129047185.37,
+        "iterationsPerSecond": 1969.13,
         "cpu": {
-          "totalMs": 109
+          "totalMs": 94
         },
         "memory": {
-          "rssBytes": 53211136,
+          "rssBytes": 53587968,
           "heapUsedBytes": 4141272,
           "maxRssBytes": null,
-          "heapUsedBefore": 4124408,
-          "heapUsedDelta": 16864
+          "heapUsedBefore": 4126608,
+          "heapUsedDelta": 14664
         },
         "process": {
-          "pid": 9984,
+          "pid": 9576,
           "node": "v24.18.0",
           "platform": "win32",
           "arch": "x64"
         },
-        "normThroughput": 129357564.56,
+        "normThroughput": 129047185.37,
         "throughputUnit": "moves/s"
       },
       "python": {
@@ -1222,11 +1222,11 @@
         "result": 42452,
         "iterations": 20,
         "movesPerCall": 65535,
-        "elapsedMs": 261.909,
-        "movesPerSecond": 5004417.57,
-        "iterationsPerSecond": 76.36,
+        "elapsedMs": 296.946,
+        "movesPerSecond": 4413939.79,
+        "iterationsPerSecond": 67.35,
         "cpu": {
-          "processMs": 265.625
+          "processMs": 296.875
         },
         "memory": {
           "heapUsedBytes": 1488,
@@ -1234,12 +1234,12 @@
           "tracemallocPeak": 1488
         },
         "process": {
-          "pid": 23556,
+          "pid": 25448,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0",
           "arch": "AMD64"
         },
-        "normThroughput": 5004417.57,
+        "normThroughput": 4413939.79,
         "throughputUnit": "moves/s"
       },
       "rust": {
@@ -1249,10 +1249,10 @@
         "result": 42452,
         "iterations": 2000,
         "movesPerCall": 65535,
-        "elapsedMs": 518.579,
-        "movesPerSecond": 252748327.11,
-        "iterationsPerSecond": 3856.69,
-        "normThroughput": 252748327.11,
+        "elapsedMs": 513.031,
+        "movesPerSecond": 255481687.36,
+        "iterationsPerSecond": 3898.4,
+        "normThroughput": 255481687.36,
         "throughputUnit": "moves/s"
       },
       "rustAvx2": {
@@ -1262,10 +1262,10 @@
         "result": 42452,
         "iterations": 2000,
         "movesPerCall": 65535,
-        "elapsedMs": 518.528,
-        "movesPerSecond": 252773430,
-        "iterationsPerSecond": 3857.08,
-        "normThroughput": 252773430,
+        "elapsedMs": 512.024,
+        "movesPerSecond": 255984044.5,
+        "iterationsPerSecond": 3906.07,
+        "normThroughput": 255984044.5,
         "throughputUnit": "moves/s"
       },
       "wasm": {
@@ -1274,37 +1274,37 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 282,
-        "compileMs": 12.712,
-        "elapsedMs": 1075.894,
+        "compileMs": 13.111,
+        "elapsedMs": 1069.644,
         "calls": 2000,
-        "callsPerSecond": 1858.92,
-        "iterationsPerSecond": 121824257.61,
+        "callsPerSecond": 1869.78,
+        "iterationsPerSecond": 122536061.75,
         "result": {
           "__tag": "int",
           "value": 42452
         },
         "error": false,
         "cpu": {
-          "totalMs": 1078
+          "totalMs": 1079
         },
         "memory": {
-          "rssBytes": 98689024,
-          "heapUsedBytes": 24309584,
+          "rssBytes": 98988032,
+          "heapUsedBytes": 23082720,
           "heapUsedDelta": 1280
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (282 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 12.7ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 13.1ms. Execution: pure WASM, no JS tree-walker."
         ],
-        "normThroughput": 121824322,
+        "normThroughput": 122536032,
         "throughputUnit": "moves/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 1.76,
-        "execMs": 666.85,
-        "totalMs": 668.62,
+        "parseMs": 0.38,
+        "execMs": 685,
+        "totalMs": 685.38,
         "result": {
           "__tag": "int",
           "value": 42452
@@ -1312,66 +1312,66 @@
         "error": false,
         "runsPerSecond": 1,
         "cpu": {
-          "userMs": 688,
+          "userMs": 718,
           "systemMs": 0,
-          "totalMs": 688
+          "totalMs": 718
         },
         "memory": {
-          "heapUsedBefore": 22583840,
-          "heapUsedAfter": 24446128,
-          "heapUsedDelta": 1862288,
-          "rssBefore": 95936512,
-          "rssAfter": 96346112,
-          "rssDelta": 409600,
-          "externalBefore": 2795503,
+          "heapUsedBefore": 22733904,
+          "heapUsedAfter": 23432648,
+          "heapUsedDelta": 698744,
+          "rssBefore": 96047104,
+          "rssAfter": 96595968,
+          "rssDelta": 548864,
+          "externalBefore": 20959585,
           "externalAfter": 2664431,
-          "externalDelta": -131072
+          "externalDelta": -18295154
         },
-        "normThroughput": 98275,
+        "normThroughput": 95672,
         "throughputUnit": "moves/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.37,
-        "execMs": 666.35,
-        "totalMs": 666.72,
+        "parseMs": 0.42,
+        "execMs": 695.97,
+        "totalMs": 696.39,
         "result": {
           "__tag": "int",
           "value": 42452
         },
         "error": false,
-        "runsPerSecond": 2,
+        "runsPerSecond": 1,
         "cpu": {
-          "userMs": 672,
-          "systemMs": 0,
-          "totalMs": 672
+          "userMs": 782,
+          "systemMs": 31,
+          "totalMs": 813
         },
         "memory": {
-          "heapUsedBefore": 22604152,
-          "heapUsedAfter": 24545088,
-          "heapUsedDelta": 1940936,
-          "rssBefore": 96964608,
-          "rssAfter": 96247808,
-          "rssDelta": -716800,
+          "heapUsedBefore": 22754056,
+          "heapUsedAfter": 25040184,
+          "heapUsedDelta": 2286128,
+          "rssBefore": 97218560,
+          "rssAfter": 96538624,
+          "rssDelta": -679936,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 98349,
+        "normThroughput": 94164,
         "throughputUnit": "moves/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.061,
-        "warmMs": 0.089,
-        "coldMs": 655.652,
+        "setupMs": 1.031,
+        "warmMs": 0.091,
+        "coldMs": 673.047,
         "warmCalls": 2,
         "coldCalls": 1,
-        "warmCallsPerSecond": 22573.36,
-        "coldCallsPerSecond": 1.53,
-        "iterationsPerSecond": 1.53,
+        "warmCallsPerSecond": 22026.43,
+        "coldCallsPerSecond": 1.49,
+        "iterationsPerSecond": 1.49,
         "result": {
           "__tag": "int",
           "value": 42452
@@ -1382,10 +1382,10 @@
           "coldTotalMs": 672
         },
         "memory": {
-          "heapUsedBefore": 25267416,
-          "heapUsedAfter": 25330024,
-          "heapUsedDelta": 62608,
-          "rssBytes": 96305152
+          "heapUsedBefore": 29897048,
+          "heapUsedAfter": 29959680,
+          "heapUsedDelta": 62632,
+          "rssBytes": 96841728
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -1393,7 +1393,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 100269,
+        "normThroughput": 97647,
         "throughputUnit": "moves/s"
       }
     },
@@ -1416,25 +1416,25 @@
         "size": 10000,
         "iterations": 5000,
         "result": 49990000,
-        "elapsedMs": 726.972,
-        "iterationsPerSecond": 6877.84,
+        "elapsedMs": 697.185,
+        "iterationsPerSecond": 7171.7,
         "cpu": {
-          "totalMs": 718
+          "totalMs": 704
         },
         "memory": {
-          "rssBytes": 70021120,
+          "rssBytes": 70045696,
           "heapUsedBytes": 12348672,
           "maxRssBytes": null,
           "heapUsedBefore": 4204112,
           "heapUsedDelta": 8144560
         },
         "process": {
-          "pid": 22376,
+          "pid": 24588,
           "node": "v24.18.0",
           "platform": "win32",
           "arch": "x64"
         },
-        "normThroughput": 68778400,
+        "normThroughput": 71717000,
         "throughputUnit": "elements/s"
       },
       "python": {
@@ -1443,10 +1443,10 @@
         "size": 10000,
         "iterations": 5000,
         "result": 49990000,
-        "elapsedMs": 2324.499,
-        "iterationsPerSecond": 2151,
+        "elapsedMs": 2273.754,
+        "iterationsPerSecond": 2199.01,
         "cpu": {
-          "processMs": 2328.125
+          "processMs": 2281.25
         },
         "memory": {
           "heapUsedBytes": 224,
@@ -1455,12 +1455,12 @@
           "tracemallocPeak": 600
         },
         "process": {
-          "pid": 20656,
+          "pid": 16508,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0",
           "arch": "AMD64"
         },
-        "normThroughput": 21510000,
+        "normThroughput": 21990100,
         "throughputUnit": "elements/s"
       },
       "rust": {
@@ -1469,9 +1469,9 @@
         "size": 10000,
         "iterations": 100000,
         "result": 49990000,
-        "elapsedMs": 235.376,
-        "iterationsPerSecond": 424851.61,
-        "normThroughput": 4248516100,
+        "elapsedMs": 231.357,
+        "iterationsPerSecond": 432232.81,
+        "normThroughput": 4322328100,
         "throughputUnit": "elements/s"
       },
       "rustAvx2": {
@@ -1480,9 +1480,9 @@
         "size": 10000,
         "iterations": 100000,
         "result": 49990000,
-        "elapsedMs": 79.985,
-        "iterationsPerSecond": 1250228.17,
-        "normThroughput": 12502281700,
+        "elapsedMs": 75.398,
+        "iterationsPerSecond": 1326300.4,
+        "normThroughput": 13263004000,
         "throughputUnit": "elements/s"
       },
       "wasm": {
@@ -1491,29 +1491,29 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 251,
-        "compileMs": 17.261,
-        "elapsedMs": 1016.877,
-        "calls": 38000,
-        "callsPerSecond": 37369.33,
-        "iterationsPerSecond": 373693290.45,
+        "compileMs": 13.121,
+        "elapsedMs": 1011.4,
+        "calls": 43000,
+        "callsPerSecond": 42515.3,
+        "iterationsPerSecond": 425153042.74,
         "result": {
           "__tag": "int",
           "value": 49990000
         },
         "error": false,
         "cpu": {
-          "totalMs": 1015
+          "totalMs": 1016
         },
         "memory": {
-          "rssBytes": 98430976,
-          "heapUsedBytes": 22792040,
-          "heapUsedDelta": 22656
+          "rssBytes": 99422208,
+          "heapUsedBytes": 22943000,
+          "heapUsedDelta": 24272
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (251 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 17.3ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 13.1ms. Execution: pure WASM, no JS tree-walker."
         ],
-        "normThroughput": 373693300,
+        "normThroughput": 425153000,
         "throughputUnit": "elements/s"
       },
       "slideReference": {
@@ -1523,24 +1523,24 @@
         "result": 49990000,
         "workCount": 10000,
         "throughputUnit": "elements/s",
-        "elapsedMs": 19.818599999998696,
-        "normThroughput": 504577,
+        "elapsedMs": 17.193299999999,
+        "normThroughput": 581622,
         "operations": 10000,
-        "operationsPerSecond": 504576.5089360832,
+        "operationsPerSecond": 581621.9108606598,
         "iterations": 1,
-        "iterationsPerSecond": 50.45765089360832,
+        "iterationsPerSecond": 58.16219108606598,
         "size": 10000,
-        "compileMs": 8.063500000003842,
-        "prepareMs": 1.5129999999917345,
+        "compileMs": 5.185100000002421,
+        "prepareMs": 1.5834999999933643,
         "warmupRuns": 2,
         "samples": [
-          18.120900000008987,
-          20.45319999998901,
-          18.03759999999602,
-          23.23530000000028,
-          18.234700000000885,
-          23.84910000000673,
-          19.818599999998696
+          17.314400000002934,
+          17.193299999999,
+          17.2445000000007,
+          17.2331000000122,
+          17.18499999999767,
+          17.12970000000496,
+          16.968600000007427
         ],
         "statistic": "median",
         "sourceDigest": "sha256:33c10edb7472b1a43cd1bf8705e85907c804b94e96408a66a82cd7c09eb2135c",
@@ -1557,90 +1557,90 @@
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.23,
-        "execMs": 1.34,
-        "totalMs": 1.57,
+        "parseMs": 0.22,
+        "execMs": 1.2,
+        "totalMs": 1.42,
         "result": {
           "__tag": "int",
           "value": 49990000
         },
         "error": false,
-        "runsPerSecond": 744,
+        "runsPerSecond": 831,
         "cpu": {
           "userMs": 0,
           "systemMs": 0,
           "totalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 22736136,
-          "heapUsedAfter": 22785096,
+          "heapUsedBefore": 22883584,
+          "heapUsedAfter": 22932544,
           "heapUsedDelta": 48960,
-          "rssBefore": 96202752,
-          "rssAfter": 96202752,
+          "rssBefore": 96952320,
+          "rssAfter": 96952320,
           "rssDelta": 0,
-          "externalBefore": 21100908,
+          "externalBefore": 21101031,
           "externalAfter": 2665679,
-          "externalDelta": -18435229
+          "externalDelta": -18435352
         },
-        "normThroughput": 7462687,
+        "normThroughput": 8333333,
         "throughputUnit": "elements/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.29,
-        "execMs": 5.4,
-        "totalMs": 5.69,
+        "parseMs": 0.33,
+        "execMs": 4.94,
+        "totalMs": 5.26,
         "result": {
           "__tag": "int",
           "value": 49990000
         },
         "error": false,
-        "runsPerSecond": 185,
+        "runsPerSecond": 203,
         "cpu": {
           "userMs": 0,
           "systemMs": 0,
           "totalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 22686664,
-          "heapUsedAfter": 22892712,
+          "heapUsedBefore": 22836016,
+          "heapUsedAfter": 23042064,
           "heapUsedDelta": 206048,
-          "rssBefore": 96903168,
-          "rssAfter": 97349632,
-          "rssDelta": 446464,
+          "rssBefore": 97656832,
+          "rssAfter": 97665024,
+          "rssDelta": 8192,
           "externalBefore": 2665679,
           "externalAfter": 2665679,
           "externalDelta": 0
         },
-        "normThroughput": 1851852,
+        "normThroughput": 2024291,
         "throughputUnit": "elements/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 0.595,
-        "warmMs": 1.294,
-        "coldMs": 28.287,
+        "setupMs": 0.505,
+        "warmMs": 0.934,
+        "coldMs": 25.903,
         "warmCalls": 30,
         "coldCalls": 20,
-        "warmCallsPerSecond": 23176.76,
-        "coldCallsPerSecond": 707.05,
-        "iterationsPerSecond": 707.05,
+        "warmCallsPerSecond": 32109.6,
+        "coldCallsPerSecond": 772.1,
+        "iterationsPerSecond": 772.1,
         "result": {
           "__tag": "int",
           "value": 49990000
         },
         "error": false,
         "cpu": {
-          "warmTotalMs": 46,
-          "coldTotalMs": 16
+          "warmTotalMs": 0,
+          "coldTotalMs": 46
         },
         "memory": {
-          "heapUsedBefore": 23327960,
-          "heapUsedAfter": 24080568,
-          "heapUsedDelta": 752608,
-          "rssBytes": 96641024
+          "heapUsedBefore": 23477312,
+          "heapUsedAfter": 24249952,
+          "heapUsedDelta": 772640,
+          "rssBytes": 96710656
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -1648,7 +1648,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 7070500,
+        "normThroughput": 7721000,
         "throughputUnit": "elements/s"
       }
     },
@@ -1671,20 +1671,20 @@
         "n": 1000,
         "result": 500500,
         "iterations": 100000,
-        "elapsedMs": 48.878,
-        "iterationsPerSecond": 2045910.23,
+        "elapsedMs": 47.08,
+        "iterationsPerSecond": 2124057.71,
         "cpu": {
           "totalMs": 47
         },
         "memory": {
-          "rssBytes": 53121024,
+          "rssBytes": 53182464,
           "heapUsedBytes": 4144136,
           "maxRssBytes": null,
           "heapUsedBefore": 4118280,
           "heapUsedDelta": 25856
         },
         "process": {
-          "pid": 23680,
+          "pid": 21820,
           "node": "v24.18.0",
           "platform": "win32",
           "arch": "x64"
@@ -1694,7 +1694,7 @@
         ],
         "normThroughput": null,
         "throughputUnit": "gov-factor",
-        "rawThroughput": 2045910.23
+        "rawThroughput": 2124057.71
       },
       "python": {
         "runtime": "python",
@@ -1702,10 +1702,10 @@
         "n": 1000,
         "result": 500500,
         "iterations": 100000,
-        "elapsedMs": 2445.29,
-        "iterationsPerSecond": 40894.94,
+        "elapsedMs": 2362.848,
+        "iterationsPerSecond": 42321.81,
         "cpu": {
-          "processMs": 2453.125
+          "processMs": 2375
         },
         "memory": {
           "heapUsedBytes": 272,
@@ -1714,7 +1714,7 @@
           "tracemallocPeak": 272
         },
         "process": {
-          "pid": 23788,
+          "pid": 24556,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0",
           "arch": "AMD64"
@@ -1724,7 +1724,7 @@
         ],
         "normThroughput": null,
         "throughputUnit": "gov-factor",
-        "rawThroughput": 40894.94
+        "rawThroughput": 42321.81
       },
       "rust": {
         "runtime": "rust",
@@ -1732,11 +1732,11 @@
         "n": 1000,
         "result": 500500,
         "iterations": 10000000,
-        "elapsedMs": 11.271,
-        "iterationsPerSecond": 887201234.98,
+        "elapsedMs": 11.188,
+        "iterationsPerSecond": 893814801.57,
         "normThroughput": null,
         "throughputUnit": "gov-factor",
-        "rawThroughput": 887201234.98
+        "rawThroughput": 893814801.57
       },
       "rustAvx2": {
         "runtime": "rust",
@@ -1744,11 +1744,11 @@
         "n": 1000,
         "result": 500500,
         "iterations": 10000000,
-        "elapsedMs": 11.236,
-        "iterationsPerSecond": 889972677.84,
+        "elapsedMs": 11.021,
+        "iterationsPerSecond": 907317515.76,
         "normThroughput": null,
         "throughputUnit": "gov-factor",
-        "rawThroughput": 889972677.84
+        "rawThroughput": 907317515.76
       },
       "wasm": {
         "runtime": "wasm",
@@ -1756,121 +1756,121 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 201,
-        "compileMs": 13.432,
-        "elapsedMs": 1000.133,
-        "calls": 3048000,
-        "callsPerSecond": 3047593.76,
-        "iterationsPerSecond": 3047593.76,
+        "compileMs": 12.473,
+        "elapsedMs": 1000.165,
+        "calls": 3182000,
+        "callsPerSecond": 3181474.74,
+        "iterationsPerSecond": 3181474.74,
         "result": {
           "__tag": "int",
           "value": 5050
         },
         "error": false,
         "cpu": {
-          "totalMs": 1000
+          "totalMs": 1016
         },
         "memory": {
-          "rssBytes": 83156992,
-          "heapUsedBytes": 23148536,
-          "heapUsedDelta": 49688
+          "rssBytes": 82939904,
+          "heapUsedBytes": 23298176,
+          "heapUsedDelta": 49736
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (201 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 13.4ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 12.5ms. Execution: pure WASM, no JS tree-walker."
         ],
         "normThroughput": null,
         "throughputUnit": "gov-factor",
-        "rawThroughput": 3047593.76
+        "rawThroughput": 3181474.74
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.32,
-        "execMs": 1.78,
-        "totalMs": 2.1,
+        "parseMs": 0.22,
+        "execMs": 1.59,
+        "totalMs": 1.81,
         "result": {
           "__tag": "int",
           "value": 5050
         },
         "error": false,
-        "runsPerSecond": 561,
+        "runsPerSecond": 628,
         "cpu": {
           "userMs": 0,
           "systemMs": 0,
           "totalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 22780392,
-          "heapUsedAfter": 23322280,
+          "heapUsedBefore": 22930848,
+          "heapUsedAfter": 23472736,
           "heapUsedDelta": 541888,
-          "rssBefore": 80601088,
-          "rssAfter": 83234816,
-          "rssDelta": 2633728,
+          "rssBefore": 80621568,
+          "rssAfter": 83030016,
+          "rssDelta": 2408448,
           "externalBefore": 20959423,
           "externalAfter": 20959423,
           "externalDelta": 0
         },
         "normThroughput": null,
         "throughputUnit": "gov-factor",
-        "rawThroughput": 561
+        "rawThroughput": 628
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.28,
-        "execMs": 1.28,
-        "totalMs": 1.57,
+        "parseMs": 0.27,
+        "execMs": 1.07,
+        "totalMs": 1.34,
         "result": {
           "__tag": "int",
           "value": 5050
         },
         "error": false,
-        "runsPerSecond": 780,
+        "runsPerSecond": 932,
         "cpu": {
           "userMs": 0,
           "systemMs": 0,
           "totalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 22794328,
-          "heapUsedAfter": 23295944,
-          "heapUsedDelta": 501616,
-          "rssBefore": 84914176,
-          "rssAfter": 84881408,
-          "rssDelta": -32768,
+          "heapUsedBefore": 22943752,
+          "heapUsedAfter": 23444400,
+          "heapUsedDelta": 500648,
+          "rssBefore": 85094400,
+          "rssAfter": 84574208,
+          "rssDelta": -520192,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
         "normThroughput": null,
         "throughputUnit": "gov-factor",
-        "rawThroughput": 780
+        "rawThroughput": 932
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.606,
-        "warmMs": 5.583,
-        "coldMs": 13.717,
+        "setupMs": 1.025,
+        "warmMs": 3.024,
+        "coldMs": 9.617,
         "warmCalls": 100,
         "coldCalls": 20,
-        "warmCallsPerSecond": 17913.12,
-        "coldCallsPerSecond": 1458.06,
-        "iterationsPerSecond": 1458.06,
+        "warmCallsPerSecond": 33064.41,
+        "coldCallsPerSecond": 2079.65,
+        "iterationsPerSecond": 2079.65,
         "result": {
           "__tag": "int",
           "value": 5050
         },
         "error": false,
         "cpu": {
-          "warmTotalMs": 0,
-          "coldTotalMs": 32
+          "warmTotalMs": 46,
+          "coldTotalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 23307040,
-          "heapUsedAfter": 24452584,
-          "heapUsedDelta": 1145544,
-          "rssBytes": 83390464
+          "heapUsedBefore": 23456984,
+          "heapUsedAfter": 23535928,
+          "heapUsedDelta": 78944,
+          "rssBytes": 83947520
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -1880,7 +1880,7 @@
         ],
         "normThroughput": null,
         "throughputUnit": "gov-factor",
-        "rawThroughput": 1458.06
+        "rawThroughput": 2079.65
       }
     },
     "units": {
@@ -1903,21 +1903,21 @@
         "vecSize": 1024,
         "iterations": 1000000,
         "result": 179.4816000339271,
-        "elapsedMs": 1127.416,
-        "iterationsPerSecond": 886984.2,
-        "fmaPerSecond": 908271820,
+        "elapsedMs": 1085.261,
+        "iterationsPerSecond": 921437.16,
+        "fmaPerSecond": 943551654,
         "cpu": {
-          "totalMs": 1125
+          "totalMs": 1078
         },
         "memory": {
-          "rssBytes": 54976512,
-          "heapUsedBytes": 4456216,
+          "rssBytes": 55197696,
+          "heapUsedBytes": 4492760,
           "maxRssBytes": null,
           "heapUsedBefore": 4123528,
-          "heapUsedDelta": 332688
+          "heapUsedDelta": 369232
         },
         "process": {
-          "pid": 24004,
+          "pid": 24428,
           "node": "v24.18.0",
           "platform": "win32",
           "arch": "x64"
@@ -1935,9 +1935,9 @@
         "vecSize": 1024,
         "iterations": 1000000,
         "result": 179.481567,
-        "elapsedMs": 853.074,
-        "iterationsPerSecond": 1172231.8,
-        "fmaPerSecond": 1200365361
+        "elapsedMs": 841.685,
+        "iterationsPerSecond": 1188093.5,
+        "fmaPerSecond": 1216607741
       },
       "rustAvx2": {
         "runtime": "rust",
@@ -1946,9 +1946,9 @@
         "vecSize": 1024,
         "iterations": 1000000,
         "result": 179.481567,
-        "elapsedMs": 852.815,
-        "iterationsPerSecond": 1172587.53,
-        "fmaPerSecond": 1200729631
+        "elapsedMs": 841.548,
+        "iterationsPerSecond": 1188286.21,
+        "fmaPerSecond": 1216805076
       },
       "wasm": {
         "runtime": "wasm",
@@ -1956,116 +1956,116 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 266,
-        "compileMs": 13.3,
-        "elapsedMs": 1000.006,
-        "calls": 48630000,
-        "callsPerSecond": 48629727.67,
-        "iterationsPerSecond": 48629727.67,
+        "compileMs": 12.754,
+        "elapsedMs": 1000.003,
+        "calls": 49502000,
+        "callsPerSecond": 49501841.59,
+        "iterationsPerSecond": 49501841.59,
         "result": {
           "__tag": "int",
           "value": 120
         },
         "error": false,
         "cpu": {
-          "totalMs": 1000
+          "totalMs": 1016
         },
         "memory": {
-          "rssBytes": 86036480,
-          "heapUsedBytes": 23354856,
-          "heapUsedDelta": 84192
+          "rssBytes": 85725184,
+          "heapUsedBytes": 23509464,
+          "heapUsedDelta": 83376
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (266 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 13.3ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 12.8ms. Execution: pure WASM, no JS tree-walker."
         ]
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.18,
-        "execMs": 0.3,
-        "totalMs": 0.48,
+        "execMs": 0.28,
+        "totalMs": 0.46,
         "result": {
           "__tag": "int",
           "value": 120
         },
         "error": false,
-        "runsPerSecond": 3331,
+        "runsPerSecond": 3517,
         "cpu": {
-          "userMs": 0,
+          "userMs": 47,
           "systemMs": 0,
-          "totalMs": 0
+          "totalMs": 47
         },
         "memory": {
-          "heapUsedBefore": 23008256,
-          "heapUsedAfter": 23130856,
+          "heapUsedBefore": 23162832,
+          "heapUsedAfter": 23285432,
           "heapUsedDelta": 122600,
-          "rssBefore": 83570688,
-          "rssAfter": 83570688,
+          "rssBefore": 83587072,
+          "rssAfter": 83587072,
           "rssDelta": 0,
           "externalBefore": 20959553,
           "externalAfter": 20959553,
           "externalDelta": 0
         },
-        "galerinaOpsPerSecond": 3333,
+        "galerinaOpsPerSecond": 3571,
         "galerinaOpsPerRun": 1
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.25,
-        "execMs": 0.33,
-        "totalMs": 0.57,
+        "parseMs": 0.24,
+        "execMs": 0.35,
+        "totalMs": 0.59,
         "result": {
           "__tag": "int",
           "value": 120
         },
         "error": false,
-        "runsPerSecond": 3047,
+        "runsPerSecond": 2867,
         "cpu": {
           "userMs": 0,
           "systemMs": 0,
           "totalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 22971512,
-          "heapUsedAfter": 23104072,
+          "heapUsedBefore": 23121432,
+          "heapUsedAfter": 23253992,
           "heapUsedDelta": 132560,
-          "rssBefore": 83922944,
-          "rssAfter": 84004864,
-          "rssDelta": 81920,
+          "rssBefore": 83845120,
+          "rssAfter": 83951616,
+          "rssDelta": 106496,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "galerinaOpsPerSecond": 3030,
+        "galerinaOpsPerSecond": 2857,
         "galerinaOpsPerRun": 1
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.101,
-        "warmMs": 22.939,
-        "coldMs": 1.669,
+        "setupMs": 0.959,
+        "warmMs": 24.007,
+        "coldMs": 1.683,
         "warmCalls": 1000,
         "coldCalls": 20,
-        "warmCallsPerSecond": 43594.45,
-        "coldCallsPerSecond": 11984.66,
-        "iterationsPerSecond": 11984.66,
+        "warmCallsPerSecond": 41655.21,
+        "coldCallsPerSecond": 11881.42,
+        "iterationsPerSecond": 11881.42,
         "result": {
           "__tag": "int",
           "value": 120
         },
         "error": false,
         "cpu": {
-          "warmTotalMs": 31,
+          "warmTotalMs": 78,
           "coldTotalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 23949856,
-          "heapUsedAfter": 23651704,
-          "heapUsedDelta": -298152,
-          "rssBytes": 83922944
+          "heapUsedBefore": 24099776,
+          "heapUsedAfter": 23890056,
+          "heapUsedDelta": -209720,
+          "rssBytes": 83329024
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -2086,11 +2086,11 @@
         "streamSize": 10000,
         "iterations": 5000,
         "result": 28900,
-        "elapsedMs": 69.865,
-        "iterationsPerSecond": 71566.49,
+        "elapsedMs": 69.832,
+        "iterationsPerSecond": 71600.31,
         "totalOps": 50000000,
         "memory": {
-          "rssBytes": 53420032,
+          "rssBytes": 53411840,
           "heapUsedBytes": 4145240,
           "heapUsedDelta": 16776,
           "bytesPerOperation": 0
@@ -2099,7 +2099,7 @@
           "totalMs": 63
         },
         "process": {
-          "pid": 22228,
+          "pid": 23588,
           "node": "v24.18.0",
           "platform": "win32"
         },
@@ -2107,7 +2107,7 @@
           "V8 uses tagged integers — no heap allocation for small integer operations",
           "Bytes/op: 0.00 (target: ~0 for integer-only flows)"
         ],
-        "normThroughput": 715664900,
+        "normThroughput": 716003100,
         "throughputUnit": "items/s"
       },
       "python": {
@@ -2116,8 +2116,8 @@
         "streamSize": 10000,
         "iterations": 1000,
         "result": 28900,
-        "elapsedMs": 1752.226,
-        "iterationsPerSecond": 570.7,
+        "elapsedMs": 1729.785,
+        "iterationsPerSecond": 578.11,
         "totalOps": 10000000,
         "memory": {
           "tracemallocCurrentBytes": 0,
@@ -2129,10 +2129,10 @@
           "tracemallocPeak": 272
         },
         "cpu": {
-          "processMs": 1750
+          "processMs": 1734.375
         },
         "process": {
-          "pid": 20288,
+          "pid": 27904,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0"
         },
@@ -2140,7 +2140,7 @@
           "tracemalloc measures Python heap allocations",
           "Bytes/op: 0.00 (Python objects are ~56+ bytes each)"
         ],
-        "normThroughput": 5707000,
+        "normThroughput": 5781100,
         "throughputUnit": "items/s"
       },
       "rust": {
@@ -2149,8 +2149,8 @@
         "streamSize": 10000,
         "iterations": 100000,
         "result": 28900,
-        "elapsedMs": 771.299,
-        "iterationsPerSecond": 129651.39,
+        "elapsedMs": 734.491,
+        "iterationsPerSecond": 136148.69,
         "totalOps": 1000000000,
         "memory": {
           "bytesPerOperation": 0
@@ -2158,7 +2158,7 @@
         "notes": [
           "Rust stack-only — zero heap allocation"
         ],
-        "normThroughput": 1296513900,
+        "normThroughput": 1361486900,
         "throughputUnit": "items/s"
       },
       "rustAvx2": {
@@ -2167,8 +2167,8 @@
         "streamSize": 10000,
         "iterations": 100000,
         "result": 28900,
-        "elapsedMs": 164.9,
-        "iterationsPerSecond": 606429.61,
+        "elapsedMs": 160.236,
+        "iterationsPerSecond": 624077.92,
         "totalOps": 1000000000,
         "memory": {
           "bytesPerOperation": 0
@@ -2176,7 +2176,7 @@
         "notes": [
           "Rust stack-only — zero heap allocation"
         ],
-        "normThroughput": 6064296100,
+        "normThroughput": 6240779200,
         "throughputUnit": "items/s"
       },
       "wasm": {
@@ -2185,11 +2185,11 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 310,
-        "compileMs": 14.167,
-        "elapsedMs": 1005.181,
-        "calls": 46000,
-        "callsPerSecond": 45762.88,
-        "iterationsPerSecond": 457628841.92,
+        "compileMs": 13.323,
+        "elapsedMs": 1011.753,
+        "calls": 48000,
+        "callsPerSecond": 47442.43,
+        "iterationsPerSecond": 474424281.19,
         "result": {
           "__tag": "int",
           "value": 28900
@@ -2199,92 +2199,92 @@
           "totalMs": 1031
         },
         "memory": {
-          "rssBytes": 86511616,
-          "heapUsedBytes": 23330648,
-          "heapUsedDelta": 42272,
+          "rssBytes": 85712896,
+          "heapUsedBytes": 23500400,
+          "heapUsedDelta": 41448,
           "bytesPerOperation": 0
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (310 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 14.2ms. Execution: pure WASM, no JS tree-walker.",
+          "Compile (one-time): 13.3ms. Execution: pure WASM, no JS tree-walker.",
           "Bytes/op: 0.00 (target: ~0 — WASM Int32Array, no JS object boxing)"
         ],
-        "normThroughput": 457628800,
+        "normThroughput": 474424300,
         "throughputUnit": "items/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.33,
-        "execMs": 76.98,
-        "totalMs": 77.31,
+        "parseMs": 0.41,
+        "execMs": 67.58,
+        "totalMs": 67.99,
         "result": {
           "__tag": "int",
           "value": 28900
         },
         "error": false,
-        "runsPerSecond": 13,
+        "runsPerSecond": 15,
         "cpu": {
-          "userMs": 109,
+          "userMs": 62,
           "systemMs": 0,
-          "totalMs": 109
+          "totalMs": 62
         },
         "memory": {
-          "heapUsedBefore": 23010672,
-          "heapUsedAfter": 23663016,
-          "heapUsedDelta": 652344,
-          "rssBefore": 83992576,
-          "rssAfter": 84774912,
-          "rssDelta": 782336,
+          "heapUsedBefore": 23180808,
+          "heapUsedAfter": 23524264,
+          "heapUsedDelta": 343456,
+          "rssBefore": 83529728,
+          "rssAfter": 84529152,
+          "rssDelta": 999424,
           "externalBefore": 20959641,
           "externalAfter": 2664431,
           "externalDelta": -18295210
         },
-        "normThroughput": 129904,
+        "normThroughput": 147973,
         "throughputUnit": "items/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.45,
-        "execMs": 132.48,
-        "totalMs": 132.94,
+        "parseMs": 0.44,
+        "execMs": 81.28,
+        "totalMs": 81.73,
         "result": {
           "__tag": "int",
           "value": 28900
         },
         "error": false,
-        "runsPerSecond": 8,
+        "runsPerSecond": 12,
         "cpu": {
-          "userMs": 188,
+          "userMs": 125,
           "systemMs": 0,
-          "totalMs": 188
+          "totalMs": 125
         },
         "memory": {
-          "heapUsedBefore": 23070368,
-          "heapUsedAfter": 25104424,
-          "heapUsedDelta": 2034056,
-          "rssBefore": 84828160,
-          "rssAfter": 84217856,
-          "rssDelta": -610304,
+          "heapUsedBefore": 23220344,
+          "heapUsedAfter": 23859120,
+          "heapUsedDelta": 638776,
+          "rssBefore": 84582400,
+          "rssAfter": 84004864,
+          "rssDelta": -577536,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 75483,
+        "normThroughput": 123031,
         "throughputUnit": "items/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 2.554,
-        "warmMs": 0.957,
-        "coldMs": 1201.177,
+        "setupMs": 1.632,
+        "warmMs": 0.738,
+        "coldMs": 1181.421,
         "warmCalls": 20,
         "coldCalls": 20,
-        "warmCallsPerSecond": 20898.64,
-        "coldCallsPerSecond": 16.65,
-        "iterationsPerSecond": 16.65,
+        "warmCallsPerSecond": 27111.29,
+        "coldCallsPerSecond": 16.93,
+        "iterationsPerSecond": 16.93,
         "result": {
           "__tag": "int",
           "value": 28900
@@ -2292,13 +2292,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 1188
+          "coldTotalMs": 1187
         },
         "memory": {
-          "heapUsedBefore": 24732992,
-          "heapUsedAfter": 23422424,
-          "heapUsedDelta": -1310568,
-          "rssBytes": 84070400
+          "heapUsedBefore": 24412136,
+          "heapUsedAfter": 25195952,
+          "heapUsedDelta": 783816,
+          "rssBytes": 85831680
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -2306,7 +2306,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 166500,
+        "normThroughput": 169300,
         "throughputUnit": "items/s"
       }
     },
@@ -2330,14 +2330,14 @@
         "elements": 100000,
         "iterations": 5000,
         "result": 1000000000,
-        "elapsedMs": 507.773,
-        "iterationsPerSecond": 9846.91,
-        "operationsPerSecond": 984691397,
+        "elapsedMs": 500.104,
+        "iterationsPerSecond": 9997.91,
+        "operationsPerSecond": 999791444,
         "cpu": {
-          "totalMs": 515
+          "totalMs": 500
         },
         "memory": {
-          "rssBytes": 53424128,
+          "rssBytes": 53858304,
           "heapUsedBytes": 4142344,
           "maxRssBytes": null,
           "heapUsedBefore": 4125568,
@@ -2347,7 +2347,7 @@
           "CPU serial execution — V8 JIT.",
           "GPU-shaped workload: per-element kernel + reduction. On GPU this parallelises across thousands of threads."
         ],
-        "normThroughput": 984691397,
+        "normThroughput": 999791444,
         "throughputUnit": "kernel-evals/s"
       },
       "python": {
@@ -2357,11 +2357,11 @@
         "elements": 100000,
         "iterations": 500,
         "result": 1000000000,
-        "elapsedMs": 4115.574,
-        "iterationsPerSecond": 121.49,
-        "operationsPerSecond": 12148975,
+        "elapsedMs": 3926.7,
+        "iterationsPerSecond": 127.33,
+        "operationsPerSecond": 12733339,
         "cpu": {
-          "processMs": 4109.375
+          "processMs": 3937.5
         },
         "memory": {
           "heapUsedBytes": 304,
@@ -2370,7 +2370,7 @@
           "tracemallocPeak": 304
         },
         "process": {
-          "pid": 22644,
+          "pid": 17760,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0"
         },
@@ -2378,7 +2378,7 @@
           "CPU serial execution — CPython.",
           "GPU-shaped map-reduce workload."
         ],
-        "normThroughput": 12148975,
+        "normThroughput": 12733339,
         "throughputUnit": "kernel-evals/s"
       },
       "rust": {
@@ -2388,13 +2388,13 @@
         "elements": 100000,
         "iterations": 50000,
         "result": 1000000000,
-        "elapsedMs": 4227.71,
-        "iterationsPerSecond": 11826.73,
-        "operationsPerSecond": 1182673418,
+        "elapsedMs": 4193.524,
+        "iterationsPerSecond": 11923.15,
+        "operationsPerSecond": 1192314683,
         "notes": [
           "Rust CPU serial baseline. GPU variant requires wgpu (toolchain-gated)."
         ],
-        "normThroughput": 1182673418,
+        "normThroughput": 1192314683,
         "throughputUnit": "kernel-evals/s"
       },
       "rustAvx2": {
@@ -2404,13 +2404,13 @@
         "elements": 100000,
         "iterations": 50000,
         "result": 1000000000,
-        "elapsedMs": 4221.954,
-        "iterationsPerSecond": 11842.86,
-        "operationsPerSecond": 1184285704,
+        "elapsedMs": 4197.224,
+        "iterationsPerSecond": 11912.64,
+        "operationsPerSecond": 1191263531,
         "notes": [
           "Rust CPU serial baseline. GPU variant requires wgpu (toolchain-gated)."
         ],
-        "normThroughput": 1184285704,
+        "normThroughput": 1191263531,
         "throughputUnit": "kernel-evals/s"
       },
       "wasm": {
@@ -2419,32 +2419,32 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 302,
-        "compileMs": 13.641,
-        "elapsedMs": 1058.352,
+        "compileMs": 13.823,
+        "elapsedMs": 1052.325,
         "calls": 5000,
-        "callsPerSecond": 4724.32,
-        "iterationsPerSecond": 472432433.66,
+        "callsPerSecond": 4751.38,
+        "iterationsPerSecond": 475138203.45,
         "result": {
           "__tag": "int",
           "value": 1000000000
         },
         "error": false,
         "cpu": {
-          "totalMs": 1078
+          "totalMs": 1047
         },
         "memory": {
-          "rssBytes": 87150592,
-          "heapUsedBytes": 23413784,
+          "rssBytes": 87584768,
+          "heapUsedBytes": 23563040,
           "heapUsedDelta": 1592
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (302 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 13.6ms. Execution: pure WASM, no JS tree-walker.",
+          "Compile (one-time): 13.8ms. Execution: pure WASM, no JS tree-walker.",
           "Galerina real result: map-reduce compiled to WASM, executed on CPU.",
           "Galerina GPU execution pending Phase 38 — no GPU number is shown (gpu-plan.ts is a stub)."
         ],
         "device": "cpu (wasm)",
-        "normThroughput": 472432000,
+        "normThroughput": 475138000,
         "throughputUnit": "kernel-evals/s"
       },
       "denoWebGpu": {
@@ -2454,9 +2454,9 @@
         "elements": 100000,
         "iterations": 1,
         "result": 1000000000,
-        "elapsedMs": 25,
-        "gpuDispatchMs": 13.945,
-        "operationsPerSecond": 3999920,
+        "elapsedMs": 24.988,
+        "gpuDispatchMs": 12.899,
+        "operationsPerSecond": 4001905,
         "notes": [
           "Real GPU parallel execution via WebGPU (Deno built-in navigator.gpu).",
           "Map: 2048 workgroups × 64 threads; 100000 real elements, 31072 zero-padded to power-of-2.",
@@ -2465,15 +2465,15 @@
           "elapsedMs = wall time incl. GPU readback; gpuDispatchMs = GPU submit+wait only.",
           "Adapter: NVIDIA GeForce RTX 2060"
         ],
-        "normThroughput": 3999920,
+        "normThroughput": 4001905,
         "throughputUnit": "kernel-evals/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.3,
-        "execMs": 297.39,
-        "totalMs": 297.7,
+        "parseMs": 0.32,
+        "execMs": 289.15,
+        "totalMs": 289.47,
         "result": {
           "__tag": "int",
           "value": 1000000000
@@ -2481,66 +2481,66 @@
         "error": false,
         "runsPerSecond": 3,
         "cpu": {
-          "userMs": 422,
+          "userMs": 328,
           "systemMs": 0,
-          "totalMs": 422
+          "totalMs": 328
         },
         "memory": {
-          "heapUsedBefore": 23168200,
-          "heapUsedAfter": 23634384,
-          "heapUsedDelta": 466184,
-          "rssBefore": 84611072,
-          "rssAfter": 84848640,
-          "rssDelta": 237568,
-          "externalBefore": 20960376,
+          "heapUsedBefore": 23317584,
+          "heapUsedAfter": 23798832,
+          "heapUsedDelta": 481248,
+          "rssBefore": 83984384,
+          "rssAfter": 84606976,
+          "rssDelta": 622592,
+          "externalBefore": 20960380,
           "externalAfter": 2664431,
-          "externalDelta": -18295945
+          "externalDelta": -18295949
         },
-        "normThroughput": 336259,
+        "normThroughput": 345841,
         "throughputUnit": "kernel-evals/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.18,
-        "execMs": 288.86,
-        "totalMs": 289.03,
+        "execMs": 276.57,
+        "totalMs": 276.74,
         "result": {
           "__tag": "int",
           "value": 1000000000
         },
         "error": false,
-        "runsPerSecond": 3,
+        "runsPerSecond": 4,
         "cpu": {
-          "userMs": 312,
+          "userMs": 297,
           "systemMs": 0,
-          "totalMs": 312
+          "totalMs": 297
         },
         "memory": {
-          "heapUsedBefore": 23164712,
-          "heapUsedAfter": 23478592,
-          "heapUsedDelta": 313880,
-          "rssBefore": 84910080,
-          "rssAfter": 84705280,
-          "rssDelta": -204800,
+          "heapUsedBefore": 23314264,
+          "heapUsedAfter": 24750072,
+          "heapUsedDelta": 1435808,
+          "rssBefore": 84754432,
+          "rssAfter": 84680704,
+          "rssDelta": -73728,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 346188,
+        "normThroughput": 361572,
         "throughputUnit": "kernel-evals/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 0.972,
-        "warmMs": 0.296,
-        "coldMs": 2358.924,
+        "setupMs": 0.935,
+        "warmMs": 0.287,
+        "coldMs": 2460.023,
         "warmCalls": 10,
         "coldCalls": 10,
-        "warmCallsPerSecond": 33829.5,
-        "coldCallsPerSecond": 4.24,
-        "iterationsPerSecond": 4.24,
+        "warmCallsPerSecond": 34867.5,
+        "coldCallsPerSecond": 4.07,
+        "iterationsPerSecond": 4.07,
         "result": {
           "__tag": "int",
           "value": 1000000000
@@ -2548,13 +2548,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 2360
+          "coldTotalMs": 2453
         },
         "memory": {
-          "heapUsedBefore": 23724856,
-          "heapUsedAfter": 23978704,
+          "heapUsedBefore": 23897888,
+          "heapUsedAfter": 24151736,
           "heapUsedDelta": 253848,
-          "rssBytes": 84803584
+          "rssBytes": 84770816
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -2562,7 +2562,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 424000,
+        "normThroughput": 407000,
         "throughputUnit": "kernel-evals/s"
       }
     },
@@ -2585,22 +2585,22 @@
         "matrixSize": 64,
         "iterations": 500,
         "checksum": 420.80000042915344,
-        "elapsedMs": 214.415,
-        "iterationsPerSecond": 2331.92,
-        "gflops": 1.223,
+        "elapsedMs": 210.305,
+        "iterationsPerSecond": 2377.5,
+        "gflops": 1.246,
         "cpu": {
-          "totalMs": 188
+          "totalMs": 219
         },
         "memory": {
-          "rssBytes": 55037952,
-          "heapUsedBytes": 4276024,
-          "heapUsedBefore": 4132184,
-          "heapUsedDelta": 143840
+          "rssBytes": 55300096,
+          "heapUsedBytes": 4836080,
+          "heapUsedBefore": 4132224,
+          "heapUsedDelta": 703856
         },
         "notes": [
           "Float32Array matrix multiply — V8 JIT may auto-vectorise to AVX2"
         ],
-        "normThroughput": 611298836,
+        "normThroughput": 623247360,
         "throughputUnit": "mul-adds/s"
       },
       "python": {
@@ -2609,9 +2609,9 @@
         "matrixSize": 64,
         "iterations": 50,
         "implementation": "numpy",
-        "elapsedMs": 3.15,
-        "iterationsPerSecond": 15872.51,
-        "gflops": 8.322,
+        "elapsedMs": 0.706,
+        "iterationsPerSecond": 70811.5,
+        "gflops": 37.126,
         "memory": {
           "heapUsedBytes": 16624,
           "heapUsedDelta": 16624,
@@ -2621,7 +2621,7 @@
         "notes": [
           "NumPy float32 matmul"
         ],
-        "normThroughput": 4160883261,
+        "normThroughput": 18562809856,
         "throughputUnit": "mul-adds/s"
       },
       "rust": {
@@ -2630,13 +2630,13 @@
         "matrixSize": 64,
         "iterations": 500,
         "checksum": 420.8,
-        "elapsedMs": 86.645,
-        "iterationsPerSecond": 5770.67,
-        "gflops": 3.025,
+        "elapsedMs": 86.828,
+        "iterationsPerSecond": 5758.52,
+        "gflops": 3.019,
         "notes": [
           "Rust serial float32 matmul — compiler may auto-vectorise"
         ],
-        "normThroughput": 1512746516,
+        "normThroughput": 1509561467,
         "throughputUnit": "mul-adds/s"
       },
       "rustAvx2": {
@@ -2645,13 +2645,13 @@
         "matrixSize": 64,
         "iterations": 500,
         "checksum": 420.8,
-        "elapsedMs": 91.914,
-        "iterationsPerSecond": 5439.87,
-        "gflops": 2.852,
+        "elapsedMs": 90.867,
+        "iterationsPerSecond": 5502.52,
+        "gflops": 2.885,
         "notes": [
           "Rust serial float32 matmul — compiler may auto-vectorise"
         ],
-        "normThroughput": 1426029281,
+        "normThroughput": 1442452603,
         "throughputUnit": "mul-adds/s"
       },
       "wasm": {
@@ -2660,30 +2660,30 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 443,
-        "compileMs": 14.271,
-        "elapsedMs": 1038.519,
+        "compileMs": 14.233,
+        "elapsedMs": 1028.396,
         "calls": 14000,
-        "callsPerSecond": 13480.74,
-        "iterationsPerSecond": 13804275.86,
+        "callsPerSecond": 13613.43,
+        "iterationsPerSecond": 13940152.64,
         "result": {
           "__tag": "int",
           "value": 522379264
         },
         "error": false,
         "cpu": {
-          "totalMs": 1047
+          "totalMs": 1032
         },
         "memory": {
-          "rssBytes": 87638016,
-          "heapUsedBytes": 23468480,
+          "rssBytes": 87973888,
+          "heapUsedBytes": 23615248,
           "heapUsedDelta": 2528
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (443 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 14.3ms. Execution: pure WASM, no JS tree-walker.",
+          "Compile (one-time): 14.2ms. Execution: pure WASM, no JS tree-walker.",
           "Galerina integer matmul (scaled ×1000) compiled to WASM"
         ],
-        "normThroughput": 441736888,
+        "normThroughput": 446084874,
         "throughputUnit": "mul-adds/s"
       },
       "denoWebGpu": {
@@ -2693,52 +2693,52 @@
         "matrixSize": 128,
         "iterations": 10,
         "checksum": 2.0927999019622803,
-        "elapsedMs": 12.884,
-        "iterationsPerSecond": 776.16,
-        "gflops": 3.255,
+        "elapsedMs": 13.77,
+        "iterationsPerSecond": 726.22,
+        "gflops": 3.046,
         "notes": [
           "Deno WebGPU WGSL compute shader — 8×8 workgroups"
         ],
-        "normThroughput": 1627725496,
+        "normThroughput": 1522993725,
         "throughputUnit": "mul-adds/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.35,
-        "execMs": 45.66,
-        "totalMs": 46.01,
+        "execMs": 42.47,
+        "totalMs": 42.82,
         "result": {
           "__tag": "int",
           "value": 522379264
         },
         "error": false,
-        "runsPerSecond": 22,
+        "runsPerSecond": 24,
         "cpu": {
-          "userMs": 63,
-          "systemMs": 0,
+          "userMs": 47,
+          "systemMs": 16,
           "totalMs": 63
         },
         "memory": {
-          "heapUsedBefore": 23206336,
-          "heapUsedAfter": 24695424,
-          "heapUsedDelta": 1489088,
-          "rssBefore": 84721664,
-          "rssAfter": 84455424,
-          "rssDelta": -266240,
-          "externalBefore": 20960057,
+          "heapUsedBefore": 23351040,
+          "heapUsedAfter": 24479152,
+          "heapUsedDelta": 1128112,
+          "rssBefore": 84946944,
+          "rssAfter": 85073920,
+          "rssDelta": 126976,
+          "externalBefore": 20960179,
           "externalAfter": 2664431,
-          "externalDelta": -18295626
+          "externalDelta": -18295748
         },
-        "normThroughput": 717652,
+        "normThroughput": 771556,
         "throughputUnit": "mul-adds/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.33,
-        "execMs": 46.63,
-        "totalMs": 46.97,
+        "parseMs": 0.34,
+        "execMs": 48.22,
+        "totalMs": 48.55,
         "result": {
           "__tag": "int",
           "value": 522379264
@@ -2751,30 +2751,30 @@
           "totalMs": 63
         },
         "memory": {
-          "heapUsedBefore": 23188640,
-          "heapUsedAfter": 23755448,
-          "heapUsedDelta": 566808,
-          "rssBefore": 84680704,
-          "rssAfter": 84787200,
-          "rssDelta": 106496,
+          "heapUsedBefore": 23353976,
+          "heapUsedAfter": 23492208,
+          "heapUsedDelta": 138232,
+          "rssBefore": 85196800,
+          "rssAfter": 86695936,
+          "rssDelta": 1499136,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 702724,
+        "normThroughput": 679552,
         "throughputUnit": "mul-adds/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.094,
-        "warmMs": 0.196,
-        "coldMs": 36.687,
+        "setupMs": 1.12,
+        "warmMs": 0.197,
+        "coldMs": 35.812,
         "warmCalls": 5,
         "coldCalls": 1,
-        "warmCallsPerSecond": 25458.25,
-        "coldCallsPerSecond": 27.26,
-        "iterationsPerSecond": 27.26,
+        "warmCallsPerSecond": 25342.12,
+        "coldCallsPerSecond": 27.92,
+        "iterationsPerSecond": 27.92,
         "result": {
           "__tag": "int",
           "value": 522379264
@@ -2782,13 +2782,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 32
+          "coldTotalMs": 47
         },
         "memory": {
-          "heapUsedBefore": 24764048,
-          "heapUsedAfter": 24958304,
-          "heapUsedDelta": 194256,
-          "rssBytes": 84848640
+          "heapUsedBefore": 24001544,
+          "heapUsedAfter": 24195792,
+          "heapUsedDelta": 194248,
+          "rssBytes": 86695936
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -2796,7 +2796,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 893256,
+        "normThroughput": 914883,
         "throughputUnit": "mul-adds/s"
       }
     },
@@ -2821,9 +2821,9 @@
           "sha256": {
             "name": "SHA-256",
             "iterations": 10000,
-            "elapsedMs": 36.438,
-            "operationsPerSecond": 274440,
-            "nsPerOp": 3643.8,
+            "elapsedMs": 37.398,
+            "operationsPerSecond": 267397,
+            "nsPerOp": 3739.8,
             "cpu": {
               "totalMs": 31
             }
@@ -2831,71 +2831,71 @@
           "hmacSha256": {
             "name": "HMAC-SHA256",
             "iterations": 10000,
-            "elapsedMs": 293.256,
-            "operationsPerSecond": 34100,
-            "nsPerOp": 29325.6,
+            "elapsedMs": 294.469,
+            "operationsPerSecond": 33959,
+            "nsPerOp": 29446.9,
             "cpu": {
-              "totalMs": 297
+              "totalMs": 313
             }
           },
           "ed25519Sign": {
             "name": "Ed25519 sign",
             "iterations": 2000,
-            "elapsedMs": 263.635,
-            "operationsPerSecond": 7586,
-            "nsPerOp": 131817.5,
+            "elapsedMs": 258.888,
+            "operationsPerSecond": 7725,
+            "nsPerOp": 129444.2,
             "cpu": {
-              "totalMs": 266
+              "totalMs": 265
             }
           },
           "ed25519Verify": {
             "name": "Ed25519 verify",
             "iterations": 2000,
-            "elapsedMs": 301.277,
-            "operationsPerSecond": 6638,
-            "nsPerOp": 150638.3,
+            "elapsedMs": 301.931,
+            "operationsPerSecond": 6624,
+            "nsPerOp": 150965.4,
             "cpu": {
-              "totalMs": 296
+              "totalMs": 313
             }
           },
           "mlDsa65Sign": {
             "name": "ML-DSA-65 sign",
             "iterations": 100,
-            "elapsedMs": 679.834,
-            "operationsPerSecond": 147,
-            "nsPerOp": 6798338,
+            "elapsedMs": 612.366,
+            "operationsPerSecond": 163,
+            "nsPerOp": 6123659,
             "cpu": {
-              "totalMs": 688
+              "totalMs": 656
             }
           },
           "mlDsa65Verify": {
             "name": "ML-DSA-65 verify",
             "iterations": 200,
-            "elapsedMs": 325.129,
-            "operationsPerSecond": 615,
-            "nsPerOp": 1625646,
+            "elapsedMs": 327.347,
+            "operationsPerSecond": 611,
+            "nsPerOp": 1636733.5,
             "cpu": {
-              "totalMs": 391
+              "totalMs": 359
             }
           },
           "hybridSign": {
             "name": "Hybrid Ed25519+ML-DSA-65 sign",
             "iterations": 100,
-            "elapsedMs": 619.225,
-            "operationsPerSecond": 161,
-            "nsPerOp": 6192247,
+            "elapsedMs": 516.461,
+            "operationsPerSecond": 194,
+            "nsPerOp": 5164606,
             "cpu": {
-              "totalMs": 672
+              "totalMs": 516
             }
           },
           "hybridVerify": {
             "name": "Hybrid Ed25519+ML-DSA-65 verify",
             "iterations": 200,
-            "elapsedMs": 356.097,
-            "operationsPerSecond": 562,
-            "nsPerOp": 1780484.5,
+            "elapsedMs": 359.162,
+            "operationsPerSecond": 557,
+            "nsPerOp": 1795811,
             "cpu": {
-              "totalMs": 375
+              "totalMs": 360
             }
           }
         },
@@ -2911,13 +2911,13 @@
         },
         "notes": [
           "bcrypt intentionally excluded from this runner (use bcrypt.mjs for that)",
-          "SHA-256 throughput: 281 MB/s (1024 byte chunks)"
+          "SHA-256 throughput: 274 MB/s (1024 byte chunks)"
         ],
         "memory": {
-          "rssBytes": 67805184,
-          "heapUsedBytes": 7910168,
-          "heapUsedBefore": 5810760,
-          "heapUsedDelta": 2099408
+          "rssBytes": 69283840,
+          "heapUsedBytes": 10018784,
+          "heapUsedBefore": 5958384,
+          "heapUsedDelta": 4060400
         }
       },
       "python": {
@@ -2928,16 +2928,16 @@
           "sha256": {
             "name": "SHA-256",
             "iterations": 5000,
-            "elapsedMs": 12.015,
-            "operationsPerSecond": 416160,
-            "nsPerOp": 2402.9
+            "elapsedMs": 11.984,
+            "operationsPerSecond": 417216,
+            "nsPerOp": 2396.8
           },
           "hmacSha256": {
             "name": "HMAC-SHA256",
             "iterations": 5000,
-            "elapsedMs": 22.143,
-            "operationsPerSecond": 225802,
-            "nsPerOp": 4428.7
+            "elapsedMs": 21.936,
+            "operationsPerSecond": 227933,
+            "nsPerOp": 4387.3
           }
         },
         "memory": {
@@ -2947,7 +2947,7 @@
           "tracemallocPeak": 305
         },
         "notes": [
-          "hashlib (C-backed) SHA-256 throughput: 426 MB/s"
+          "hashlib (C-backed) SHA-256 throughput: 427 MB/s"
         ]
       },
       "rust": {
@@ -2958,9 +2958,9 @@
           "pseudoHash": {
             "name": "Pseudo-Hash (XOR chain)",
             "iterations": 10000,
-            "elapsedMs": 8.883,
-            "operationsPerSecond": 1125695,
-            "nsPerOp": 888.3
+            "elapsedMs": 8.926,
+            "operationsPerSecond": 1120373,
+            "nsPerOp": 892.6
           }
         },
         "notes": [
@@ -2975,9 +2975,9 @@
           "pseudoHash": {
             "name": "Pseudo-Hash (XOR chain)",
             "iterations": 10000,
-            "elapsedMs": 8.735,
-            "operationsPerSecond": 1144859,
-            "nsPerOp": 873.5
+            "elapsedMs": 8.713,
+            "operationsPerSecond": 1147684,
+            "nsPerOp": 871.3
           }
         },
         "notes": [
@@ -2987,90 +2987,90 @@
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.5,
-        "execMs": 4.86,
-        "totalMs": 5.36,
+        "parseMs": 0.51,
+        "execMs": 4.94,
+        "totalMs": 5.45,
         "result": {
           "__tag": "record",
           "fields": {}
         },
         "error": false,
-        "runsPerSecond": 206,
+        "runsPerSecond": 202,
         "cpu": {
-          "userMs": 0,
+          "userMs": 16,
           "systemMs": 0,
-          "totalMs": 0
+          "totalMs": 16
         },
         "memory": {
-          "heapUsedBefore": 23163000,
-          "heapUsedAfter": 23522104,
-          "heapUsedDelta": 359104,
-          "rssBefore": 84709376,
-          "rssAfter": 84770816,
-          "rssDelta": 61440,
-          "externalBefore": 2665664,
-          "externalAfter": 2665664,
+          "heapUsedBefore": 23313704,
+          "heapUsedAfter": 23674064,
+          "heapUsedDelta": 360360,
+          "rssBefore": 85135360,
+          "rssAfter": 85241856,
+          "rssDelta": 106496,
+          "externalBefore": 2667994,
+          "externalAfter": 2667994,
           "externalDelta": 0
         },
-        "galerinaOpsPerSecond": 206,
+        "galerinaOpsPerSecond": 202,
         "galerinaOpsPerRun": 1
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.26,
-        "execMs": 0.57,
-        "totalMs": 0.83,
+        "parseMs": 0.28,
+        "execMs": 0.54,
+        "totalMs": 0.82,
         "result": {
           "__tag": "record",
           "fields": {}
         },
         "error": false,
-        "runsPerSecond": 1749,
+        "runsPerSecond": 1852,
         "cpu": {
           "userMs": 0,
           "systemMs": 0,
           "totalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 23239784,
-          "heapUsedAfter": 23443448,
-          "heapUsedDelta": 203664,
-          "rssBefore": 84774912,
-          "rssAfter": 84774912,
-          "rssDelta": 0,
+          "heapUsedBefore": 23385792,
+          "heapUsedAfter": 23667488,
+          "heapUsedDelta": 281696,
+          "rssBefore": 85241856,
+          "rssAfter": 85254144,
+          "rssDelta": 12288,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "galerinaOpsPerSecond": 1754,
+        "galerinaOpsPerSecond": 1852,
         "galerinaOpsPerRun": 1
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 0.764,
-        "warmMs": 19.311,
-        "coldMs": 3.748,
+        "setupMs": 0.731,
+        "warmMs": 18.659,
+        "coldMs": 3.387,
         "warmCalls": 100,
         "coldCalls": 20,
-        "warmCallsPerSecond": 5178.48,
-        "coldCallsPerSecond": 5336.18,
-        "iterationsPerSecond": 5336.18,
+        "warmCallsPerSecond": 5359.4,
+        "coldCallsPerSecond": 5905.45,
+        "iterationsPerSecond": 5905.45,
         "result": {
           "__tag": "record",
           "fields": {}
         },
         "error": false,
         "cpu": {
-          "warmTotalMs": 47,
+          "warmTotalMs": 16,
           "coldTotalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 24105216,
-          "heapUsedAfter": 24224624,
-          "heapUsedDelta": 119408,
-          "rssBytes": 85004288
+          "heapUsedBefore": 24210136,
+          "heapUsedAfter": 24371184,
+          "heapUsedDelta": 161048,
+          "rssBytes": 86818816
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -3092,63 +3092,63 @@
           "htmlEscape": {
             "name": "HTML escape (replace chain)",
             "iterations": 50000,
-            "elapsedMs": 57.447,
-            "operationsPerSecond": 870364,
-            "nsPerOp": 1148.9
+            "elapsedMs": 56.949,
+            "operationsPerSecond": 877980,
+            "nsPerOp": 1139
           },
           "htmlEscapeRegex": {
             "name": "HTML escape (regex map)",
             "iterations": 50000,
-            "elapsedMs": 58.521,
-            "operationsPerSecond": 854400,
-            "nsPerOp": 1170.4
+            "elapsedMs": 57.579,
+            "operationsPerSecond": 868365,
+            "nsPerOp": 1151.6
           },
           "jsonParse": {
             "name": "JSON.parse",
             "iterations": 50000,
-            "elapsedMs": 185.407,
-            "operationsPerSecond": 269676,
-            "nsPerOp": 3708.1
+            "elapsedMs": 183.714,
+            "operationsPerSecond": 272162,
+            "nsPerOp": 3674.3
           },
           "jsonStringify": {
             "name": "JSON.stringify",
             "iterations": 50000,
-            "elapsedMs": 106.447,
-            "operationsPerSecond": 469716,
-            "nsPerOp": 2128.9
+            "elapsedMs": 105.822,
+            "operationsPerSecond": 472492,
+            "nsPerOp": 2116.4
           },
           "stringSplit": {
             "name": "String split+join",
             "iterations": 50000,
-            "elapsedMs": 22.54,
-            "operationsPerSecond": 2218229,
-            "nsPerOp": 450.8
+            "elapsedMs": 22.244,
+            "operationsPerSecond": 2247817,
+            "nsPerOp": 444.9
           },
           "wordCount": {
             "name": "Word count",
             "iterations": 50000,
-            "elapsedMs": 2.256,
-            "operationsPerSecond": 22163121,
-            "nsPerOp": 45.1
+            "elapsedMs": 2.49,
+            "operationsPerSecond": 20078709,
+            "nsPerOp": 49.8
           },
           "templateStr": {
             "name": "Template string",
             "iterations": 50000,
-            "elapsedMs": 4.995,
-            "operationsPerSecond": 10011012,
-            "nsPerOp": 99.9
+            "elapsedMs": 4.943,
+            "operationsPerSecond": 10115724,
+            "nsPerOp": 98.9
           },
           "regexMatch": {
             "name": "Regex match (4+ char words)",
             "iterations": 50000,
-            "elapsedMs": 20.972,
-            "operationsPerSecond": 2384097,
-            "nsPerOp": 419.4
+            "elapsedMs": 21.028,
+            "operationsPerSecond": 2377771,
+            "nsPerOp": 420.6
           }
         },
         "memory": {
           "heapUsedBefore": 4129976,
-          "heapUsedDelta": 471880
+          "heapUsedDelta": 472152
         },
         "notes": [
           "HTML escaping is security-critical — must be fast to avoid temptation to skip it",
@@ -3162,37 +3162,37 @@
           "htmlEscape": {
             "name": "html.escape",
             "iterations": 20000,
-            "elapsedMs": 18.357,
-            "operationsPerSecond": 1089491,
-            "nsPerOp": 917.9
+            "elapsedMs": 17.947,
+            "operationsPerSecond": 1114368,
+            "nsPerOp": 897.4
           },
           "jsonParse": {
             "name": "json.loads",
             "iterations": 20000,
-            "elapsedMs": 194.985,
-            "operationsPerSecond": 102572,
-            "nsPerOp": 9749.2
+            "elapsedMs": 189.458,
+            "operationsPerSecond": 105564,
+            "nsPerOp": 9472.9
           },
           "jsonDumps": {
             "name": "json.dumps",
             "iterations": 20000,
-            "elapsedMs": 221.855,
-            "operationsPerSecond": 90149,
-            "nsPerOp": 11092.7
+            "elapsedMs": 219.39,
+            "operationsPerSecond": 91162,
+            "nsPerOp": 10969.5
           },
           "stringSplit": {
             "name": "split+join",
             "iterations": 20000,
-            "elapsedMs": 11.476,
-            "operationsPerSecond": 1742768,
-            "nsPerOp": 573.8
+            "elapsedMs": 11.798,
+            "operationsPerSecond": 1695131,
+            "nsPerOp": 589.9
           },
           "regexMatch": {
             "name": "re.findall",
             "iterations": 20000,
-            "elapsedMs": 59.684,
-            "operationsPerSecond": 335098,
-            "nsPerOp": 2984.2
+            "elapsedMs": 59.251,
+            "operationsPerSecond": 337546,
+            "nsPerOp": 2962.6
           }
         },
         "memory": {
@@ -3212,16 +3212,16 @@
           "htmlEscape": {
             "name": "HTML escape",
             "iterations": 50000,
-            "elapsedMs": 23.071,
-            "operationsPerSecond": 2167260,
-            "nsPerOp": 461.4
+            "elapsedMs": 11.825,
+            "operationsPerSecond": 4228330,
+            "nsPerOp": 236.5
           },
           "stringSplit": {
             "name": "split+join",
             "iterations": 50000,
-            "elapsedMs": 25.514,
-            "operationsPerSecond": 1959670,
-            "nsPerOp": 510.3
+            "elapsedMs": 22.157,
+            "operationsPerSecond": 2256593,
+            "nsPerOp": 443.1
           }
         },
         "notes": [
@@ -3235,16 +3235,16 @@
           "htmlEscape": {
             "name": "HTML escape",
             "iterations": 50000,
-            "elapsedMs": 11.566,
-            "operationsPerSecond": 4323016,
-            "nsPerOp": 231.3
+            "elapsedMs": 11.485,
+            "operationsPerSecond": 4353505,
+            "nsPerOp": 229.7
           },
           "stringSplit": {
             "name": "split+join",
             "iterations": 50000,
-            "elapsedMs": 22.01,
-            "operationsPerSecond": 2271736,
-            "nsPerOp": 440.2
+            "elapsedMs": 22.692,
+            "operationsPerSecond": 2203391,
+            "nsPerOp": 453.8
           }
         },
         "notes": [
@@ -3254,76 +3254,76 @@
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.33,
-        "execMs": 1.24,
-        "totalMs": 1.56,
+        "parseMs": 0.32,
+        "execMs": 1.21,
+        "totalMs": 1.53,
         "result": {
           "__tag": "string",
           "value": "{\\\"status\\\":\\\"ok\\\",\\\"body\\\":\\\"&lt;script&gt;alert('xss')</script>\\\"}"
         },
         "error": false,
-        "runsPerSecond": 809,
+        "runsPerSecond": 824,
         "cpu": {
           "userMs": 0,
           "systemMs": 0,
           "totalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 23643192,
-          "heapUsedAfter": 23859416,
+          "heapUsedBefore": 23785384,
+          "heapUsedAfter": 24001608,
           "heapUsedDelta": 216224,
-          "rssBefore": 85229568,
-          "rssAfter": 85274624,
-          "rssDelta": 45056,
-          "externalBefore": 2731864,
-          "externalAfter": 2731864,
+          "rssBefore": 85286912,
+          "rssAfter": 85504000,
+          "rssDelta": 217088,
+          "externalBefore": 2731863,
+          "externalAfter": 2731863,
           "externalDelta": 0
         },
-        "galerinaOpsPerSecond": 806,
+        "galerinaOpsPerSecond": 826,
         "galerinaOpsPerRun": 1
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.49,
-        "execMs": 0.48,
-        "totalMs": 0.97,
+        "parseMs": 0.36,
+        "execMs": 0.58,
+        "totalMs": 0.94,
         "result": {
           "__tag": "string",
           "value": "{\\\"status\\\":\\\"ok\\\",\\\"body\\\":\\\"&lt;script&gt;alert('xss')</script>\\\"}"
         },
         "error": false,
-        "runsPerSecond": 2078,
+        "runsPerSecond": 1727,
         "cpu": {
           "userMs": 0,
           "systemMs": 0,
           "totalMs": 0
         },
         "memory": {
-          "heapUsedBefore": 23627848,
-          "heapUsedAfter": 23824232,
+          "heapUsedBefore": 23769768,
+          "heapUsedAfter": 23966152,
           "heapUsedDelta": 196384,
-          "rssBefore": 85397504,
-          "rssAfter": 85397504,
+          "rssBefore": 85610496,
+          "rssAfter": 85610496,
           "rssDelta": 0,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "galerinaOpsPerSecond": 2083,
+        "galerinaOpsPerSecond": 1724,
         "galerinaOpsPerRun": 1
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.537,
-        "warmMs": 3.259,
-        "coldMs": 3.915,
+        "setupMs": 1.659,
+        "warmMs": 3.498,
+        "coldMs": 4.065,
         "warmCalls": 100,
         "coldCalls": 20,
-        "warmCallsPerSecond": 30680.49,
-        "coldCallsPerSecond": 5108.82,
-        "iterationsPerSecond": 5108.82,
+        "warmCallsPerSecond": 28589.4,
+        "coldCallsPerSecond": 4920.29,
+        "iterationsPerSecond": 4920.29,
         "result": {
           "__tag": "string",
           "value": "{\\\"status\\\":\\\"ok\\\",\\\"body\\\":\\\"&lt;script&gt;alert('xss')</script>\\\"}"
@@ -3331,13 +3331,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 16
+          "coldTotalMs": 47
         },
         "memory": {
-          "heapUsedBefore": 23918056,
-          "heapUsedAfter": 24287744,
+          "heapUsedBefore": 24060488,
+          "heapUsedAfter": 24430176,
           "heapUsedDelta": 369688,
-          "rssBytes": 84979712
+          "rssBytes": 85368832
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -3361,19 +3361,19 @@
         "elementsPerCall": 100000,
         "tritOpsPerCall": 300000,
         "checksum": -1,
-        "elapsedMs": 301.054,
-        "operationsPerSecond": 996499629,
-        "callsPerSecond": 3322,
+        "elapsedMs": 312.853,
+        "operationsPerSecond": 958915888,
+        "callsPerSecond": 3196,
         "memory": {
           "heapUsedBefore": 4133800,
-          "heapUsedDelta": 375272
+          "heapUsedDelta": 335768
         },
         "notes": [
           "✓ 27/27 Kleene truth-table combinations correct",
           "Common bulk-N path: runBulkTri(100000) = 300000 trit-ops/call, identical on every runtime",
           "Kleene AND/OR/NOT collapse to min/max/neg — single i32 instructions in WASM"
         ],
-        "normThroughput": 996499629,
+        "normThroughput": 958915888,
         "throughputUnit": "trit-ops/s"
       },
       "python": {
@@ -3385,13 +3385,13 @@
         "elementsPerCall": 100000,
         "tritOpsPerCall": 300000,
         "checksum": -1,
-        "elapsedMs": 837.273,
-        "operationsPerSecond": 14332234,
+        "elapsedMs": 827.117,
+        "operationsPerSecond": 14508222,
         "callsPerSecond": 48,
         "notes": [
           "Common bulk-N path: runBulkTri(100000) = 300000 trit-ops/call, identical on every runtime"
         ],
-        "normThroughput": 14332234,
+        "normThroughput": 14508222,
         "throughputUnit": "trit-ops/s"
       },
       "rust": {
@@ -3401,13 +3401,13 @@
         "elementsPerCall": 100000,
         "tritOpsPerCall": 300000,
         "checksum": -1,
-        "elapsedMs": 431.914,
-        "operationsPerSecond": 1389166079,
-        "callsPerSecond": 4631,
+        "elapsedMs": 426.487,
+        "operationsPerSecond": 1406841093,
+        "callsPerSecond": 4689,
         "notes": [
           "Common bulk-N path: runBulkTri(100000)=300000 trit-ops/call, identical on every runtime"
         ],
-        "normThroughput": 1389166079,
+        "normThroughput": 1406841093,
         "throughputUnit": "trit-ops/s"
       },
       "rustAvx2": {
@@ -3417,13 +3417,13 @@
         "elementsPerCall": 100000,
         "tritOpsPerCall": 300000,
         "checksum": -1,
-        "elapsedMs": 430.045,
-        "operationsPerSecond": 1395203152,
-        "callsPerSecond": 4651,
+        "elapsedMs": 426.248,
+        "operationsPerSecond": 1407630578,
+        "callsPerSecond": 4692,
         "notes": [
           "Common bulk-N path: runBulkTri(100000)=300000 trit-ops/call, identical on every runtime"
         ],
-        "normThroughput": 1395203152,
+        "normThroughput": 1407630578,
         "throughputUnit": "trit-ops/s"
       },
       "wasm": {
@@ -3432,11 +3432,11 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 421,
-        "compileMs": 13.597,
-        "elapsedMs": 1280.74,
+        "compileMs": 14.282,
+        "elapsedMs": 1265.598,
         "calls": 2000,
-        "callsPerSecond": 1561.6,
-        "iterationsPerSecond": 156159732.35,
+        "callsPerSecond": 1580.28,
+        "iterationsPerSecond": 158028100.08,
         "result": {
           "__tag": "int",
           "value": -1
@@ -3446,26 +3446,26 @@
           "totalMs": 1266
         },
         "memory": {
-          "rssBytes": 87756800,
-          "heapUsedBytes": 23970472,
+          "rssBytes": 88543232,
+          "heapUsedBytes": 24112648,
           "heapUsedDelta": 1280
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (421 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 13.6ms. Execution: pure WASM, no JS tree-walker.",
+          "Compile (one-time): 14.3ms. Execution: pure WASM, no JS tree-walker.",
           "Kleene AND = i32.min_s, OR = i32.max_s, NOT = i32.sub(0,a) in WAT",
           "Zero branching overhead — should match or beat branchless Node.js"
         ],
         "kleeneNote": "WASM compiles Tri.and=min, Tri.or=max, Tri.not=neg to single i32 instructions",
-        "normThroughput": 468480000,
+        "normThroughput": 474084000,
         "throughputUnit": "trit-ops/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.39,
-        "execMs": 867.86,
-        "totalMs": 868.25,
+        "parseMs": 0.37,
+        "execMs": 904.86,
+        "totalMs": 905.23,
         "result": {
           "__tag": "int",
           "value": -1
@@ -3473,30 +3473,30 @@
         "error": false,
         "runsPerSecond": 1,
         "cpu": {
-          "userMs": 922,
+          "userMs": 906,
           "systemMs": 0,
-          "totalMs": 922
+          "totalMs": 906
         },
         "memory": {
-          "heapUsedBefore": 23640352,
-          "heapUsedAfter": 24205408,
-          "heapUsedDelta": 565056,
-          "rssBefore": 84963328,
-          "rssAfter": 85405696,
-          "rssDelta": 442368,
+          "heapUsedBefore": 23782784,
+          "heapUsedAfter": 25392280,
+          "heapUsedDelta": 1609496,
+          "rssBefore": 85143552,
+          "rssAfter": 86859776,
+          "rssDelta": 1716224,
           "externalBefore": 20959740,
           "externalAfter": 2664431,
           "externalDelta": -18295309
         },
-        "normThroughput": 345678,
+        "normThroughput": 331543,
         "throughputUnit": "trit-ops/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.37,
-        "execMs": 849.19,
-        "totalMs": 849.57,
+        "execMs": 863.89,
+        "totalMs": 864.26,
         "result": {
           "__tag": "int",
           "value": -1
@@ -3504,35 +3504,35 @@
         "error": false,
         "runsPerSecond": 1,
         "cpu": {
-          "userMs": 844,
+          "userMs": 907,
           "systemMs": 0,
-          "totalMs": 844
+          "totalMs": 907
         },
         "memory": {
-          "heapUsedBefore": 23719888,
-          "heapUsedAfter": 25300976,
-          "heapUsedDelta": 1581088,
-          "rssBefore": 85585920,
-          "rssAfter": 85508096,
-          "rssDelta": -77824,
+          "heapUsedBefore": 23862704,
+          "heapUsedAfter": 25137816,
+          "heapUsedDelta": 1275112,
+          "rssBefore": 86921216,
+          "rssAfter": 86904832,
+          "rssDelta": -16384,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 353278,
+        "normThroughput": 347266,
         "throughputUnit": "trit-ops/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.626,
-        "warmMs": 3.003,
-        "coldMs": 16431.655,
+        "setupMs": 1.629,
+        "warmMs": 3.31,
+        "coldMs": 16981.933,
         "warmCalls": 100,
         "coldCalls": 20,
-        "warmCallsPerSecond": 33295.6,
-        "coldCallsPerSecond": 1.22,
-        "iterationsPerSecond": 1.22,
+        "warmCallsPerSecond": 30206.92,
+        "coldCallsPerSecond": 1.18,
+        "iterationsPerSecond": 1.18,
         "result": {
           "__tag": "int",
           "value": -1
@@ -3540,13 +3540,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 16437
+          "coldTotalMs": 17000
         },
         "memory": {
-          "heapUsedBefore": 25522688,
-          "heapUsedAfter": 24292992,
-          "heapUsedDelta": -1229696,
-          "rssBytes": 85696512
+          "heapUsedBefore": 25352856,
+          "heapUsedAfter": 24123656,
+          "heapUsedDelta": -1229200,
+          "rssBytes": 85454848
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -3554,7 +3554,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 366000,
+        "normThroughput": 354000,
         "throughputUnit": "trit-ops/s"
       }
     },
@@ -3576,21 +3576,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          527600,
-          510400,
-          516900,
-          550500,
-          542400,
-          529600,
-          521700,
-          514300,
-          504900
+          517600,
+          500900,
+          493000,
+          489800,
+          496200,
+          491000,
+          492300,
+          489600,
+          492100
         ],
-        "medianNs": 521700,
-        "operationsPerSecond": 1916810427,
+        "medianNs": 492300,
+        "operationsPerSecond": 2031281738,
         "unit": "element-reads/s",
         "antiElision": "returned-last-value-and-iteration-count",
-        "normThroughput": 1916810427,
+        "normThroughput": 2031281738,
         "throughputUnit": "element-reads/s"
       },
       "python": {
@@ -3598,21 +3598,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          51155600,
-          50344700,
-          50725100,
-          51444300,
-          50200800,
-          50503300,
-          50736400,
-          51464100,
-          51942400
+          49478900,
+          49060000,
+          50205300,
+          50232000,
+          49885000,
+          49474500,
+          49551700,
+          49613200,
+          49635000
         ],
-        "medianNs": 50736400,
-        "operationsPerSecond": 19709715,
+        "medianNs": 49613200,
+        "operationsPerSecond": 20155926,
         "unit": "element-reads/s",
         "antiElision": "interpreter-observes-returned-last-value-and-iteration-count",
-        "normThroughput": 19709715,
+        "normThroughput": 20155926,
         "throughputUnit": "element-reads/s"
       },
       "rust": {
@@ -3620,21 +3620,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          436200,
-          422700,
-          430000,
-          417600,
-          416700,
-          433300,
-          424400,
-          424400,
-          425100
+          417800,
+          417300,
+          415500,
+          417100,
+          415500,
+          415500,
+          417800,
+          434200,
+          445500
         ],
-        "medianNs": 424400,
-        "operationsPerSecond": 2356267672,
+        "medianNs": 417300,
+        "operationsPerSecond": 2396357536,
         "unit": "element-reads/s",
         "antiElision": "std::hint::black_box-per-index",
-        "normThroughput": 2356267672,
+        "normThroughput": 2396357536,
         "throughputUnit": "element-reads/s"
       },
       "rustAvx2": {
@@ -3642,21 +3642,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          323100,
-          290000,
-          284000,
-          283900,
-          287000,
-          281700,
-          276100,
-          273800,
-          294700
+          273200,
+          272200,
+          269600,
+          271700,
+          269600,
+          271700,
+          269500,
+          269600,
+          269600
         ],
-        "medianNs": 284000,
-        "operationsPerSecond": 3521126760,
+        "medianNs": 269600,
+        "operationsPerSecond": 3709198813,
         "unit": "element-reads/s",
         "antiElision": "std::hint::black_box-per-index",
-        "normThroughput": 3521126760,
+        "normThroughput": 3709198813,
         "throughputUnit": "element-reads/s"
       },
       "go": {
@@ -3664,21 +3664,21 @@
         "iterations": 1000000,
         "result": 999999,
         "samplesNs": [
-          1096400,
-          1090000,
-          1097000,
-          1086000,
-          1085500,
-          1088600,
-          1318600,
-          1083400,
-          1084700
+          1124400,
+          1036900,
+          1028700,
+          1069800,
+          1092900,
+          1216200,
+          1092000,
+          1088300,
+          1130500
         ],
-        "medianNs": 1088600,
-        "operationsPerSecond": 918611060,
+        "medianNs": 1092000,
+        "operationsPerSecond": 915750915,
         "unit": "element-reads/s",
         "antiElision": "noinline-observed-read-per-index-and-observed-last-value",
-        "normThroughput": 918611060,
+        "normThroughput": 915750915,
         "throughputUnit": "element-reads/s"
       },
       "checkedReference": {
@@ -3809,9 +3809,9 @@
         "calls": 5000,
         "recordScansPerCall": 10000,
         "checksum": 16950,
-        "elapsedMs": 129.318,
-        "operationsPerSecond": 386644973,
-        "callsPerSecond": 38664,
+        "elapsedMs": 129.129,
+        "operationsPerSecond": 387211189,
+        "callsPerSecond": 38721,
         "memory": {
           "heapUsedBefore": 4125368,
           "heapUsedDelta": 26656
@@ -3820,7 +3820,7 @@
           "Common bulk-N path: scanRecords(10000) = 10000 record-scans/call (filter + group-by), identical on every runtime",
           "Integer core = the WASM/interp-comparable throughput; Galerina's taint checker governs the real Tainted<String> query path at compile time"
         ],
-        "normThroughput": 386644973,
+        "normThroughput": 387211189,
         "throughputUnit": "record-scans/s"
       },
       "python": {
@@ -3830,21 +3830,52 @@
         "calls": 300,
         "recordScansPerCall": 10000,
         "checksum": 16950,
-        "elapsedMs": 429.466,
-        "operationsPerSecond": 6985414,
-        "callsPerSecond": 699,
+        "elapsedMs": 428.831,
+        "operationsPerSecond": 6995768,
+        "callsPerSecond": 700,
         "notes": [
           "Common bulk-N path: scanRecords(10000) = 10000 record-scans/call (filter + group-by), identical on every runtime"
         ],
-        "normThroughput": 6985414,
+        "normThroughput": 6995768,
         "throughputUnit": "record-scans/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.35,
-        "execMs": 41.92,
-        "totalMs": 42.27,
+        "execMs": 42.9,
+        "totalMs": 43.25,
+        "result": {
+          "__tag": "int",
+          "value": 16950
+        },
+        "error": false,
+        "runsPerSecond": 23,
+        "cpu": {
+          "userMs": 78,
+          "systemMs": 0,
+          "totalMs": 78
+        },
+        "memory": {
+          "heapUsedBefore": 24698136,
+          "heapUsedAfter": 27249920,
+          "heapUsedDelta": 2551784,
+          "rssBefore": 91549696,
+          "rssAfter": 91975680,
+          "rssDelta": 425984,
+          "externalBefore": 2772916,
+          "externalAfter": 2664431,
+          "externalDelta": -108485
+        },
+        "normThroughput": 233100,
+        "throughputUnit": "record-scans/s"
+      },
+      "galerinaManifest": {
+        "runtime": "galerina-manifest",
+        "mode": "manifest",
+        "parseMs": 0.48,
+        "execMs": 41.09,
+        "totalMs": 41.57,
         "result": {
           "__tag": "int",
           "value": 16950
@@ -3852,80 +3883,49 @@
         "error": false,
         "runsPerSecond": 24,
         "cpu": {
-          "userMs": 47,
+          "userMs": 125,
           "systemMs": 0,
-          "totalMs": 47
+          "totalMs": 125
         },
         "memory": {
-          "heapUsedBefore": 24537224,
-          "heapUsedAfter": 27110688,
-          "heapUsedDelta": 2573464,
-          "rssBefore": 91058176,
-          "rssAfter": 90562560,
-          "rssDelta": -495616,
-          "externalBefore": 2739797,
-          "externalAfter": 2664431,
-          "externalDelta": -75366
-        },
-        "normThroughput": 238550,
-        "throughputUnit": "record-scans/s"
-      },
-      "galerinaManifest": {
-        "runtime": "galerina-manifest",
-        "mode": "manifest",
-        "parseMs": 0.46,
-        "execMs": 40.07,
-        "totalMs": 40.53,
-        "result": {
-          "__tag": "int",
-          "value": 16950
-        },
-        "error": false,
-        "runsPerSecond": 25,
-        "cpu": {
-          "userMs": 78,
-          "systemMs": 0,
-          "totalMs": 78
-        },
-        "memory": {
-          "heapUsedBefore": 24474344,
-          "heapUsedAfter": 25391944,
-          "heapUsedDelta": 917600,
-          "rssBefore": 90914816,
-          "rssAfter": 90443776,
-          "rssDelta": -471040,
+          "heapUsedBefore": 24640656,
+          "heapUsedAfter": 25396808,
+          "heapUsedDelta": 756152,
+          "rssBefore": 92078080,
+          "rssAfter": 90533888,
+          "rssDelta": -1544192,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 249563,
+        "normThroughput": 243368,
         "throughputUnit": "record-scans/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.181,
-        "warmMs": 1.217,
-        "coldMs": 674.544,
+        "setupMs": 1.199,
+        "warmMs": 1.214,
+        "coldMs": 705.573,
         "warmCalls": 50,
         "coldCalls": 20,
-        "warmCallsPerSecond": 41101.52,
-        "coldCallsPerSecond": 29.65,
-        "iterationsPerSecond": 29.65,
+        "warmCallsPerSecond": 41179.38,
+        "coldCallsPerSecond": 28.35,
+        "iterationsPerSecond": 28.35,
         "result": {
           "__tag": "int",
           "value": 16950
         },
         "error": false,
         "cpu": {
-          "warmTotalMs": 0,
-          "coldTotalMs": 671
+          "warmTotalMs": 16,
+          "coldTotalMs": 718
         },
         "memory": {
-          "heapUsedBefore": 27287272,
-          "heapUsedAfter": 28757032,
-          "heapUsedDelta": 1469760,
-          "rssBytes": 90841088
+          "heapUsedBefore": 27237504,
+          "heapUsedAfter": 28705920,
+          "heapUsedDelta": 1468416,
+          "rssBytes": 92053504
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -3933,7 +3933,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 296500,
+        "normThroughput": 283500,
         "throughputUnit": "record-scans/s"
       }
     },
@@ -3956,26 +3956,26 @@
         "result": 57984,
         "iterations": 50000,
         "callsPerIteration": 7,
-        "elapsedMs": 1.005,
-        "iterationsPerSecond": 49751243.78,
-        "callsPerSecond": 348258706.47,
+        "elapsedMs": 1.179,
+        "iterationsPerSecond": 42398032.73,
+        "callsPerSecond": 296786229.12,
         "cpu": {
           "totalMs": 0
         },
         "memory": {
-          "rssBytes": 53473280,
-          "heapUsedBytes": 4151144,
+          "rssBytes": 53358592,
+          "heapUsedBytes": 4151152,
           "maxRssBytes": null,
-          "heapUsedBefore": 4137080,
+          "heapUsedBefore": 4137088,
           "heapUsedDelta": 14064
         },
         "process": {
-          "pid": 21120,
+          "pid": 11596,
           "node": "v24.18.0",
           "platform": "win32",
           "arch": "x64"
         },
-        "normThroughput": 49751243.78,
+        "normThroughput": 42398032.73,
         "throughputUnit": "chains/s"
       },
       "python": {
@@ -3984,11 +3984,11 @@
         "result": 57984,
         "iterations": 50000,
         "callsPerIteration": 7,
-        "elapsedMs": 20.64,
-        "iterationsPerSecond": 2422433.67,
-        "callsPerSecond": 16957035.72,
+        "elapsedMs": 22.214,
+        "iterationsPerSecond": 2250832.81,
+        "callsPerSecond": 15755829.66,
         "cpu": {
-          "processMs": 31.25
+          "processMs": 15.625
         },
         "memory": {
           "heapUsedBytes": 368,
@@ -3997,12 +3997,12 @@
           "tracemallocPeak": 368
         },
         "process": {
-          "pid": 24200,
+          "pid": 23672,
           "python": "3.14.6",
           "platform": "Windows-10-10.0.19045-SP0",
           "arch": "AMD64"
         },
-        "normThroughput": 2422433.67,
+        "normThroughput": 2250832.81,
         "throughputUnit": "chains/s"
       },
       "rust": {
@@ -4011,10 +4011,10 @@
         "result": 57984,
         "iterations": 50000,
         "callsPerIteration": 7,
-        "elapsedMs": 0.3262,
-        "iterationsPerSecond": 153280196.198651,
-        "callsPerSecond": 1072961373.390558,
-        "normThroughput": 153280196.198651,
+        "elapsedMs": 0.3245,
+        "iterationsPerSecond": 154083204.930663,
+        "callsPerSecond": 1078582434.514638,
+        "normThroughput": 154083204.930663,
         "throughputUnit": "chains/s"
       },
       "rustAvx2": {
@@ -4023,19 +4023,19 @@
         "result": 57984,
         "iterations": 50000,
         "callsPerIteration": 7,
-        "elapsedMs": 0.3311,
-        "iterationsPerSecond": 151011778.918756,
-        "callsPerSecond": 1057082452.43129,
-        "normThroughput": 151011778.918756,
+        "elapsedMs": 0.3263,
+        "iterationsPerSecond": 153233220.962305,
+        "callsPerSecond": 1072632546.736132,
+        "normThroughput": 153233220.962305,
         "throughputUnit": "chains/s"
       },
       "go": {
         "benchmark": "call-chain-v1",
         "callsPerIteration": 7,
-        "callsPerSecond": 972416705.563335,
-        "elapsedMs": 0.359928,
+        "callsPerSecond": 1007414571.2443585,
+        "elapsedMs": 0.347424,
         "iterations": 50000,
-        "iterationsPerSecond": 138916672.22333357,
+        "iterationsPerSecond": 143916367.32062265,
         "measurementRepeats": 25,
         "process": {
           "arch": "amd64",
@@ -4044,7 +4044,7 @@
         },
         "result": 57984,
         "runtime": "go",
-        "normThroughput": 138916672.22333357,
+        "normThroughput": 143916367.32062265,
         "throughputUnit": "chains/s"
       },
       "wasm": {
@@ -4053,11 +4053,11 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 309,
-        "compileMs": 13.247,
-        "elapsedMs": 1820.016,
+        "compileMs": 13.839,
+        "elapsedMs": 1824.527,
         "calls": 2000,
-        "callsPerSecond": 1098.89,
-        "iterationsPerSecond": 54944568.9,
+        "callsPerSecond": 1096.17,
+        "iterationsPerSecond": 54808719.76,
         "result": {
           "__tag": "int",
           "value": 57984
@@ -4067,15 +4067,15 @@
           "totalMs": 1828
         },
         "memory": {
-          "rssBytes": 94093312,
-          "heapUsedBytes": 24778160,
+          "rssBytes": 93433856,
+          "heapUsedBytes": 24961384,
           "heapUsedDelta": 1280
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (309 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 13.2ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 13.8ms. Execution: pure WASM, no JS tree-walker."
         ],
-        "normThroughput": 54944500,
+        "normThroughput": 54808500,
         "throughputUnit": "chains/s"
       },
       "slideReference": {
@@ -4085,24 +4085,24 @@
         "result": 57984,
         "workCount": 50000,
         "throughputUnit": "chains/s",
-        "elapsedMs": 261.94879999998375,
-        "normThroughput": 190876.99580988003,
+        "elapsedMs": 260.733899999992,
+        "normThroughput": 191766.39478027803,
         "operations": 50000,
-        "operationsPerSecond": 190876.99580988003,
+        "operationsPerSecond": 191766.39478027803,
         "iterations": 50000,
-        "iterationsPerSecond": 190876.99580988003,
+        "iterationsPerSecond": 191766.39478027803,
         "callsPerIteration": 7,
-        "compileMs": 6.0228000000061,
-        "prepareMs": 1.253100000001723,
+        "compileMs": 5.846900000004098,
+        "prepareMs": 1.239899999985937,
         "warmupRuns": 2,
         "samples": [
-          265.37470000001485,
-          263.3451000000059,
-          261.94879999998375,
-          261.3800999999803,
-          259.64670000001206,
-          262.0916000000143,
-          260.16130000000703
+          264.4456000000064,
+          260.733899999992,
+          259.569599999988,
+          259.5697999999975,
+          264.3904999999795,
+          262.06869999997434,
+          260.6896999999881
         ],
         "statistic": "median",
         "sourceDigest": "sha256:f7568fc9a94e01bd0c3b55782355f25cc5211554fbb012e381196db5a3558b58",
@@ -4119,9 +4119,9 @@
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.47,
-        "execMs": 901.38,
-        "totalMs": 901.84,
+        "parseMs": 0.46,
+        "execMs": 887.05,
+        "totalMs": 887.51,
         "result": {
           "__tag": "int",
           "value": 57984
@@ -4129,30 +4129,30 @@
         "error": false,
         "runsPerSecond": 1,
         "cpu": {
-          "userMs": 969,
+          "userMs": 890,
           "systemMs": 0,
-          "totalMs": 969
+          "totalMs": 890
         },
         "memory": {
-          "heapUsedBefore": 24685176,
-          "heapUsedAfter": 28042720,
-          "heapUsedDelta": 3357544,
-          "rssBefore": 99508224,
-          "rssAfter": 101203968,
-          "rssDelta": 1695744,
-          "externalBefore": 21036808,
+          "heapUsedBefore": 24866016,
+          "heapUsedAfter": 31726216,
+          "heapUsedDelta": 6860200,
+          "rssBefore": 99352576,
+          "rssAfter": 101195776,
+          "rssDelta": 1843200,
+          "externalBefore": 21036931,
           "externalAfter": 2664431,
-          "externalDelta": -18372377
+          "externalDelta": -18372500
         },
-        "normThroughput": 55471,
+        "normThroughput": 56367,
         "throughputUnit": "chains/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.75,
-        "execMs": 876.95,
-        "totalMs": 877.7,
+        "parseMs": 0.47,
+        "execMs": 893.82,
+        "totalMs": 894.29,
         "result": {
           "__tag": "int",
           "value": 57984
@@ -4160,35 +4160,35 @@
         "error": false,
         "runsPerSecond": 1,
         "cpu": {
-          "userMs": 953,
+          "userMs": 922,
           "systemMs": 0,
-          "totalMs": 953
+          "totalMs": 922
         },
         "memory": {
-          "heapUsedBefore": 24714616,
-          "heapUsedAfter": 28119784,
-          "heapUsedDelta": 3405168,
-          "rssBefore": 101343232,
-          "rssAfter": 101384192,
-          "rssDelta": 40960,
+          "heapUsedBefore": 24875024,
+          "heapUsedAfter": 31822280,
+          "heapUsedDelta": 6947256,
+          "rssBefore": 101302272,
+          "rssAfter": 100933632,
+          "rssDelta": -368640,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 57016,
+        "normThroughput": 55940,
         "throughputUnit": "chains/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.45,
-        "warmMs": 0.189,
-        "coldMs": 813.463,
+        "setupMs": 1.227,
+        "warmMs": 0.188,
+        "coldMs": 836.306,
         "warmCalls": 5,
         "coldCalls": 1,
-        "warmCallsPerSecond": 26455.03,
-        "coldCallsPerSecond": 1.23,
-        "iterationsPerSecond": 1.23,
+        "warmCallsPerSecond": 26666.67,
+        "coldCallsPerSecond": 1.2,
+        "iterationsPerSecond": 1.2,
         "result": {
           "__tag": "int",
           "value": 57984
@@ -4196,13 +4196,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 813
+          "coldTotalMs": 828
         },
         "memory": {
-          "heapUsedBefore": 26709640,
-          "heapUsedAfter": 26857272,
-          "heapUsedDelta": 147632,
-          "rssBytes": 101384192
+          "heapUsedBefore": 30401000,
+          "heapUsedAfter": 30548600,
+          "heapUsedDelta": 147600,
+          "rssBytes": 100933632
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -4210,7 +4210,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 61500,
+        "normThroughput": 60000,
         "throughputUnit": "chains/s"
       }
     },
@@ -4234,22 +4234,22 @@
         "steps": 8,
         "iterations": 200,
         "checksum": 536024,
-        "elapsedMs": 53.15,
-        "iterationsPerSecond": 3762.95,
-        "forceEvalsPerSecond": 123304321,
+        "elapsedMs": 53.314,
+        "iterationsPerSecond": 3751.39,
+        "forceEvalsPerSecond": 122925482,
         "cpu": {
-          "totalMs": 79
+          "totalMs": 47
         },
         "memory": {
-          "rssBytes": 55697408,
-          "heapUsedBytes": 4181576,
-          "heapUsedBefore": 4151512,
-          "heapUsedDelta": 30064
+          "rssBytes": 55595008,
+          "heapUsedBytes": 4181720,
+          "heapUsedBefore": 4151640,
+          "heapUsedDelta": 30080
         },
         "notes": [
           "Scaled-integer N-body — checksum matches Python and Galerina bit-for-bit"
         ],
-        "normThroughput": 123304321,
+        "normThroughput": 122925482,
         "throughputUnit": "force-evals/s"
       },
       "python": {
@@ -4259,9 +4259,9 @@
         "steps": 8,
         "iterations": 50,
         "checksum": 536024,
-        "elapsedMs": 906.882,
-        "iterationsPerSecond": 55.13,
-        "forceEvalsPerSecond": 1806631,
+        "elapsedMs": 869.117,
+        "iterationsPerSecond": 57.53,
+        "forceEvalsPerSecond": 1885133,
         "memory": {
           "heapUsedBytes": 624,
           "heapUsedDelta": 624,
@@ -4271,7 +4271,7 @@
         "notes": [
           "Scaled-integer N-body — checksum matches Node and Galerina bit-for-bit"
         ],
-        "normThroughput": 1806631,
+        "normThroughput": 1885133,
         "throughputUnit": "force-evals/s"
       },
       "wasm": {
@@ -4280,11 +4280,11 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 722,
-        "compileMs": 16.369,
-        "elapsedMs": 1129.734,
+        "compileMs": 16.087,
+        "elapsedMs": 1114.703,
         "calls": 1000,
-        "callsPerSecond": 885.16,
-        "iterationsPerSecond": 29005050.13,
+        "callsPerSecond": 897.1,
+        "iterationsPerSecond": 29396171,
         "result": {
           "__tag": "int",
           "value": 536024
@@ -4294,23 +4294,23 @@
           "totalMs": 1125
         },
         "memory": {
-          "rssBytes": 102731776,
-          "heapUsedBytes": 25056072,
+          "rssBytes": 102076416,
+          "heapUsedBytes": 25218464,
           "heapUsedDelta": 1176
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (722 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 16.4ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 16.1ms. Execution: pure WASM, no JS tree-walker."
         ],
-        "normThroughput": 29004923,
+        "normThroughput": 29396173,
         "throughputUnit": "force-evals/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.58,
-        "execMs": 506.36,
-        "totalMs": 506.94,
+        "parseMs": 0.59,
+        "execMs": 487.41,
+        "totalMs": 488,
         "result": {
           "__tag": "int",
           "value": 536024
@@ -4318,30 +4318,30 @@
         "error": false,
         "runsPerSecond": 2,
         "cpu": {
-          "userMs": 547,
+          "userMs": 531,
           "systemMs": 0,
-          "totalMs": 547
+          "totalMs": 531
         },
         "memory": {
-          "heapUsedBefore": 24772200,
-          "heapUsedAfter": 26786904,
-          "heapUsedDelta": 2014704,
-          "rssBefore": 100048896,
-          "rssAfter": 100134912,
-          "rssDelta": 86016,
-          "externalBefore": 20960342,
+          "heapUsedBefore": 24933640,
+          "heapUsedAfter": 26430712,
+          "heapUsedDelta": 1497072,
+          "rssBefore": 99389440,
+          "rssAfter": 99389440,
+          "rssDelta": 0,
+          "externalBefore": 20960465,
           "externalAfter": 2664431,
-          "externalDelta": -18295911
+          "externalDelta": -18296034
         },
-        "normThroughput": 64713,
+        "normThroughput": 67229,
         "throughputUnit": "force-evals/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.8,
-        "execMs": 507,
-        "totalMs": 507.8,
+        "parseMs": 0.78,
+        "execMs": 502.09,
+        "totalMs": 502.87,
         "result": {
           "__tag": "int",
           "value": 536024
@@ -4354,30 +4354,30 @@
           "totalMs": 516
         },
         "memory": {
-          "heapUsedBefore": 24783136,
-          "heapUsedAfter": 26097816,
-          "heapUsedDelta": 1314680,
-          "rssBefore": 100241408,
-          "rssAfter": 99868672,
-          "rssDelta": -372736,
+          "heapUsedBefore": 24944544,
+          "heapUsedAfter": 25626672,
+          "heapUsedDelta": 682128,
+          "rssBefore": 99610624,
+          "rssAfter": 102146048,
+          "rssDelta": 2535424,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 64631,
+        "normThroughput": 65263,
         "throughputUnit": "force-evals/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 2.87,
-        "warmMs": 0.288,
-        "coldMs": 494.165,
+        "setupMs": 2.635,
+        "warmMs": 0.269,
+        "coldMs": 484.287,
         "warmCalls": 5,
         "coldCalls": 1,
-        "warmCallsPerSecond": 17379.21,
-        "coldCallsPerSecond": 2.02,
-        "iterationsPerSecond": 2.02,
+        "warmCallsPerSecond": 18559.76,
+        "coldCallsPerSecond": 2.06,
+        "iterationsPerSecond": 2.06,
         "result": {
           "__tag": "int",
           "value": 536024
@@ -4385,13 +4385,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 485
+          "coldTotalMs": 484
         },
         "memory": {
-          "heapUsedBefore": 28723744,
-          "heapUsedAfter": 28990808,
+          "heapUsedBefore": 26162096,
+          "heapUsedAfter": 26429160,
           "heapUsedDelta": 267064,
-          "rssBytes": 100147200
+          "rssBytes": 102146048
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -4399,7 +4399,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 66191,
+        "normThroughput": 67502,
         "throughputUnit": "force-evals/s"
       }
     },
@@ -4426,28 +4426,28 @@
           "splitScan": {
             "name": "Split-scan parse (fields + value lengths)",
             "iterations": 400,
-            "elapsedMs": 59.5,
-            "operationsPerSecond": 6723,
-            "nsPerOp": 148750.8
+            "elapsedMs": 180.54,
+            "operationsPerSecond": 2216,
+            "nsPerOp": 451349
           },
           "jsonParse": {
             "name": "JSON.parse + field read",
             "iterations": 200000,
-            "elapsedMs": 66.523,
-            "operationsPerSecond": 3006456,
-            "nsPerOp": 332.6
+            "elapsedMs": 65.861,
+            "operationsPerSecond": 3036699,
+            "nsPerOp": 329.3
           }
         },
         "memory": {
           "heapUsedBefore": 4122808,
-          "heapUsedDelta": 254248
+          "heapUsedDelta": 250856
         },
         "notes": [
           "Records: 500 key:value records of 5 fields each",
           "checksum = N × (5 fields + 20 value-chars) via split/length — matches Galerina and Python",
           "splitScan mirrors the .fungi kernel; jsonParse is the native JSON.parse path for reference"
         ],
-        "normThroughput": 3361500,
+        "normThroughput": 1108000,
         "throughputUnit": "records/s"
       },
       "python": {
@@ -4460,16 +4460,16 @@
           "splitScan": {
             "name": "Split-scan parse",
             "iterations": 400,
-            "elapsedMs": 265.932,
-            "operationsPerSecond": 1504,
-            "nsPerOp": 664830
+            "elapsedMs": 262.966,
+            "operationsPerSecond": 1521,
+            "nsPerOp": 657414.2
           },
           "jsonParse": {
             "name": "json.loads + field read",
             "iterations": 200000,
-            "elapsedMs": 344.134,
-            "operationsPerSecond": 581168,
-            "nsPerOp": 1720.7
+            "elapsedMs": 327.016,
+            "operationsPerSecond": 611591,
+            "nsPerOp": 1635.1
           }
         },
         "memory": {
@@ -4482,15 +4482,15 @@
           "Records: 500 key:value records",
           "checksum = N x (5 fields + 20 value-chars) via split/len — matches Galerina and Node"
         ],
-        "normThroughput": 752000,
+        "normThroughput": 760500,
         "throughputUnit": "records/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.47,
-        "execMs": 89.34,
-        "totalMs": 89.81,
+        "parseMs": 0.55,
+        "execMs": 92.89,
+        "totalMs": 93.44,
         "result": {
           "__tag": "int",
           "value": 12500
@@ -4498,30 +4498,30 @@
         "error": false,
         "runsPerSecond": 11,
         "cpu": {
-          "userMs": 109,
+          "userMs": 156,
           "systemMs": 0,
-          "totalMs": 109
+          "totalMs": 156
         },
         "memory": {
-          "heapUsedBefore": 24786672,
-          "heapUsedAfter": 27459520,
-          "heapUsedDelta": 2672848,
-          "rssBefore": 100315136,
-          "rssAfter": 104050688,
-          "rssDelta": 3735552,
+          "heapUsedBefore": 24949296,
+          "heapUsedAfter": 26708776,
+          "heapUsedDelta": 1759480,
+          "rssBefore": 102354944,
+          "rssAfter": 107671552,
+          "rssDelta": 5316608,
           "externalBefore": 2666114,
           "externalAfter": 2664431,
           "externalDelta": -1683
         },
-        "normThroughput": 5597,
+        "normThroughput": 5383,
         "throughputUnit": "records/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
-        "parseMs": 0.71,
-        "execMs": 90.85,
-        "totalMs": 91.56,
+        "parseMs": 0.56,
+        "execMs": 91.33,
+        "totalMs": 91.9,
         "result": {
           "__tag": "int",
           "value": 12500
@@ -4529,35 +4529,35 @@
         "error": false,
         "runsPerSecond": 11,
         "cpu": {
-          "userMs": 94,
+          "userMs": 156,
           "systemMs": 0,
-          "totalMs": 94
+          "totalMs": 156
         },
         "memory": {
-          "heapUsedBefore": 25290392,
-          "heapUsedAfter": 26247208,
-          "heapUsedDelta": 956816,
-          "rssBefore": 106774528,
-          "rssAfter": 103129088,
-          "rssDelta": -3645440,
+          "heapUsedBefore": 25452952,
+          "heapUsedAfter": 28420520,
+          "heapUsedDelta": 2967568,
+          "rssBefore": 107962368,
+          "rssAfter": 103075840,
+          "rssDelta": -4886528,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 5504,
+        "normThroughput": 5475,
         "throughputUnit": "records/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.601,
-        "warmMs": 0.663,
-        "coldMs": 992.098,
+        "setupMs": 1.618,
+        "warmMs": 0.669,
+        "coldMs": 983.672,
         "warmCalls": 20,
         "coldCalls": 20,
-        "warmCallsPerSecond": 30175.02,
-        "coldCallsPerSecond": 20.16,
-        "iterationsPerSecond": 20.16,
+        "warmCallsPerSecond": 29899.84,
+        "coldCallsPerSecond": 20.33,
+        "iterationsPerSecond": 20.33,
         "result": {
           "__tag": "int",
           "value": 12500
@@ -4565,13 +4565,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 1108
+          "coldTotalMs": 1062
         },
         "memory": {
-          "heapUsedBefore": 29326504,
-          "heapUsedAfter": 29876552,
-          "heapUsedDelta": 550048,
-          "rssBytes": 101363712
+          "heapUsedBefore": 27337352,
+          "heapUsedAfter": 27887416,
+          "heapUsedDelta": 550064,
+          "rssBytes": 100786176
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -4579,7 +4579,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 10080,
+        "normThroughput": 10165,
         "throughputUnit": "records/s"
       }
     },
@@ -4602,21 +4602,21 @@
         "iterations": 200,
         "pixels": 16384,
         "checksum": 230132,
-        "elapsedMs": 480.073,
-        "operationsPerSecond": 6825636,
+        "elapsedMs": 517.824,
+        "operationsPerSecond": 6328022,
         "cpu": {
-          "totalMs": 484
+          "totalMs": 515
         },
         "memory": {
-          "rssBytes": 55201792,
-          "heapUsedBytes": 5141200,
-          "heapUsedBefore": 4128336,
-          "heapUsedDelta": 1012864
+          "rssBytes": 55275520,
+          "heapUsedBytes": 4488040,
+          "heapUsedBefore": 4128240,
+          "heapUsedDelta": 359800
         },
         "notes": [
           "Scaled-integer Mandelbrot escape-time — checksum matches Python, Rust and Galerina bit-for-bit"
         ],
-        "normThroughput": 6825636,
+        "normThroughput": 6328022,
         "throughputUnit": "pixels/s"
       },
       "python": {
@@ -4625,8 +4625,8 @@
         "iterations": 200,
         "pixels": 16384,
         "checksum": 230132,
-        "elapsedMs": 12330.261,
-        "operationsPerSecond": 265753,
+        "elapsedMs": 12124.139,
+        "operationsPerSecond": 270271,
         "memory": {
           "heapUsedBytes": 3408,
           "heapUsedDelta": 3408,
@@ -4636,7 +4636,7 @@
         "notes": [
           "Scaled-integer Mandelbrot escape-time — checksum matches Node, Rust and Galerina bit-for-bit"
         ],
-        "normThroughput": 265753,
+        "normThroughput": 270271,
         "throughputUnit": "pixels/s"
       },
       "rust": {
@@ -4645,9 +4645,9 @@
         "iterations": 200,
         "pixels": 16384,
         "checksum": 230132,
-        "elapsedMs": 139.651,
-        "operationsPerSecond": 23464174,
-        "normThroughput": 23464174,
+        "elapsedMs": 137.909,
+        "operationsPerSecond": 23760647,
+        "normThroughput": 23760647,
         "throughputUnit": "pixels/s"
       },
       "rustAvx2": {
@@ -4656,9 +4656,9 @@
         "iterations": 200,
         "pixels": 16384,
         "checksum": 230132,
-        "elapsedMs": 139.921,
-        "operationsPerSecond": 23418879,
-        "normThroughput": 23418879,
+        "elapsedMs": 137.525,
+        "operationsPerSecond": 23826854,
+        "normThroughput": 23826854,
         "throughputUnit": "pixels/s"
       },
       "wasm": {
@@ -4667,37 +4667,37 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 582,
-        "compileMs": 16.015,
-        "elapsedMs": 1797.124,
+        "compileMs": 16.163,
+        "elapsedMs": 1791.362,
         "calls": 1000,
-        "callsPerSecond": 556.44,
-        "iterationsPerSecond": 9116788.82,
+        "callsPerSecond": 558.23,
+        "iterationsPerSecond": 9146112.89,
         "result": {
           "__tag": "int",
           "value": 230132
         },
         "error": false,
         "cpu": {
-          "totalMs": 1781
+          "totalMs": 1796
         },
         "memory": {
-          "rssBytes": 104148992,
-          "heapUsedBytes": 25707272,
+          "rssBytes": 103354368,
+          "heapUsedBytes": 25869928,
           "heapUsedDelta": 1176
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (582 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 16.0ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 16.2ms. Execution: pure WASM, no JS tree-walker."
         ],
-        "normThroughput": 9116713,
+        "normThroughput": 9146040,
         "throughputUnit": "pixels/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
         "parseMs": 0.32,
-        "execMs": 1926.65,
-        "totalMs": 1926.97,
+        "execMs": 1979.5,
+        "totalMs": 1979.81,
         "result": {
           "__tag": "int",
           "value": 230132
@@ -4705,30 +4705,30 @@
         "error": false,
         "runsPerSecond": 1,
         "cpu": {
-          "userMs": 1969,
+          "userMs": 2047,
           "systemMs": 0,
-          "totalMs": 1969
+          "totalMs": 2047
         },
         "memory": {
-          "heapUsedBefore": 25426104,
-          "heapUsedAfter": 26699480,
-          "heapUsedDelta": 1273376,
-          "rssBefore": 101482496,
-          "rssAfter": 104509440,
-          "rssDelta": 3026944,
+          "heapUsedBefore": 25588096,
+          "heapUsedAfter": 26760248,
+          "heapUsedDelta": 1172152,
+          "rssBefore": 101105664,
+          "rssAfter": 102965248,
+          "rssDelta": 1859584,
           "externalBefore": 20960185,
           "externalAfter": 2664431,
           "externalDelta": -18295754
         },
-        "normThroughput": 8504,
+        "normThroughput": 8277,
         "throughputUnit": "pixels/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.47,
-        "execMs": 1989.99,
-        "totalMs": 1990.46,
+        "execMs": 1985.32,
+        "totalMs": 1985.79,
         "result": {
           "__tag": "int",
           "value": 230132
@@ -4736,35 +4736,35 @@
         "error": false,
         "runsPerSecond": 1,
         "cpu": {
-          "userMs": 2015,
-          "systemMs": 0,
-          "totalMs": 2015
+          "userMs": 1984,
+          "systemMs": 15,
+          "totalMs": 1999
         },
         "memory": {
-          "heapUsedBefore": 25190984,
-          "heapUsedAfter": 27368896,
-          "heapUsedDelta": 2177912,
-          "rssBefore": 104566784,
-          "rssAfter": 104796160,
-          "rssDelta": 229376,
+          "heapUsedBefore": 25353416,
+          "heapUsedAfter": 28477592,
+          "heapUsedDelta": 3124176,
+          "rssBefore": 103022592,
+          "rssAfter": 102973440,
+          "rssDelta": -49152,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 8233,
+        "normThroughput": 8253,
         "throughputUnit": "pixels/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.847,
-        "warmMs": 0.215,
-        "coldMs": 1902.172,
+        "setupMs": 2.121,
+        "warmMs": 0.219,
+        "coldMs": 1964.087,
         "warmCalls": 5,
         "coldCalls": 1,
-        "warmCallsPerSecond": 23310.02,
-        "coldCallsPerSecond": 0.53,
-        "iterationsPerSecond": 0.53,
+        "warmCallsPerSecond": 22799.82,
+        "coldCallsPerSecond": 0.51,
+        "iterationsPerSecond": 0.51,
         "result": {
           "__tag": "int",
           "value": 230132
@@ -4772,13 +4772,13 @@
         "error": false,
         "cpu": {
           "warmTotalMs": 0,
-          "coldTotalMs": 1890
+          "coldTotalMs": 1953
         },
         "memory": {
-          "heapUsedBefore": 27875064,
-          "heapUsedAfter": 28071064,
-          "heapUsedDelta": 196000,
-          "rssBytes": 104796160
+          "heapUsedBefore": 28962184,
+          "heapUsedAfter": 29158216,
+          "heapUsedDelta": 196032,
+          "rssBytes": 102973440
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -4786,7 +4786,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 8684,
+        "normThroughput": 8356,
         "throughputUnit": "pixels/s"
       }
     },
@@ -4809,21 +4809,21 @@
         "iterations": 50,
         "aEvals": 200000,
         "checksum": 6647,
-        "elapsedMs": 41.091,
-        "operationsPerSecond": 243362886,
+        "elapsedMs": 41.576,
+        "operationsPerSecond": 240523379,
         "cpu": {
-          "totalMs": 31
+          "totalMs": 47
         },
         "memory": {
-          "rssBytes": 55115776,
-          "heapUsedBytes": 4429864,
-          "heapUsedBefore": 4136272,
-          "heapUsedDelta": 293592
+          "rssBytes": 55046144,
+          "heapUsedBytes": 4429704,
+          "heapUsedBefore": 4136224,
+          "heapUsedDelta": 293480
         },
         "notes": [
           "Scaled-int power iteration (n=100, 10 iters); checksum is byte-identical to Python and Rust"
         ],
-        "normThroughput": 243362886,
+        "normThroughput": 240523379,
         "throughputUnit": "A-evals/s"
       },
       "python": {
@@ -4832,8 +4832,8 @@
         "iterations": 50,
         "aEvals": 200000,
         "checksum": 6647,
-        "elapsedMs": 3001.661,
-        "operationsPerSecond": 3331489,
+        "elapsedMs": 2943.714,
+        "operationsPerSecond": 3397069,
         "memory": {
           "heapUsedBytes": 3664,
           "heapUsedDelta": 3664,
@@ -4843,7 +4843,7 @@
         "notes": [
           "Scaled-int power iteration (n=100, 10 iters); checksum is byte-identical to Node and Rust"
         ],
-        "normThroughput": 3331489,
+        "normThroughput": 3397069,
         "throughputUnit": "A-evals/s"
       },
       "rust": {
@@ -4852,12 +4852,12 @@
         "iterations": 50,
         "aEvals": 200000,
         "checksum": 6647,
-        "elapsedMs": 26.874,
-        "operationsPerSecond": 372112408,
+        "elapsedMs": 26.494,
+        "operationsPerSecond": 377438251,
         "notes": [
           "Scaled-int power iteration (n=100, 10 iters); checksum is byte-identical to Node and Python"
         ],
-        "normThroughput": 372112408,
+        "normThroughput": 377438251,
         "throughputUnit": "A-evals/s"
       },
       "rustAvx2": {
@@ -4866,12 +4866,12 @@
         "iterations": 50,
         "aEvals": 200000,
         "checksum": 6647,
-        "elapsedMs": 26.863,
-        "operationsPerSecond": 372252313,
+        "elapsedMs": 26.828,
+        "operationsPerSecond": 372749062,
         "notes": [
           "Scaled-int power iteration (n=100, 10 iters); checksum is byte-identical to Node and Python"
         ],
-        "normThroughput": 372252313,
+        "normThroughput": 372749062,
         "throughputUnit": "A-evals/s"
       }
     },
@@ -4894,22 +4894,22 @@
         "iterations": 1,
         "nodesAllocated": 135854,
         "checksum": 135854,
-        "elapsedMs": 1.768,
-        "operationsPerSecond": 76818773,
+        "elapsedMs": 1.841,
+        "operationsPerSecond": 73789582,
         "cpu": {
           "totalMs": 0
         },
         "memory": {
-          "rssBytes": 55414784,
+          "rssBytes": 55345152,
           "heapUsedBytes": 4557800,
-          "heapUsedBefore": 4129408,
-          "heapUsedDelta": 428392,
-          "bytesPerOperation": 3.15
+          "heapUsedBefore": 4129168,
+          "heapUsedDelta": 428632,
+          "bytesPerOperation": 3.16
         },
         "notes": [
           "One op = one allocated tree node (135854/run). Headline metric = bytesPerOperation."
         ],
-        "normThroughput": 76818773,
+        "normThroughput": 73789582,
         "throughputUnit": "nodes/s"
       },
       "python": {
@@ -4918,10 +4918,10 @@
         "iterations": 1,
         "nodesAllocated": 135854,
         "checksum": 135854,
-        "elapsedMs": 25.813,
-        "operationsPerSecond": 5263027,
+        "elapsedMs": 26.148,
+        "operationsPerSecond": 5195658,
         "cpu": {
-          "processMs": 31.25
+          "processMs": 15.625
         },
         "memory": {
           "heapUsedBytes": 368,
@@ -4934,7 +4934,7 @@
           "One op = one allocated tree node (135854/run). Headline metric = bytesPerOperation.",
           "binary-trees churns: most trees are freed immediately, so heapUsedDelta (surviving) is tiny; tracemallocPeak is the live high-water mark of the largest simultaneous tree."
         ],
-        "normThroughput": 5263027,
+        "normThroughput": 5195658,
         "throughputUnit": "nodes/s"
       },
       "rust": {
@@ -4943,9 +4943,9 @@
         "iterations": 1,
         "nodesAllocated": 135854,
         "checksum": 135854,
-        "elapsedMs": 6.867,
-        "operationsPerSecond": 19783027,
-        "normThroughput": 19783027,
+        "elapsedMs": 6.703,
+        "operationsPerSecond": 20267037,
+        "normThroughput": 20267037,
         "throughputUnit": "nodes/s"
       },
       "rustAvx2": {
@@ -4954,9 +4954,9 @@
         "iterations": 1,
         "nodesAllocated": 135854,
         "checksum": 135854,
-        "elapsedMs": 6.77,
-        "operationsPerSecond": 20068543,
-        "normThroughput": 20068543,
+        "elapsedMs": 6.777,
+        "operationsPerSecond": 20046037,
+        "normThroughput": 20046037,
         "throughputUnit": "nodes/s"
       },
       "wasm": {
@@ -4965,11 +4965,11 @@
         "flowName": "main",
         "qualifier": "pure",
         "binaryBytes": 472,
-        "compileMs": 14.609,
-        "elapsedMs": 1157.461,
+        "compileMs": 14.771,
+        "elapsedMs": 1161.792,
         "calls": 5000,
-        "callsPerSecond": 4319.8,
-        "iterationsPerSecond": 586862156.64,
+        "callsPerSecond": 4303.69,
+        "iterationsPerSecond": 584674163.82,
         "result": {
           "__tag": "int",
           "value": 135854
@@ -4979,23 +4979,23 @@
           "totalMs": 1157
         },
         "memory": {
-          "rssBytes": 106962944,
-          "heapUsedBytes": 25479976,
+          "rssBytes": 105074688,
+          "heapUsedBytes": 25640440,
           "heapUsedDelta": 1592
         },
         "notes": [
           "Phase 27: Galerina → WAT → binary WASM (472 bytes) → WebAssembly.instantiate",
-          "Compile (one-time): 14.6ms. Execution: pure WASM, no JS tree-walker."
+          "Compile (one-time): 14.8ms. Execution: pure WASM, no JS tree-walker."
         ],
-        "normThroughput": 586862109,
+        "normThroughput": 584673501,
         "throughputUnit": "nodes/s"
       },
       "galerinaGoverned": {
         "runtime": "galerina-governed",
         "mode": "governed",
-        "parseMs": 0.31,
-        "execMs": 355.58,
-        "totalMs": 355.89,
+        "parseMs": 0.29,
+        "execMs": 369.53,
+        "totalMs": 369.82,
         "result": {
           "__tag": "int",
           "value": 135854
@@ -5003,30 +5003,30 @@
         "error": false,
         "runsPerSecond": 3,
         "cpu": {
-          "userMs": 375,
+          "userMs": 422,
           "systemMs": 0,
-          "totalMs": 375
+          "totalMs": 422
         },
         "memory": {
-          "heapUsedBefore": 25215304,
-          "heapUsedAfter": 27263152,
-          "heapUsedDelta": 2047848,
-          "rssBefore": 102322176,
-          "rssAfter": 104628224,
-          "rssDelta": 2306048,
+          "heapUsedBefore": 25375912,
+          "heapUsedAfter": 26478504,
+          "heapUsedDelta": 1102592,
+          "rssBefore": 101482496,
+          "rssAfter": 100945920,
+          "rssDelta": -536576,
           "externalBefore": 20959965,
           "externalAfter": 2664431,
           "externalDelta": -18295534
         },
-        "normThroughput": 382063,
+        "normThroughput": 367640,
         "throughputUnit": "nodes/s"
       },
       "galerinaManifest": {
         "runtime": "galerina-manifest",
         "mode": "manifest",
         "parseMs": 0.28,
-        "execMs": 359.14,
-        "totalMs": 359.42,
+        "execMs": 347.29,
+        "totalMs": 347.57,
         "result": {
           "__tag": "int",
           "value": 135854
@@ -5034,35 +5034,35 @@
         "error": false,
         "runsPerSecond": 3,
         "cpu": {
-          "userMs": 406,
-          "systemMs": 16,
-          "totalMs": 422
+          "userMs": 437,
+          "systemMs": 0,
+          "totalMs": 437
         },
         "memory": {
-          "heapUsedBefore": 25217008,
-          "heapUsedAfter": 25912472,
-          "heapUsedDelta": 695464,
-          "rssBefore": 104673280,
-          "rssAfter": 102334464,
-          "rssDelta": -2338816,
+          "heapUsedBefore": 25377976,
+          "heapUsedAfter": 27244424,
+          "heapUsedDelta": 1866448,
+          "rssBefore": 101097472,
+          "rssAfter": 103149568,
+          "rssDelta": 2052096,
           "externalBefore": 2664431,
           "externalAfter": 2664431,
           "externalDelta": 0
         },
-        "normThroughput": 378276,
+        "normThroughput": 391183,
         "throughputUnit": "nodes/s"
       },
       "galerinaPassive": {
         "runtime": "galerina-passive",
         "mode": "passive",
-        "setupMs": 1.179,
+        "setupMs": 1.342,
         "warmMs": 0.117,
-        "coldMs": 300.671,
+        "coldMs": 307.111,
         "warmCalls": 3,
         "coldCalls": 1,
-        "warmCallsPerSecond": 25728.99,
-        "coldCallsPerSecond": 3.33,
-        "iterationsPerSecond": 3.33,
+        "warmCallsPerSecond": 25751.07,
+        "coldCallsPerSecond": 3.26,
+        "iterationsPerSecond": 3.26,
         "result": {
           "__tag": "int",
           "value": 135854
@@ -5073,10 +5073,10 @@
           "coldTotalMs": 296
         },
         "memory": {
-          "heapUsedBefore": 26620688,
-          "heapUsedAfter": 26707128,
+          "heapUsedBefore": 28006792,
+          "heapUsedAfter": 28093232,
           "heapUsedDelta": 86440,
-          "rssBytes": 102371328
+          "rssBytes": 103149568
         },
         "notes": [
           "setupMs: one-time compile+governance cost (not charged to execution)",
@@ -5084,7 +5084,7 @@
           "warmCallsPerSecond: LRU-cache steady-state (a Galerina-only optimization; NOT comparable to runtimes that recompute each call)",
           "coldCallsPerSecond: execution without cache (first-call per unique input) = the comparable throughput above"
         ],
-        "normThroughput": 452394,
+        "normThroughput": 442884,
         "throughputUnit": "nodes/s"
       }
     },
@@ -5109,22 +5109,22 @@
         "containerBytes": 203,
         "integrityRoot": "43386e644c7b53aa0900cda21c15acd15f30b3fdf997950e39e7dd3dbc685212",
         "checksum": 60900000,
-        "elapsedMs": 6028.689,
-        "operationsPerSecond": 49762,
+        "elapsedMs": 6060.811,
+        "operationsPerSecond": 49498,
         "cpu": {
-          "totalMs": 7390
+          "totalMs": 7359
         },
         "memory": {
-          "rssBytes": 71106560,
-          "heapUsedBytes": 9038136,
+          "rssBytes": 71249920,
+          "heapUsedBytes": 9028872,
           "heapUsedBefore": 7262704,
-          "heapUsedDelta": 1775432,
-          "bytesPerOperation": 5.92
+          "heapUsedDelta": 1766168,
+          "bytesPerOperation": 5.89
         },
         "notes": [
           "One op = build the canonical golden .spore (203 bytes, root asserted): SHAKE256 leaf/node/root + LE packing"
         ],
-        "normThroughput": 49762,
+        "normThroughput": 49498,
         "throughputUnit": "containers/s"
       },
       "python": {
@@ -5134,8 +5134,8 @@
         "containerBytes": 203,
         "integrityRoot": "43386e644c7b53aa0900cda21c15acd15f30b3fdf997950e39e7dd3dbc685212",
         "checksum": 20300000,
-        "elapsedMs": 1138.037,
-        "operationsPerSecond": 87871,
+        "elapsedMs": 1137.121,
+        "operationsPerSecond": 87941,
         "memory": {
           "heapUsedBytes": 4736,
           "heapUsedDelta": 4736,
@@ -5145,7 +5145,7 @@
         "notes": [
           "Python reference impl (hashlib.shake_256) — byte-identical to the Galerina engine"
         ],
-        "normThroughput": 87871,
+        "normThroughput": 87941,
         "throughputUnit": "containers/s"
       },
       "rust": {
@@ -5155,9 +5155,9 @@
         "containerBytes": 203,
         "integrityRoot": "43386e644c7b53aa0900cda21c15acd15f30b3fdf997950e39e7dd3dbc685212",
         "checksum": 60900000,
-        "elapsedMs": 1959.354,
-        "operationsPerSecond": 153112,
-        "normThroughput": 153112,
+        "elapsedMs": 1738.779,
+        "operationsPerSecond": 172535,
+        "normThroughput": 172535,
         "throughputUnit": "containers/s"
       },
       "rustAvx2": {
@@ -5167,9 +5167,9 @@
         "containerBytes": 203,
         "integrityRoot": "43386e644c7b53aa0900cda21c15acd15f30b3fdf997950e39e7dd3dbc685212",
         "checksum": 60900000,
-        "elapsedMs": 1980.327,
-        "operationsPerSecond": 151490,
-        "normThroughput": 151490,
+        "elapsedMs": 1752.727,
+        "operationsPerSecond": 171162,
+        "normThroughput": 171162,
         "throughputUnit": "containers/s"
       }
     },
@@ -5192,29 +5192,29 @@
         "note": "Node.js column = Galerina App Kernel (fixed 12-gate pipeline, no middleware)",
         "iterations": 200000,
         "handledOk": 200000,
-        "elapsedMs": 1365.321,
-        "operationsPerSecond": 146486,
-        "heapUsedDeltaKernel": 11311232,
+        "elapsedMs": 1374.794,
+        "operationsPerSecond": 145476,
+        "heapUsedDeltaKernel": 11095504,
         "architecture": {
-          "galerinaAppKernel_async_opsPerSec": 146486,
-          "handRolledMiddlewareChain_sync_opsPerSec": 755512,
-          "rawNoGovernance_sync_opsPerSec": 956875,
+          "galerinaAppKernel_async_opsPerSec": 145476,
+          "handRolledMiddlewareChain_sync_opsPerSec": 761178,
+          "rawNoGovernance_sync_opsPerSec": 941999,
           "auditEventsEmitted": 202001
         },
         "cpu": {
-          "totalMs": 2157
+          "totalMs": 1968
         },
         "memory": {
-          "rssBytes": 81608704,
-          "heapUsedBytes": 21851656,
-          "heapUsedDelta": 11311232,
-          "bytesPerOperation": 56.56
+          "rssBytes": 82161664,
+          "heapUsedBytes": 21670488,
+          "heapUsedDelta": 11095504,
+          "bytesPerOperation": 55.48
         },
         "notes": [
           "One op = one full successful request through the fixed governed pipeline to a handler",
           "Kernel is async (Tri-Pipe audit off critical path); the sync architecture[] figures isolate gate cost"
         ],
-        "normThroughput": 146486,
+        "normThroughput": 145476,
         "throughputUnit": "requests/s"
       },
       "python": {
@@ -5222,8 +5222,8 @@
         "benchmark": "framework-pipeline-v1",
         "iterations": 200000,
         "handledOk": 200000,
-        "elapsedMs": 1169.792,
-        "operationsPerSecond": 170971,
+        "elapsedMs": 1186.733,
+        "operationsPerSecond": 168530,
         "memory": {
           "heapUsedBytes": 1872,
           "heapUsedDelta": 1872,
@@ -5233,7 +5233,7 @@
         "notes": [
           "Hand-rolled stdlib middleware chain (same gates); a real framework would be slower"
         ],
-        "normThroughput": 170971,
+        "normThroughput": 168530,
         "throughputUnit": "requests/s"
       }
     },
@@ -5254,15 +5254,15 @@
         "benchmark": "http-throughput",
         "runtime": "node",
         "description": "Sequential HTTP requests/sec to localhost (no concurrency, measures server throughput)",
-        "nodeRaw_reqPerSec": 3297,
-        "nodeRaw_p50Ms": 0.26,
-        "nodeRaw_p99Ms": 0.523,
+        "nodeRaw_reqPerSec": 3364,
+        "nodeRaw_p50Ms": 0.257,
+        "nodeRaw_p99Ms": 0.609,
         "requests": 300,
-        "elapsedMs": 91,
+        "elapsedMs": 89,
         "notes": [
-          "Raw Node.js HTTP: 3,297 req/sec",
-          "p50 latency: 0.26ms",
-          "p99 latency: 0.523ms",
+          "Raw Node.js HTTP: 3,364 req/sec",
+          "p50 latency: 0.257ms",
+          "p99 latency: 0.609ms",
           "Sequential (not concurrent) — isolates server throughput from client parallelism"
         ]
       }
@@ -5278,14 +5278,14 @@
         "description": "FUNGI-NAMING checker over auth-service corpus (27 files)",
         "iterations": 100,
         "filesPerIteration": 31,
-        "elapsedMs": 451,
-        "filesPerSecond": 6869,
-        "msPerFile": 0.146,
+        "elapsedMs": 439,
+        "filesPerSecond": 7063,
+        "msPerFile": 0.142,
         "findingsPerSweep": 33,
         "notes": [
           "Corpus: 31 files",
           "Findings: 33/sweep",
-          "6869 files/sec"
+          "7063 files/sec"
         ]
       }
     }
@@ -5301,14 +5301,14 @@
         "iterations": 50,
         "filesPerIteration": 31,
         "receiptsPerIteration": 116,
-        "elapsedMs": 321,
-        "receiptsPerSecond": 18061,
-        "msPerFile": 0.207,
+        "elapsedMs": 319,
+        "receiptsPerSecond": 18195,
+        "msPerFile": 0.206,
         "avgTokenReductionPct": 88.7,
         "notes": [
           "Corpus: 31 files, 116 flows",
           "Avg token reduction: 88.7%",
-          "Receipt throughput: 18061 receipts/sec"
+          "Receipt throughput: 18195 receipts/sec"
         ]
       }
     }
@@ -5324,13 +5324,13 @@
         "indexBuildMs": 22,
         "indexedFlows": 116,
         "searchIterations": 5000,
-        "queriesPerSecond": 102089,
-        "msPerQuery": 0.01,
+        "queriesPerSecond": 106839,
+        "msPerQuery": 0.009,
         "topResultFor_verifyPassword": "verifyPassword",
-        "elapsedMs": 49,
+        "elapsedMs": 47,
         "notes": [
           "116 flows indexed",
-          "102089 queries/sec",
+          "106839 queries/sec",
           "Top \"verify password\": verifyPassword"
         ]
       }
@@ -5346,9 +5346,9 @@
         "description": "Data lineage analysis over auth-service corpus (27 files)",
         "iterations": 50,
         "filesPerIteration": 31,
-        "elapsedMs": 4606,
-        "filesPerSecond": 337,
-        "msPerFile": 2.971,
+        "elapsedMs": 4560,
+        "filesPerSecond": 340,
+        "msPerFile": 2.942,
         "avgNodesPerSweep": 208,
         "avgEdgesPerSweep": 42,
         "totalFlowsPerIter": 0,
@@ -5357,7 +5357,7 @@
           "Corpus: 31 files, 0 flows",
           "Graph: 208 nodes, 42 edges per sweep",
           "Risk flows detected: 0",
-          "Throughput: 337 files/sec"
+          "Throughput: 340 files/sec"
         ]
       }
     }

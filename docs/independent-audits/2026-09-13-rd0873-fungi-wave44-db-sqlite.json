@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-044-DB-SQLITE",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-db-sqlite/src/index.ts#validateSqliteCredentialRef",
+  "sourceSha256": "b43706376d145719a8500b70ee69309faf16812ade563cce9dca10d608780f24",
+  "target": "packages/fungi/products/galerina-db-sqlite/validate-sqlite-credential-ref.fungi",
+  "targetBytes": 5217,
+  "targetSha256": "71c52d5e4fa88d4279c762916293d8e948dc31bc3b67c03e9ed59f9a5b9d7214",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "12/12",
+    "parity": "12/12",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Credential-reference parity covers invalid kinds, empty refs and inline credential-bearing connection strings; the bounded scan follows ECMAScript whitespace behavior. Credential resolution, encryption-key custody, SQLite provider effects, physical ABI admission and host marshalling remain host-owned.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 243.6,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

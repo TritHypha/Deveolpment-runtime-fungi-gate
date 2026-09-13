@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-63-TARGET-AI-ACCELERATOR",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-target-ai-accelerator/src/index.ts#validateAiAcceleratorModel",
+  "sourceSha256": "31045854a8e81f3a58622b3b9d67a39f82667dfc96c458f7bf78953200e5c308",
+  "target": "packages/fungi/products/galerina-target-ai-accelerator/validate-ai-accelerator-model.fungi",
+  "targetBytes": 3271,
+  "targetSha256": "14aaafb99b6963e4fb7fb7b8af11cf00bac49e2f8b2336bd07eed135bb26595c",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "8/8",
+    "parity": "8/8",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0,
+    "details": "Focused parity 8/8 interpreter and 8/8 signed-Wasm"
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "Model loading, capability discovery, device dispatch, inference, filesystem/network effects and production authority remain host/runtime boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 250.6,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

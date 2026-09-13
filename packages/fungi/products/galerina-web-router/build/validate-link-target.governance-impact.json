@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-link-target.fungi",
+  "sourceHash": "sha256:ed493938da3b764ce21ca7f0b194e0eea7db217a2f275d6aee1073ae9bd290ce",
+  "generatedAt": "2026-09-13T17:46:53.420Z",
+  "flowCount": 5,
+  "flows": [
+    {
+      "name": "charCodeAt",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "compactLink",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "extractScheme",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "httpHostIsLocalhost",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateLinkTarget",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 5,
+  "derivedConstraintCount": 5
+}

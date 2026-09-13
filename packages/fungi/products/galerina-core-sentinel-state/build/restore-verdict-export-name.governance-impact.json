@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "restore-verdict-export-name.fungi",
+  "sourceHash": "sha256:28443bef6d635a65f49f1b6ea8d2dd843e747d10c385cc9736afac60268c0fb8",
+  "generatedAt": "2026-09-13T17:46:03.883Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "restoreVerdictExportName",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

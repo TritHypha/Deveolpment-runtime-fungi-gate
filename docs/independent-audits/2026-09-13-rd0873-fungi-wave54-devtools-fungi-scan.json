@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-54-DEVTOOLS-FUNGI-SCAN",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-devtools-fungi-scan/src/scanner.ts#PLANNED_CONSTRUCT_WORDS",
+  "sourceSha256": "a6d51ffc058dd9c27599465e39a82d0d341751258b268ca0113b2cb9d0080007",
+  "target": "packages/fungi/products/galerina-devtools-fungi-scan/planned-construct-words.fungi",
+  "targetBytes": 1103,
+  "targetSha256": "3d456c77cc625b6c4a5d9da0f328c276f02301f46f99e934b53a570cfdd161cb",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "15/15",
+    "parity": "15/15",
+    "sourcePackageSuite": "PASS",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The full ordered 15-word table matches in interpreter and signed-Wasm. Scanner lexing, filesystem traversal, collision measurement, reporting and migration authority remain host/toolchain boundaries.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 267.3,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

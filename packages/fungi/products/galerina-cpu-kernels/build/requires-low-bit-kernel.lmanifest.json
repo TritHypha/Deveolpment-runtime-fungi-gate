@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:dba10804d96756dfd50c80549133db182d99cff738e211b01c194e17eadf267c",
+  "sourceFile": "requires-low-bit-kernel.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:f4c33a505760d85567f6829bdda3f545a1020041dbdc1c86fe3d5a3e7a3063b1",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:08.593Z"
+  },
+  "behavioralFingerprint": "sha256:12d5c977dea75fd87224c59c4d8fe0ee0dee7b7ad659ca86605eb4a829b4fc07",
+  "derivedConstraints": [],
+  "proofObligations": [
+    {
+      "flowName": "requiresLowBitKernel",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:08.593Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "dbfb2205236174bb",
+    "signature": "v1ZdtIHQIQWOcfAnO1wgdxxNruDn+N7cjIbDq2g/8QTKvqrmE8xTLdWAplnMjWWdsdZ5nZra94hLG3/myZpjCA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:08.601Z"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-photonic-lowering-plan.fungi",
+  "sourceHash": "sha256:344f96333d6ac693d4b31f1c5090ef685de7c8e77f18fe94594528e452f62d23",
+  "generatedAt": "2026-09-13T17:46:51.323Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "validatePhotonicLoweringPlanAtPath",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validatePhotonicLoweringPlan",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

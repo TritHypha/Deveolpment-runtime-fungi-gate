@@ -1,0 +1,50 @@
+@version 1
+
+/// Bounded direct-package translation of isServerOnlyImport from
+/// packages-ts/galerina-web/src/index.ts.
+///
+/// This pure classifier preserves the browser deny-list decision only. Module
+/// resolution, bundling, runtime loading, browser execution and capability
+/// enforcement remain host/toolchain boundaries; this flow grants no import
+/// or browser authority.
+
+pure flow isServerOnlyImport(specifier: String) -> Bool
+contract { intent { "Classify a trimmed module specifier as server-only when it uses node: or a known server builtin name." } }
+{
+  let s: String = specifier.trim()
+  if s.startsWith("node:") { return true }
+
+  mut known: Bool = false
+  match s {
+    "fs" => { known = true }
+    "path" => { known = true }
+    "os" => { known = true }
+    "process" => { known = true }
+    "child_process" => { known = true }
+    "cluster" => { known = true }
+    "worker_threads" => { known = true }
+    "net" => { known = true }
+    "tls" => { known = true }
+    "dns" => { known = true }
+    "dgram" => { known = true }
+    "http" => { known = true }
+    "https" => { known = true }
+    "http2" => { known = true }
+    "crypto" => { known = true }
+    "stream" => { known = true }
+    "buffer" => { known = true }
+    "v8" => { known = true }
+    "vm" => { known = true }
+    "module" => { known = true }
+    "readline" => { known = true }
+    "repl" => { known = true }
+    "zlib" => { known = true }
+    "util" => { known = true }
+    "assert" => { known = true }
+    "async_hooks" => { known = true }
+    "perf_hooks" => { known = true }
+    "inspector" => { known = true }
+    _ => {}
+  }
+  return known
+}

@@ -1,0 +1,69 @@
+@version 1
+
+/// Bounded translation of validateWasmArtefact from
+/// packages-ts/galerina-target-wasm/src/index.ts:47-81.
+///
+/// The TypeScript artefact contract remains the compatibility shadow. This
+/// leaf validates only the fields consumed by the source helper; WASM bytes,
+/// filesystem paths, imports/features, and runtime execution stay host checks.
+
+record WasmTarget {
+  runtime: String
+}
+
+record WasmArtefact {
+  path: String
+  target: WasmTarget
+  exports: Array<String>
+}
+
+record WasmDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow validateWasmArtefact(artefact: WasmArtefact, path_: String) -> Array<WasmDiagnostic>
+contract { intent { "Validate an artefact path, known runtime, and callable export presence." } }
+{
+  mut diagnostics: Array<WasmDiagnostic> = Array.empty()
+
+  if artefact.path.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_WASM_ARTEFACT_PATH_REQUIRED",
+      severity: "error",
+      message: "Wasm artefact requires a path.",
+      path: path_ + ".path"
+    })
+  }
+
+  mut runtimeKnown: Bool = false
+  match artefact.target.runtime {
+    "browser" => { runtimeKnown = true }
+    "edge" => { runtimeKnown = true }
+    "server" => { runtimeKnown = true }
+    "standalone" => { runtimeKnown = true }
+    _ => {}
+  }
+
+  if runtimeKnown == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_WASM_RUNTIME_INVALID",
+      severity: "error",
+      message: "Wasm target runtime must be one of: browser, edge, server, standalone.",
+      path: path_ + ".target.runtime"
+    })
+  }
+
+  if artefact.exports.count() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_WASM_ARTEFACT_NO_EXPORTS",
+      severity: "warning",
+      message: "Wasm artefact declares no exports; nothing can be invoked from it.",
+      path: path_ + ".exports"
+    })
+  }
+
+  return diagnostics
+}

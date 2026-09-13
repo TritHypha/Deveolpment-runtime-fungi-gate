@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "select-vector-tier.fungi",
+  "sourceHash": "sha256:14fa9e903e244a0f926253671313d2114671f677fc7496ef63e64c5c2f04a47e",
+  "generatedAt": "2026-09-13T17:46:01.572Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "selectVectorTier",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

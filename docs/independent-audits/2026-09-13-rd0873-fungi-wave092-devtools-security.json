@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-092-DEVTOOLS-SECURITY",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-devtools-security/src/index.ts#DEVTOOLS_SECURITY_VERSION",
+  "sourceSha256": "e4036d5806c2335a0e956fcff5686844c0c2eb667bf620ee67d3a9f98fc24207",
+  "target": "packages/fungi/products/galerina-devtools-security/version.fungi",
+  "targetBytes": 456,
+  "targetSha256": "56279ba5786e8fbf330f3f091f6cebc3ad406a7d8d0a6e8c98c915ac2a7a3b22",
+  "sourceShadowRetained": true,
+  "validation": {
+    "strictCheck": "PASS",
+    "strictBuild": "PASS",
+    "focusedTests": "1/1",
+    "parity": "1/1",
+    "sourcePackageSuite": "PASS",
+    "packageSuiteTests": "51/51",
+    "failures": 0,
+    "skips": 0
+  },
+  "limits": {
+    "maxPackages": 2,
+    "maxSourceFiles": 4,
+    "maxOutputBytes": 16384,
+    "maxFocusedTests": 12,
+    "workerEffort": "Luna - High",
+    "workerRestartAllowed": true
+  },
+  "boundary": "The DEVTOOLS_SECURITY_VERSION constant is exactly \"0.1.0\". Audit execution, filesystem/path checks, CLI behavior and security authority remain TypeScript/host responsibilities.",
+  "productionAuthorizing": false,
+  "interimBenchmark": {
+    "iterations": 10,
+    "allPassed": true,
+    "meanCheckMs": 243.8,
+    "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup",
+    "cliBenchmarkCommand": "unimplemented diagnostic"
+  }
+}

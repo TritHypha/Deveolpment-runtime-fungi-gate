@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "RD-0873-FUNGI-WAVE-030-AI-LOWBIT",
+  "status": "BOUNDED_PASS_WITH_MANUAL_BOUNDARY",
+  "planId": "RD-0873-FULL-PACKAGE-FUNGI-CONVERSION",
+  "head": "675e1048304b11e109b1de4f68af97ebc64f5949",
+  "tree": "b20138180928ed9d787d157d1faedbe86050be64",
+  "source": "packages-ts/galerina-ai-lowbit/src/index.ts#validateLowBitAiModel",
+  "sourceSha256": "2d0c0713eefe1cd636fb8ba769b5f6d24b05cffb97ed778f47eb0dfa02be1ca8",
+  "target": "packages/fungi/products/galerina-ai-lowbit/validate-low-bit-ai-model.fungi",
+  "targetBytes": 3064,
+  "targetSha256": "1ccbf30886482ed5e523ffb9c179a1526a1678875a99eaacd228d073b0a91220",
+  "sourceShadowRetained": true,
+  "validation": {"strictCheck": "PASS", "strictBuild": "PASS", "focusedTests": "9/9", "finiteInterpreter": "9/9", "finiteSignedWasm": "9/9", "failures": 0, "skips": 0},
+  "limits": {"maxPackages": 2, "maxSourceFiles": 4, "maxOutputBytes": 16384, "maxFocusedTests": 12, "workerEffort": "Luna - High", "workerRestartAllowed": true},
+  "boundary": "NaN and Infinity remain an explicit host/manual boundary because the current WAT emitter traps nonfinite Float64 before TypeScript <=0 semantics. Finite model validation preserves verdicts and diagnostics; no production authority is claimed.",
+  "manualHostBoundary": "NaN/Infinity numeric semantics pending emitter/runtime support",
+  "productionAuthorizing": false,
+  "interimBenchmark": {"iterations": 10, "allPassed": true, "meanCheckMs": 245.7, "method": "10 fresh local CLI strict-check invocations; includes Node/compiler startup", "cliBenchmarkCommand": "unimplemented diagnostic"}
+}

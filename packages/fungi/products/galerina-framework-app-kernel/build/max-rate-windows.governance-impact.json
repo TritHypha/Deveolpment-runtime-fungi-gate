@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "max-rate-windows.fungi",
+  "sourceHash": "sha256:6fa3d9e40111ef49df5ce2539c7d00594da630c45aafc6aa2298141bde6eb266",
+  "generatedAt": "2026-09-13T17:47:17.059Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "maxRateWindows",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

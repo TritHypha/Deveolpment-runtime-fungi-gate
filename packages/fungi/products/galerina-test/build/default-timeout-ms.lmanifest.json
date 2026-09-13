@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:091152c877720d4a2654f39ffd68f3b8f33373c2b4b0520daa771dd606682600",
+  "sourceFile": "default-timeout-ms.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:86fddcb685a0970867d3525064e3c66f3348c278ec4e40a1f753385280b2ce2b",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:47:12.613Z"
+  },
+  "behavioralFingerprint": "sha256:7e0dd45070aeb1cac8e2fcd53b3954373f1040fa1b0a902bbc4570fc66bddad2",
+  "derivedConstraints": [
+    "defaultTimeoutMs: Flow defaultTimeoutMs has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "defaultTimeoutMs",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:47:12.614Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "82be5abe3eff4204",
+    "signature": "ln2gw06bcq4ec1DXAbjjf60JfIO5arZBjXTdeUOdU5ZlNtX0ejwFPZeljiTo7IFFr3FCPpia0vPm1+n41tHuAA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:47:12.621Z"
+  }
+}

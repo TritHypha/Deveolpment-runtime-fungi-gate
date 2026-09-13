@@ -1,0 +1,39 @@
+@version 1
+
+/// Bounded direct-package translation of validateEnvelope from
+/// packages-ts/galerina-core-sentinel-power/src/thermal-envelope.ts.
+///
+/// A successful source return becomes Ok(true); the source PowerFault failure
+/// becomes Err(message) so the Fungi boundary remains typed and pure. A host
+/// adapter must map Err back to LSP-ENV-001 before any governor use. Thermal
+/// sensing, governor state changes and enforcement remain TypeScript-owned.
+///
+/// Executable parity is bounded to finite Float64 thresholds. The current WAT
+/// emitter/runtime traps nonfinite Float64 values before the source PowerFault
+/// message is formed; NaN and Infinity therefore remain an explicit
+/// host/manual boundary for the source's finite-number check.
+
+record ThermalEnvelope {
+  throttleC: Float64
+  safeC: Float64
+  criticalC: Float64
+}
+
+pure flow validateEnvelope(envelope: ThermalEnvelope) -> Result<Bool, String>
+contract { intent { "Accept only finite thresholds ordered as 0 < throttleC < safeC < criticalC; return a typed failure otherwise." } }
+{
+  let finite: Bool = Float64.isFinite(envelope.throttleC) and Float64.isFinite(envelope.safeC) and Float64.isFinite(envelope.criticalC)
+  let ordered: Bool = 0.0 < envelope.throttleC and envelope.throttleC < envelope.safeC and envelope.safeC < envelope.criticalC
+  let valid: Bool = finite and ordered
+
+  if valid == true {
+    return Ok(true)
+  }
+
+  let messageStart: String = "invalid thermal envelope: require 0 < throttleC < safeC < criticalC, got "
+  let messageWithThrottle: String = messageStart + "throttleC=" + envelope.throttleC.toString()
+  let messageWithSafe: String = messageWithThrottle + ", safeC=" + envelope.safeC.toString()
+  let message: String = messageWithSafe + ", criticalC=" + envelope.criticalC.toString()
+  return Err(message)
+}
+

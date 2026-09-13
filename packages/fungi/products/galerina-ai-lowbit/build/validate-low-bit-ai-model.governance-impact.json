@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-low-bit-ai-model.fungi",
+  "sourceHash": "sha256:1ccbf30886482ed5e523ffb9c179a1526a1678875a99eaacd228d073b0a91220",
+  "generatedAt": "2026-09-13T17:46:25.437Z",
+  "flowCount": 1,
+  "flows": [
+    {
+      "name": "validateLowBitAiModel",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 1,
+  "derivedConstraintCount": 1
+}

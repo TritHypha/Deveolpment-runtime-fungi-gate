@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "fungi.governance-impact.v1",
+  "sourceFile": "validate-native-target.fungi",
+  "sourceHash": "sha256:e680af0b4cf91a18431d74e8c6b3faf58615acff1f24abf68b0ac0e204599d27",
+  "generatedAt": "2026-09-13T17:46:50.034Z",
+  "flowCount": 2,
+  "flows": [
+    {
+      "name": "validateNativeTargetAtPath",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    },
+    {
+      "name": "validateNativeTarget",
+      "qualifier": "pure",
+      "effects": [],
+      "hasInvariant": false
+    }
+  ],
+  "surfaceArea": {
+    "totalEffects": 0,
+    "uniqueEffects": [],
+    "networkFlows": [],
+    "secretFlows": [],
+    "mutationFlows": []
+  },
+  "proofObligationCount": 2,
+  "derivedConstraintCount": 2
+}

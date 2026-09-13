@@ -1,0 +1,46 @@
+@version 1
+
+/// Bounded direct-package translation of createPackageNode from
+/// packages-ts/galerina-devtools-graph-project/src/index.ts.
+///
+/// This pure constructor creates one typed package-node value. Graph scanning,
+/// persistence, indexing, edge authority and generated reports remain host or
+/// toolchain boundaries; this leaf grants no graph or publication authority.
+
+record ProjectGraphNode {
+  id: String
+  kind: String
+  label: String
+  sourcePath: String
+  summary: Option<String>
+  tags: Array<String>
+}
+
+pure flow createPackageNode(
+  id: String,
+  label: String,
+  sourcePath: String,
+  summary: Option<String>,
+) -> ProjectGraphNode
+contract { intent { "Construct a package graph node with the source fields, optional summary and the canonical package tag." } }
+{
+  let tags: Array<String> = Array.empty().append("package")
+  return {
+    id: id
+    kind: "Package"
+    label: label
+    sourcePath: sourcePath
+    summary: summary
+    tags: tags
+  }
+}
+
+pure flow createPackageNodeDefault(
+  id: String,
+  label: String,
+  sourcePath: String,
+) -> ProjectGraphNode
+contract { intent { "Construct a package graph node using the source default of no summary." } }
+{
+  return createPackageNode(id, label, sourcePath, None)
+}

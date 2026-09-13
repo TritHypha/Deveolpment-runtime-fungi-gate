@@ -1,0 +1,13 @@
+@version 1
+
+/// Bounded direct-package translation of the exported ALIGN_BYTES constant
+/// from packages-ts/galerina-core-sentinel-memory/src/memory-validator.ts.
+///
+/// Memory validation, buffer state, traps and host memory effects remain in
+/// the TypeScript shadow; this pure constant grants no memory authority.
+
+pure flow alignBytes() -> Int
+contract { intent { "Return the fixed byte alignment required by sentinel memory." } }
+{
+  return 16
+}

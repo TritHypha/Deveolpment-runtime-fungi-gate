@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "fungi.manifest.v1",
+  "sourceHash": "sha256:8aad3c9afb5300b5a6b24d0acb874c222b9ec9bd7bed061e52adfdf409c6b467",
+  "sourceFile": "validate-compute-plan.fungi",
+  "flowCount": 1,
+  "compilerVersion": "1.0.0-beta.2",
+  "productIdentity": {
+    "schemaVersion": 1,
+    "artifactNamespace": "galerina/v1",
+    "productId": "galerina",
+    "governanceClass": "zero-trust",
+    "policyDigest": "sha256:a581b16510fcc0927d08318eafda67a0a6ec0e1c6623769c1ee4a724ac068f2b",
+    "safetyProfile": "strict",
+    "buildMode": "build-production",
+    "physicalProfile": "1"
+  },
+  "productArtifactKey": "product-artifact-v1:0b8198dd45503590d1c5c32ad742b9d840db81ae2f6e8b16e0b8445a3d643f13",
+  "policyResolutionDag": {
+    "allowedEffects": 0,
+    "deniedEffects": 0,
+    "conflictsResolved": 0,
+    "resolvedAt": "2026-09-13T17:46:01.187Z"
+  },
+  "behavioralFingerprint": "sha256:a15d9ff4c110d9ab0ce9544b074fd810a6744b9fe0f71e140a41c31d511a292c",
+  "derivedConstraints": [
+    "validateComputePlan: Flow validateComputePlan has a contract declaration [via contract]"
+  ],
+  "proofObligations": [
+    {
+      "flowName": "validateComputePlan",
+      "kind": "effect-safety",
+      "description": "pure flow declares effects [none]",
+      "verified": "static"
+    }
+  ],
+  "generatedAt": "2026-09-13T17:46:01.188Z",
+  "governanceSignature": {
+    "algorithm": "Ed25519",
+    "keyId": "de828b7ee0a2e37d",
+    "signature": "PXJxdKYYkgOfznXICB/e3T0YQ3xWzatOWuYFwBwbj8t0VzKFmDtTizFR4LYdQEuCaKLnBUvt8VccAIlfD5c7BA==",
+    "canon": "jcs",
+    "signedAt": "2026-09-13T17:46:01.196Z"
+  }
+}

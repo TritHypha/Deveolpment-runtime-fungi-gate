@@ -1,0 +1,14 @@
+@version 1
+
+/// Bounded translation of optionSome from
+/// packages-ts/galerina-data-query/src/index.ts.
+///
+/// The TypeScript generic QueryOption<T> is represented at a concrete String
+/// specialization. The host must marshal the typed payload through Fungi's
+/// Option ABI; arbitrary JavaScript structural values remain outside.
+
+pure flow optionSome(value_: String) -> Option<String>
+contract { intent { "Wrap a value as a present Option result." } }
+{
+  return Some(value_)
+}

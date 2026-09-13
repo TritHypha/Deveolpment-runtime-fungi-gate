@@ -1,0 +1,227 @@
+@version 1
+
+/// Bounded translation of validateLinkTarget from
+/// packages-ts/galerina-web-router/src/index.ts:343-416.
+///
+/// The TypeScript URL/navigation shadow remains authoritative. This leaf
+/// performs the pure allowlist decision; browser navigation and full URL
+/// resolution remain host responsibilities.
+
+record WebRouterDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+pure flow charCodeAt(value: String, index: Int) -> Int
+contract { intent { "Read one string code point with a negative missing sentinel." } }
+{
+  let characterOpt: Option<Char> = value.charAt(index)
+  match characterOpt {
+    Some(character) => { return character.codePoint() }
+    None => { return 0 - 1 }
+    _ => { return 0 - 1 }
+  }
+}
+
+pure flow compactLink(value: String) -> String
+contract { intent { "Remove ASCII control/space code points and normalize a link for scheme checks." } }
+{
+  mut compact: String = ""
+  mut index: Int = 0
+  while index < value.length() {
+    let characterOpt: Option<Char> = value.charAt(index)
+    match characterOpt {
+      Some(character) => {
+        let codePoint: Int = character.codePoint()
+        if codePoint > 32 { compact = compact + character.toString() }
+      }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+  return compact.toLower()
+}
+
+pure flow extractScheme(value: String) -> Option<String>
+contract { intent { "Extract a leading ASCII URL scheme without accepting malformed prefixes." } }
+{
+  if value.length() == 0 { return None }
+  let first: Int = charCodeAt(value, 0)
+  if first < 97 or first > 122 { return None }
+
+  mut scheme: String = ""
+  mut index: Int = 0
+  mut valid: Bool = true
+  while index < value.length() and valid {
+    let codePoint: Int = charCodeAt(value, index)
+    if codePoint >= 97 and codePoint <= 122 {
+      let characterOpt: Option<Char> = value.charAt(index)
+      match characterOpt {
+        Some(character) => { scheme = scheme + character.toString() }
+        None => { valid = false }
+        _ => { valid = false }
+      }
+    } else {
+      if codePoint >= 48 and codePoint <= 57 or codePoint == 43 or codePoint == 45 or codePoint == 46 {
+        let characterOpt: Option<Char> = value.charAt(index)
+        match characterOpt {
+          Some(character) => { scheme = scheme + character.toString() }
+          None => { valid = false }
+          _ => { valid = false }
+        }
+      } else {
+        if codePoint == 58 {
+          if scheme.length() > 0 { return Some(scheme) }
+          return None
+        }
+        return None
+      }
+    }
+    index = index + 1
+  }
+  return None
+}
+
+pure flow httpHostIsLocalhost(value: String) -> Bool
+contract { intent { "Permit cleartext HTTP only when its effective host is localhost." } }
+{
+  if value.startsWith("http://") == false { return false }
+
+  mut authority_: String = ""
+  mut index: Int = 7
+  while index < value.length() and charCodeAt(value, index) != 47 and charCodeAt(value, index) != 63 and charCodeAt(value, index) != 35 {
+    let characterOpt: Option<Char> = value.charAt(index)
+    match characterOpt {
+      Some(character) => { authority_ = authority_ + character.toString() }
+      None => {}
+      _ => {}
+    }
+    index = index + 1
+  }
+
+  mut atIndex: Int = 0 - 1
+  mut authorityIndex: Int = 0
+  while authorityIndex < authority_.length() {
+    if charCodeAt(authority_, authorityIndex) == 64 { atIndex = authorityIndex }
+    authorityIndex = authorityIndex + 1
+  }
+
+  mut hostStart: Int = 0
+  if atIndex >= 0 { hostStart = atIndex + 1 }
+  if hostStart >= authority_.length() { return false }
+
+  mut host: String = ""
+  if charCodeAt(authority_, hostStart) == 91 {
+    mut hostIndex: Int = hostStart + 1
+    while hostIndex < authority_.length() and charCodeAt(authority_, hostIndex) != 93 {
+      let characterOpt: Option<Char> = authority_.charAt(hostIndex)
+      match characterOpt {
+        Some(character) => { host = host + character.toString() }
+        None => {}
+        _ => {}
+      }
+      hostIndex = hostIndex + 1
+    }
+  } else {
+    mut hostIndex: Int = hostStart
+    while hostIndex < authority_.length() and charCodeAt(authority_, hostIndex) != 58 {
+      let characterOpt: Option<Char> = authority_.charAt(hostIndex)
+      match characterOpt {
+        Some(character) => { host = host + character.toString() }
+        None => {}
+        _ => {}
+      }
+      hostIndex = hostIndex + 1
+    }
+  }
+
+  match host {
+    "localhost" => { return true }
+    "127.0.0.1" => { return true }
+    "::1" => { return true }
+    _ => { return false }
+  }
+}
+
+pure flow validateLinkTarget(href: String, path_: String) -> Array<WebRouterDiagnostic>
+contract { intent { "Allow safe relative, HTTPS, localhost HTTP, and mailto link targets." } }
+{
+  mut diagnostics: Array<WebRouterDiagnostic> = Array.empty()
+  let trimmed: String = href.trim()
+  if trimmed.length() == 0 {
+    return diagnostics.append({
+      code: "Galerina_WEB_ROUTER_LINK_TARGET_REQUIRED",
+      severity: "error",
+      message: "Link target must be non-empty.",
+      path: path_
+    })
+  }
+
+  let compact: String = compactLink(trimmed)
+  if compact.startsWith("//") {
+    return diagnostics.append({
+      code: "Galerina_WEB_ROUTER_LINK_PROTOCOL_RELATIVE_FORBIDDEN",
+      severity: "error",
+      message: "Link target " + Char.fromCode(34).toString() + trimmed + Char.fromCode(34).toString() + " is protocol-relative; it looks relative but navigates to another host, so it is denied.",
+      path: path_
+    })
+  }
+
+  let schemeOpt: Option<String> = extractScheme(compact)
+  match schemeOpt {
+    None => { return diagnostics }
+    Some(scheme) => {
+      match scheme {
+        "javascript" => {
+          return diagnostics.append({
+            code: "Galerina_WEB_ROUTER_LINK_SCHEME_FORBIDDEN",
+            severity: "error",
+            message: "Link scheme " + Char.fromCode(34).toString() + scheme + ":" + Char.fromCode(34).toString() + " is executable content and may never be generated as a link.",
+            path: path_
+          })
+        }
+        "data" => {
+          return diagnostics.append({
+            code: "Galerina_WEB_ROUTER_LINK_SCHEME_FORBIDDEN",
+            severity: "error",
+            message: "Link scheme " + Char.fromCode(34).toString() + scheme + ":" + Char.fromCode(34).toString() + " is executable content and may never be generated as a link.",
+            path: path_
+          })
+        }
+        "vbscript" => {
+          return diagnostics.append({
+            code: "Galerina_WEB_ROUTER_LINK_SCHEME_FORBIDDEN",
+            severity: "error",
+            message: "Link scheme " + Char.fromCode(34).toString() + scheme + ":" + Char.fromCode(34).toString() + " is executable content and may never be generated as a link.",
+            path: path_
+          })
+        }
+        "https" => { return diagnostics }
+        "mailto" => { return diagnostics }
+        "http" => {
+          if httpHostIsLocalhost(compact) == false {
+            return diagnostics.append({
+              code: "Galerina_WEB_ROUTER_LINK_HTTP_REQUIRES_LOCALHOST",
+              severity: "error",
+              message: "Link target " + Char.fromCode(34).toString() + trimmed + Char.fromCode(34).toString() + " uses cleartext http to a non-localhost host; http links are localhost-only.",
+              path: path_
+            })
+          }
+          return diagnostics
+        }
+        _ => {
+          return diagnostics.append({
+            code: "Galerina_WEB_ROUTER_LINK_SCHEME_UNKNOWN",
+            severity: "error",
+            message: "Link scheme " + Char.fromCode(34).toString() + scheme + ":" + Char.fromCode(34).toString() + " is not in the allowlist (relative/https/http-localhost/mailto); unknown schemes are denied by default.",
+            path: path_
+          })
+        }
+      }
+    }
+    _ => { return diagnostics }
+  }
+}

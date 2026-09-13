@@ -1,0 +1,104 @@
+@version 1
+
+/// Bounded direct-package translation of validateLowBitAiModel from
+/// packages-ts/galerina-ai-lowbit/src/index.ts.
+///
+/// The TypeScript model object, filesystem admission and inference runtimes
+/// remain shadowed. This pure flow validates metadata only; it does not load,
+/// execute or authorize a low-bit model.
+///
+/// Executable parity is bounded to finite Float64 limits. The TypeScript
+/// `<= 0` checks let NaN and Infinity pass, while the current WAT emitter
+/// traps nonfinite Float64 values; those nonfinite cases remain a documented
+/// host/manual boundary and are not claimed by this leaf.
+
+record LowBitAiModelReference {
+  name: String
+  path: String
+  format: String
+  weightFormat: String
+  quantization: String
+  embeddingQuantization: String
+  parameterCount: Option<String>
+  maxContextTokens: Float64
+  maxOutputTokens: Float64
+  memoryEstimateBytes: Float64
+}
+
+record LowBitAiDiagnostic {
+  code: String
+  severity: String
+  message: String
+  path: String
+}
+
+record LowBitAiModelValidationResult {
+  model: LowBitAiModelReference
+  valid: Bool
+  diagnostics: Array<LowBitAiDiagnostic>
+}
+
+pure flow validateLowBitAiModel(
+  model: LowBitAiModelReference,
+) -> LowBitAiModelValidationResult
+contract { intent { "Validate local path, GGUF extension and finite positive model resource limits without loading or executing the model." } }
+{
+  mut diagnostics: Array<LowBitAiDiagnostic> = Array.empty()
+  mut valid: Bool = true
+
+  if model.path.trim().length() == 0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_LOWBIT_AI_MODEL_PATH_REQUIRED"
+      severity: "error"
+      message: "Low-bit AI inference requires an explicit local model path."
+      path: "model.path"
+    })
+    valid = false
+  }
+
+  if model.format == "gguf" and model.path.toLower().endsWith(".gguf") == false {
+    diagnostics = diagnostics.append({
+      code: "Galerina_LOWBIT_AI_GGUF_EXTENSION_REQUIRED"
+      severity: "error"
+      message: "GGUF low-bit AI model paths must reference a GGUF file."
+      path: "model.path"
+    })
+    valid = false
+  }
+
+  if model.maxContextTokens <= 0.0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_LOWBIT_AI_CONTEXT_TOKENS_REQUIRED"
+      severity: "error"
+      message: "Low-bit AI model requires a positive max context token limit."
+      path: "model.maxContextTokens"
+    })
+    valid = false
+  }
+
+  if model.maxOutputTokens <= 0.0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_LOWBIT_AI_OUTPUT_TOKENS_REQUIRED"
+      severity: "error"
+      message: "Low-bit AI model requires a positive max output token limit."
+      path: "model.maxOutputTokens"
+    })
+    valid = false
+  }
+
+  if model.memoryEstimateBytes <= 0.0 {
+    diagnostics = diagnostics.append({
+      code: "Galerina_LOWBIT_AI_MEMORY_ESTIMATE_REQUIRED"
+      severity: "error"
+      message: "Low-bit AI model requires a positive memory estimate."
+      path: "model.memoryEstimateBytes"
+    })
+    valid = false
+  }
+
+  return {
+    model: model
+    valid: valid
+    diagnostics: diagnostics
+  }
+}
