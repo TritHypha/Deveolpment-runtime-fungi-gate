@@ -65,6 +65,7 @@ future merge must name an exact branch and path manifest first.
 The housekeeping commits that followed the initial checkpoint are:
 
 - Galerina graph and roadmap refresh: `9572c0486517ea19eeb93650463d3e3032fc432f` (pushed to `origin/main`).
+- Galerina final roadmap-provenance binding: `cc929d576518a15665e0537aa72b53f56f1e673f` (pushed to `origin/main`).
 - SLIDE benchmark/documentation checkpoint: `05fdfd43044796aed86cad533c8a87e817b149df` (pushed to its feature branch).
 - Lyth local documentation checkpoint: `518cb33603d4217d1e58824ac2ae8d0ce3941767` (local only; owner push rule applies).
 - AI-RESTART checkpoint: `d2c888973d97c3da0f639ae448a93b42f7e33882` (local only; owner push rule applies).
