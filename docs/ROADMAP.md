@@ -3,6 +3,27 @@
 Date: 2026-08-30
 Branch: `main`
 
+## RD-0873 conversion and benchmark close housekeeping - 2026-09-13
+
+The direct Fungi conversion and local benchmark are recorded as a closed
+development checkpoint. All 100 package roots are dispositioned: 94 roots
+have 95 direct buildable leaves, two are manual host/native boundaries and
+four contain no eligible TypeScript/JavaScript source under their declared
+roots. The build consumed 95 `.fungi` inputs and zero TypeScript inputs,
+producing 475 artifacts totalling 820,572 bytes. An `Array.includes` WAT
+lowering gap was repaired and the affected build passed again.
+
+The benchmark publisher measured 30 groups, 18 work-equivalent groups, and
+passed the 0.4% noise gate, truth audit and benchmark guard. The current chart,
+measured sheet and archive comparison are retained under
+`packages-ts/galerina-devtools-benchmarks/results/`. This is development
+evidence; production SLIDE/VOK authority remains disabled and VOK/Rust was
+outside this chapter.
+
+Receipts: `docs/independent-audits/2026-09-13-rd0873-fungi-build-regeneration.json`,
+`packages-ts/galerina-devtools-benchmarks/results/benchmark-run-to-graph-latest.json`,
+and `docs/handover/HANDOVER-rd0873-conversion-benchmark-housekeeping-2026-09-13.md`.
+
 ## RD-0873 full package conversion start - 2026-09-13
 
 The owner-authorized conversion now targets the direct package layout

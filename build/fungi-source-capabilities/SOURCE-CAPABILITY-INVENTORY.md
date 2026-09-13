@@ -3,40 +3,40 @@
 Generated from the retirement graph. This is measured source demand, not SLIDE
 admission, execution parity, retirement credit or production authority.
 
-- Files: 2546
-- Flows: 3280
-- Bytes: 8336084
-- Retirement graph: `sha256:2c9174e1600eaa4b874a87a1a502a97f141ea6d9130ecc78494fea43a8daf2bf`
+- Files: 2544
+- Flows: 3294
+- Bytes: 8350868
+- Retirement graph: `sha256:0e1facb0e22193c08bb60c57fadeeb20a994a82c901ef941f9de8df2d6f5b561`
 
 ## AST kinds
 
 | Kind | Count |
 |---|---:|
-| `identifier` | 169091 |
-| `letDecl` | 139797 |
-| `block` | 19407 |
-| `stringLiteral` | 18464 |
-| `returnStmt` | 17420 |
-| `typeRef` | 15761 |
-| `ifStmt` | 14167 |
-| `paramDecl` | 13661 |
-| `callExpr` | 7270 |
-| `binaryExpr` | 6875 |
-| `numberLiteral` | 6279 |
-| `memberExpr` | 4731 |
-| `pureFlowDecl` | 3268 |
-| `program` | 2546 |
-| `boolLiteral` | 2388 |
-| `assignStmt` | 2120 |
-| `matchArm` | 1385 |
-| `contractDecl` | 1303 |
-| `intentDecl` | 1303 |
-| `mutDecl` | 810 |
-| `matchExpr` | 409 |
+| `identifier` | 169382 |
+| `letDecl` | 139839 |
+| `block` | 19509 |
+| `stringLiteral` | 18535 |
+| `returnStmt` | 17429 |
+| `typeRef` | 15797 |
+| `ifStmt` | 14215 |
+| `paramDecl` | 13686 |
+| `callExpr` | 7389 |
+| `binaryExpr` | 6991 |
+| `numberLiteral` | 6322 |
+| `memberExpr` | 4766 |
+| `pureFlowDecl` | 3282 |
+| `program` | 2544 |
+| `boolLiteral` | 2390 |
+| `assignStmt` | 2160 |
+| `matchArm` | 1382 |
+| `contractDecl` | 1317 |
+| `intentDecl` | 1317 |
+| `mutDecl` | 833 |
+| `matchExpr` | 413 |
 | `checkArm` | 351 |
-| `whileStmt` | 340 |
+| `whileStmt` | 347 |
 | `unaryExpr` | 300 |
-| `recordDecl` | 210 |
+| `recordDecl` | 211 |
 | `checkExpr` | 117 |
 | `listLiteral` | 115 |
 | `trapDecl` | 50 |
@@ -58,13 +58,13 @@ admission, execution parity, retirement credit or production authority.
 
 | Type | Count |
 |---|---:|
-| `Bool` | 10989 |
-| `String` | 2663 |
-| `Int` | 960 |
+| `Bool` | 10993 |
+| `String` | 2676 |
+| `Int` | 963 |
 | `Bytes` | 143 |
-| `Array<Auto>` | 75 |
+| `Array<Auto>` | 82 |
 | `Verdict` | 61 |
-| `Array<Token>` | 44 |
+| `Array<Token>` | 46 |
 | `SLIDEV2AImportCursor` | 36 |
 | `Array<Int>` | 22 |
 | `SLIDER1ImportCursor` | 21 |
@@ -72,7 +72,7 @@ admission, execution parity, retirement credit or production authority.
 | `Array<FlowDecl>` | 19 |
 | `RtValue` | 19 |
 | `GIRExpr` | 15 |
-| `Array<String>` | 12 |
+| `Array<String>` | 13 |
 | `SLIDEV2AFunction` | 12 |
 | `SLIDEV2CAggregateProgram` | 12 |
 | `ExprParse` | 11 |
@@ -85,6 +85,8 @@ admission, execution parity, retirement credit or production authority.
 | `SLIDEV2CAggregateDecision` | 10 |
 | `SLIDEV2DMemoryDecision` | 10 |
 | `SLIDEV2EExternalEvidenceExpectation` | 10 |
+| `Array<Stmt>` | 9 |
+| `Expr` | 9 |
 | `SLIDEG4CheckedSnapshot` | 9 |
 | `SLIDEV2AProgram` | 9 |
 | `SLIDEV2BCapabilityDecision` | 9 |
@@ -92,19 +94,18 @@ admission, execution parity, retirement credit or production authority.
 | `SLIDEV2DMemoryProgram` | 9 |
 | `SLIDEV2EFrontendEvidence` | 9 |
 | `Array<Binding>` | 8 |
-| `Array<Stmt>` | 8 |
-| `Expr` | 8 |
 | `SLIDEV2CExecutableProgram` | 8 |
 | `SLIDEV2EFrontendReceipt` | 8 |
 | `Array<FlowEntry>` | 7 |
 | `SLIDER1ImportDecision` | 7 |
 | `SLIDEV2BCapabilityRequest` | 7 |
 | `SLIDEV2DExecutableDecision` | 7 |
+| `Array<FlowParam>` | 6 |
 | `Array<GIRStmt>` | 6 |
 | `Array<SLIDEV2ESourceMapEntry>` | 6 |
 | `SLIDEV2CExecutableDecision` | 6 |
 | `SLIDEV2EReceiptImport` | 6 |
-| `Array<FlowParam>` | 5 |
+| `Stmt` | 6 |
 | `R1InputStmt` | 5 |
 | `SLIDER1ProgramExecutionResult` | 5 |
 | `SLIDEV2AEdge` | 5 |
@@ -112,7 +113,7 @@ admission, execution parity, retirement credit or production authority.
 | `SLIDEV2CRuntimeStore` | 5 |
 | `SLIDEV2DRuntimeStore` | 5 |
 | `SLIDEV2EPlanDigests` | 5 |
-| `Stmt` | 5 |
+| `Char` | 4 |
 | `DSSState` | 4 |
 | `GovResult` | 4 |
 | `ParseResult` | 4 |
@@ -133,7 +134,6 @@ admission, execution parity, retirement credit or production authority.
 | `Array<AuditEntry>` | 3 |
 | `Array<R1InputStmt>` | 3 |
 | `Array<SLIDEV2ABlock>` | 3 |
-| `Char` | 3 |
 | `EmergencyTransitionResult` | 3 |
 | `SLIDER1LogicalInstruction` | 3 |
 | `SLIDER1MemoryDecision` | 3 |
@@ -251,6 +251,7 @@ admission, execution parity, retirement credit or production authority.
 | `ExecutionSignatureFungi` | 1 |
 | `FlowDecl` | 1 |
 | `ForLoopResult` | 1 |
+| `GenericTypeParts` | 1 |
 | `GIRModule` | 1 |
 | `GIRNode` | 1 |
 | `HostResidencyCapabilityFungi` | 1 |
@@ -307,35 +308,35 @@ admission, execution parity, retirement credit or production authority.
 
 | Method | Count |
 |---|---:|
-| `append` | 707 |
-| `count` | 562 |
-| `empty` | 503 |
-| `get` | 254 |
-| `length` | 176 |
+| `append` | 714 |
+| `count` | 566 |
+| `empty` | 510 |
+| `get` | 258 |
+| `length` | 189 |
 | `of` | 170 |
-| `toString` | 77 |
+| `toString` | 83 |
 | `encode` | 56 |
 | `contains` | 37 |
 | `unwrapOr` | 35 |
 | `sha256Hex` | 33 |
-| `charAt` | 25 |
+| `charAt` | 31 |
+| `startsWith` | 16 |
 | `bitAnd` | 14 |
 | `isEmpty` | 14 |
 | `fromHex` | 13 |
+| `slice` | 13 |
+| `trim` | 13 |
 | `toInt` | 12 |
 | `isDigit` | 11 |
-| `codePoint` | 9 |
+| `codePoint` | 10 |
 | `first` | 9 |
 | `bitOr` | 7 |
-| `startsWith` | 7 |
 | `isLetter` | 6 |
 | `last` | 6 |
-| `trim` | 5 |
-| `slice` | 4 |
+| `endsWith` | 3 |
 | `write` | 3 |
 | `charCount` | 2 |
 | `decode` | 2 |
-| `endsWith` | 2 |
 | `getInt` | 2 |
 | `is_empty` | 2 |
 | `scan` | 2 |
@@ -349,17 +350,17 @@ admission, execution parity, retirement credit or production authority.
 
 | Operator | Count |
 |---|---:|
-| `==` | 2410 |
-| `+` | 1039 |
-| `!=` | 980 |
-| `\|\|` | 762 |
-| `<` | 620 |
-| `-` | 476 |
-| `&&` | 439 |
-| `>` | 256 |
-| `>=` | 73 |
+| `==` | 2453 |
+| `+` | 1058 |
+| `!=` | 986 |
+| `\|\|` | 778 |
+| `<` | 630 |
+| `-` | 477 |
+| `&&` | 451 |
+| `>` | 258 |
+| `>=` | 77 |
 | `*` | 57 |
-| `<=` | 29 |
+| `<=` | 32 |
 | `/` | 26 |
 | `%` | 6 |
 | `!` | 2 |

@@ -7,6 +7,27 @@ authorize production execution. The separation is binding and fail closed. A
 tracked, strict-clean, hash-pinned or reference-executable source is not thereby
 production-authorized.
 
+## RD-0873 conversion and benchmark close - 2026-09-13
+
+The owner-authorized direct Fungi conversion is complete at the development
+disposition tier. The manifest classifies all 100 package roots: 94 roots
+contain 95 direct buildable leaves, two are manual host/native boundaries and
+four have no eligible TypeScript/JavaScript source. The local regeneration
+receipt records 95 `.fungi` inputs, zero TypeScript inputs and 475 generated
+artifacts totalling 820,572 bytes. The first regeneration found an
+`Array.includes` WAT-lowering gap; the compiler repair and repeat build
+passed.
+
+The benchmark receipt records 30 measured groups, 18 comparable groups, a
+passing 0.4% noise gate, truth audit and benchmark guard. The benchmark sheet,
+charts and archive comparison are observational development evidence only.
+They do not issue a production SLIDE lease, activate VOK or prove complete
+self-hosting. VOK/Rust and native provider work were intentionally excluded.
+
+This closes the bookkeeping checkpoint, not production authority gates. Exact
+receipts and the successor route are in
+`docs/handover/HANDOVER-rd0873-conversion-benchmark-housekeeping-2026-09-13.md`.
+
 ## RD-0361 secret-gate Option-ABI re-baseline - 2026-09-13
 
 At Galerina `main` HEAD `e716fc677d3ca609b016cf76d7f994b67fd36466` / tree

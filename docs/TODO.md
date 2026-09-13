@@ -4,6 +4,23 @@ The first dated sections are the current checkpoint and next queue. Lower
 dated sections are retained as a chronological evidence ledger and may contain
 counts or open items that a newer section explicitly supersedes.
 
+### RD-0873 conversion and benchmark close housekeeping - 2026-09-13
+
+- [x] Confirm all 100 package roots are dispositioned: 94 roots have 95
+  direct buildable Fungi leaves, two are manual host/native boundaries and
+  four have no eligible TypeScript/JavaScript source.
+- [x] Confirm the local build used 95 Fungi inputs and zero TypeScript inputs,
+  producing 475 artifacts and 820,572 bytes; the `Array.includes` WAT repair
+  passed on repeat.
+- [x] Confirm the benchmark publisher measured 30 groups, 18 comparable
+  groups, and passed its noise, truth and guard stages.
+- [x] Record the exact receipts and handover in
+  `docs/handover/HANDOVER-rd0873-conversion-benchmark-housekeeping-2026-09-13.md`.
+- [ ] Keep production SLIDE/VOK authority disabled; these are development
+  observations and do not establish production admission or full self-hosting.
+- [ ] Reverify exact heads and owner custody before new conversion, merge,
+  branch cleanup or VOK work.
+
 ### RD-0873 full package conversion start - 2026-09-13
 
 - [x] Set the canonical target layout to
